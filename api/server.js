@@ -67,20 +67,28 @@ function initial() {
     username: "admin",
     email: "admin@bim-cloud.org",
     password: bcrypt.hashSync("123456", 8)
-  })
-    .then(user => {
+  }).then(user => {
+        Project.findAll()
+			.then(projects => {
+          user.setProjects(projects)
+        });
         Role.findAll({
             where: {name: "admin"}
         }).then(roles => {
           user.setRoles(roles)
         });
-});
+  });
+
   User.create({
     username: "demo",
     email: "demo@bim-cloud.org",
     password: bcrypt.hashSync("123456", 8)
   })
     .then(user => {
+        Project.findAll()
+			.then(projects => {
+          user.setProjects(projects)
+        });
         Role.findAll({
             where: {name: "user"}
         }).then(roles => {

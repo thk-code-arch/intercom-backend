@@ -33,15 +33,20 @@ db.role.belongsToMany(db.user, {
   foreignKey: "roleId",
   otherKey: "userId"
 });
+db.user.belongsToMany(db.role, {
+  through: "user_roles",
+  foreignKey: "userId",
+  otherKey: "roleId"
+});
 db.project.belongsToMany(db.user, {
   through: "user_projects",
   foreignKey: "projectId",
   otherKey: "userId"
 });
-db.user.belongsToMany(db.role, {
-  through: "user_roles",
+db.user.belongsToMany(db.project, {
+  through: "user_projects",
   foreignKey: "userId",
-  otherKey: "roleId"
+  otherKey: "projectId"
 });
 // TODO adding subprojects
 // TODO add table for files belongs to projects
