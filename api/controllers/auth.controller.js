@@ -67,6 +67,12 @@ exports.signin = (req, res) => {
         expiresIn: 86400 // 24 hours
       });
 
+      var userprojects = [];
+      user.getProjects().then(projects => {
+        for (let i = 0; i < projects.length; i++) {
+          userprojects.push(projects[i].name);
+        }
+      });
       var authorities = [];
       user.getRoles().then(roles => {
         for (let i = 0; i < roles.length; i++) {
@@ -77,6 +83,7 @@ exports.signin = (req, res) => {
           username: user.username,
           email: user.email,
           roles: authorities,
+          projects: userprojects,
           accessToken: token
         });
       });
