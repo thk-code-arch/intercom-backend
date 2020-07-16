@@ -70,7 +70,7 @@ exports.signin = (req, res) => {
       var userprojects = [];
       user.getProjects().then(projects => {
         for (let i = 0; i < projects.length; i++) {
-          userprojects.push(projects[i].name);
+          userprojects.push("Assigned_Project:_" + projects[i].name);
         }
       });
       var authorities = [];
