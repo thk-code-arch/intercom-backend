@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 app.use('/files', express.static('/files'));
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
-
+require('./routes/file.routes')(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
