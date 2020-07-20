@@ -1,4 +1,5 @@
 const express = require("express");
+const fileUpload = require('express-fileupload');
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
@@ -10,6 +11,10 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 
+// enable files upload
+app.use(fileUpload({
+    createParentPath: true
+}));
 // parse requests of content-type - application/json
 app.use(bodyParser.json());
 
@@ -35,7 +40,7 @@ const db = require("./models");
 const Role = db.role;
 const User = db.user;
 const Project = db.project;
-
+//test db
 db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Db');
   initial();
@@ -52,7 +57,6 @@ function initial() {
     name: "admin"
   });
 // dev only adding DEMO data
-// TODO add users to projects
     Project.create({
         id: 1,
         name: "InterACT",
