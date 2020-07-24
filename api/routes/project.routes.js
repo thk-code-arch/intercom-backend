@@ -12,7 +12,7 @@ module.exports = function(app) {
 
 
   app.get(
-    "api/projects/",
+    "api/project/get_projects/",
     [authJwt.verifyToken],
     controller.getProject
   );
