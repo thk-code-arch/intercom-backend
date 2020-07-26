@@ -6,6 +6,7 @@ const User = db.user;
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
 
+//TODO get currentproject
   if (!token) {
     return res.status(403).send({
       message: "No token provided!"
@@ -19,9 +20,14 @@ verifyToken = (req, res, next) => {
       });
     }
     req.userId = decoded.id;
+    console.log(req);
     next();
   });
 };
+
+//TODO isProjectMember "check if User is projectmember"
+
+//TODO isProjectOwner "check if User is projectowner"
 
 isAdmin = (req, res, next) => {
   User.findByPk(req.userId).then(user => {

@@ -10,6 +10,8 @@ module.exports = (sequelize, Sequelize) => {
     owner: {
       type: Sequelize.INTEGER
     }
+      //TODO add subproject INTEGER id is parentProject
+      
   });
 
   return Project;

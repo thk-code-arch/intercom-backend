@@ -25,5 +25,8 @@
     "morgan-body": "^2.4.14",
     "mysql2": "^2.1.0",
     "sequelize": "^6.3.3"
+  },
+  "devDependencies": {
+    "express-reload": "^1.2.0"
   }
 }
