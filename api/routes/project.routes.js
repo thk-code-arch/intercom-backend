@@ -17,9 +17,16 @@ module.exports = function(app) {
     controller.getProjects
   );
 
+  app.post(
+    "/api/project/select_project/",
+    [authJwt.verifyToken],
+    controller.selectProject
+  );
+
   app.get(
     "/api/project/get_projectfile/",
-    [authJwt.verifyToken],
+    //[authJwt.verifyToken],
+//TODO GLTF Loader muss token ubergeben sonst kein fproject select
     controller.getProjectfile
   );
 };

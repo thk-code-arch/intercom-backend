@@ -33,6 +33,7 @@ isProjectMember = (req, res, next) => {
     user.getProjects().then(projects => {
       for (let i = 0; i < projects.length; i++) {
         if (projects[i].id === currentProjct) {
+          req.currProject = currentProjct;
           next();
           return;
         }

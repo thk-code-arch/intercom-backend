@@ -87,6 +87,7 @@ function initial() {
         owner: 1
     });
   User.create({
+    id: 1,
     username: "admin",
     email: "admin@bim-cloud.org",
     password: bcrypt.hashSync("123456", 8)
@@ -103,6 +104,7 @@ function initial() {
   });
 
   User.create({
+    id: 2,
     username: "demo",
     email: "demo@bim-cloud.org",
     password: bcrypt.hashSync("123456", 8)
