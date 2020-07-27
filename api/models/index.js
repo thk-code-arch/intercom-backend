@@ -49,6 +49,9 @@ db.user.belongsToMany(db.project, {
   foreignKey: "userId",
   otherKey: "projectId"
 });
+db.projectfile.belongsTo(db.project, {
+  foreignKey: "projectId",
+});
 // TODO adding subprojects
 // TODO add table for files belongs to projects
 db.ROLES = ["user", "admin"];

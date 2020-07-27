@@ -17,5 +17,10 @@ module.exports = function(app) {
     controller.getProjects
   );
 
+  app.get(
+    "/api/project/get_projectfile/",
+    [authJwt.verifyToken],
+    controller.getProjectfile
+  );
 };
 

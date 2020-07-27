@@ -1,9 +1,9 @@
+const fs = require('fs');
 const db = require("../models");
 const User = db.user;
 const Project = db.project;
 
 exports.getProjects = (req, res) => {
-  console.log(req.userId);
   var userprojects = [];
   User.findByPk(req.userId).then(user => {
     user.getProjects().then(projects => {
@@ -17,10 +17,24 @@ exports.getProjects = (req, res) => {
   });
   };
 
-exports.selectProject = (req, res) => {
-  res.status(200).send("Project selected");
+exports.getProjectfile = (req, res) => {
+  console.log(req.headers["x-current-project"])
+  const filePath =  "/files/interact.gltf" // or any file format
+  // Check if file specified by the filePath exists 
+  fs.exists(filePath, function(exists){
+      if (exists) {     
+        // Content-type is very interesting part that guarantee that
+        // Web browser will handle response in an appropriate manner.
+        res.writeHead(200, {
+          "Content-Type": "model/gltf+json",
+        });
+        fs.createReadStream(filePath).pipe(res);
+      } else {
+        res.writeHead(400, {"Content-Type": "text/plain"});
+        res.end("ERROR File does not exist");
+      }
+    });
 };
-
 exports.addProject = (req, res) => {
   res.status(200).send("Project added");
 };

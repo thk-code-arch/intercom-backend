@@ -2,6 +2,7 @@ module.exports = (sequelize, Sequelize) => {
   const Projectfile = sequelize.define("projectfiles", {
     id: {
       type: Sequelize.INTEGER,
+      autoIncrement: true,
       primaryKey: true
     },
     filename: {

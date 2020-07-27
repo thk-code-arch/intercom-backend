@@ -50,6 +50,7 @@ const db = require("./models");
 const Role = db.role;
 const User = db.user;
 const Project = db.project;
+const Projectfile = db.projectfile;
 //test db
 db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Db');
@@ -70,12 +71,20 @@ function initial() {
     Project.create({
         id: 1,
         name: "InterACT",
-        owner: 1,
+        owner: 1
+    }).then((newProject) => {
+	console.log(newProject.get())
+    return Projectfile.create({
+    filename: "interact.gltf",
+    path: "/files/",
+    uploadedby: 1,
+    projectId: newProject.id
+    })
     });
     Project.create({
         id: 2,
         name: "Koelner-Dom",
-        owner: 1,
+        owner: 1
     });
   User.create({
     username: "admin",

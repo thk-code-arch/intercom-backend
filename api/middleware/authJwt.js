@@ -27,6 +27,24 @@ verifyToken = (req, res, next) => {
 
 //TODO isProjectMember "check if User is projectmember"
 
+isProjectMember = (req, res, next) => {
+  let currentProjct = req.headers["x-current-project"];
+  User.findByPk(req.userId).then(user => {
+    user.getProjects().then(projects => {
+      for (let i = 0; i < projects.length; i++) {
+        if (projects[i].id === currentProjct) {
+          next();
+          return;
+        }
+      }
+
+      res.status(403).send({
+        message: "Not a project member!"
+      });
+      return;
+    });
+  });
+};
 //TODO isProjectOwner "check if User is projectowner"
 
 isAdmin = (req, res, next) => {
