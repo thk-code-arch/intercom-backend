@@ -20,7 +20,6 @@ verifyToken = (req, res, next) => {
       });
     }
     req.userId = decoded.id;
-    console.log(req);
     next();
   });
 };
@@ -31,8 +30,10 @@ isProjectMember = (req, res, next) => {
   let currentProjct = req.headers["x-current-project"];
   User.findByPk(req.userId).then(user => {
     user.getProjects().then(projects => {
+    console.log(currentProjct);
       for (let i = 0; i < projects.length; i++) {
-        if (projects[i].id === currentProjct) {
+        console.log(projects[i].id);
+        if (projects[i].id == currentProjct) {
           req.currProject = currentProjct;
           next();
           return;

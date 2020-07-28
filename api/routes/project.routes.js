@@ -25,7 +25,7 @@ module.exports = function(app) {
 
   app.get(
     "/api/project/get_projectfile/",
-    //[authJwt.verifyToken],
+    [authJwt.verifyToken],isProjectMember,
 //TODO GLTF Loader muss token ubergeben sonst kein fproject select
     controller.getProjectfile
   );

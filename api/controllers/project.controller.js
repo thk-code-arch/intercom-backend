@@ -2,6 +2,7 @@ const fs = require('fs');
 const db = require("../models");
 const User = db.user;
 const Project = db.project;
+const Projectfile = db.projectfile;
 
 exports.getProjects = (req, res) => {
   var userprojects = [];
@@ -19,23 +20,34 @@ exports.getProjects = (req, res) => {
   };
 
 exports.getProjectfile = (req, res) => {
-  console.log(req.currentProjct)
+   Projectfile.findAll({
+	limit: 1,
+	where: {
+	  //your where conditions, or without them if you need ANY entry
+	},
+	order: [ [ 'createdAt', 'DESC' ]]
+  }).then(function(entries){
+    console.log(entries);
+    const filePath = entries[0].path + entries[0].filename;
+    console.log(filePath);
+    // Check if file specified by the filePath exists 
+    fs.exists(filePath, function(exists){
+        if (exists) {     
+          // Content-type is very interesting part that guarantee that
+          // Web browser will handle response in an appropriate manner.
+          res.writeHead(200, {
+            "Content-Type": "model/gltf+json",
+          });
+          fs.createReadStream(filePath).pipe(res);
+        } else {
+          res.writeHead(400, {"Content-Type": "text/plain"});
+          res.end("ERROR File does not exist");
+        }
+      });
+      //only difference is that you get users list limited to 1
+      //entries[0]
+    });  
 //TODO get latest GLTF by Project
-  const filePath =  "/files/interact.gltf" // or any file format
-  // Check if file specified by the filePath exists 
-  fs.exists(filePath, function(exists){
-      if (exists) {     
-        // Content-type is very interesting part that guarantee that
-        // Web browser will handle response in an appropriate manner.
-        res.writeHead(200, {
-          "Content-Type": "model/gltf+json",
-        });
-        fs.createReadStream(filePath).pipe(res);
-      } else {
-        res.writeHead(400, {"Content-Type": "text/plain"});
-        res.end("ERROR File does not exist");
-      }
-    });
 };
 exports.selectProject = (req, res) => {
   Project.findOne({
