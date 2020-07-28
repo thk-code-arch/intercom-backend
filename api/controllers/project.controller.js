@@ -72,5 +72,22 @@ exports.selectProject = (req, res) => {
 };
 
 exports.addProject = (req, res) => {
-  res.status(200).send("Project added");
+    Project.create({
+        name: "New Project",
+        owner: req.userId,
+    })
+    .then(project => {
+    var projctowner = false;
+     if (project.owner == req.userId){
+          projctowner = true};
+        res.status(200).send({
+          id: project.id,
+          name: project.name,
+          owner: projctowner,
+          parentProject: project.parentProject,
+        });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message });
+    });
 };

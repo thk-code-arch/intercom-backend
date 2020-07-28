@@ -9,8 +9,6 @@ module.exports = function(app) {
     );
     next();
   });
-
-
   app.get(
     "/api/project/get_projects/",
     [authJwt.verifyToken],
@@ -23,6 +21,11 @@ module.exports = function(app) {
     controller.selectProject
   );
 
+  app.post(
+    "/api/project/add_project/",
+    [authJwt.verifyToken],isAdmin,
+    controller.addProject
+  );
   app.get(
     "/api/project/get_projectfile/",
     [authJwt.verifyToken],isProjectMember,
