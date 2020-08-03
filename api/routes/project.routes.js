@@ -23,14 +23,18 @@ module.exports = function(app) {
 
   app.post(
     "/api/project/add_project/",
-    [authJwt.verifyToken],isAdmin,
+    [authJwt.verifyToken, authJwt.isAdmin],
     controller.addProject
   );
   app.get(
     "/api/project/get_projectfile/",
-    [authJwt.verifyToken],isProjectMember,
-//TODO GLTF Loader muss token ubergeben sonst kein fproject select
+    [authJwt.verifyToken, authJwt.isProjectMember],
     controller.getProjectfile
+  );
+  app.get(
+    "/api/project/get_projectinfo/",
+    [authJwt.verifyToken, authJwt.isProjectMember],
+    controller.getProjectinfo
   );
 };
 

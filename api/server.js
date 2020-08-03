@@ -38,6 +38,7 @@ app.get("/", (req, res) => {
 app.use('/files', express.static('/files'));
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
+require('./routes/admin.routes')(app);
 require('./routes/file.routes')(app);
 require('./routes/project.routes')(app);
 // set port, listen for requests

@@ -19,17 +19,33 @@ exports.getProjects = (req, res) => {
   });
   };
 
+exports.getProjectinfo = (req, res) => {
+  Project.findOne({
+    where: {
+      id: req.currProject
+    }
+  })
+    .then(project => {
+        res.status(200).send({
+          id: project.id,
+          name: project.name,
+          description: project.description,
+          parentProject: project.parentProject,
+        });
+    })
+    .catch(err => {
+      res.status(500).send({ message: err.message });
+    });
+  };
+
 exports.getProjectfile = (req, res) => {
    Projectfile.findAll({
 	limit: 1,
 	where: {
-	  //your where conditions, or without them if you need ANY entry
 	},
 	order: [ [ 'createdAt', 'DESC' ]]
   }).then(function(entries){
-    console.log(entries);
     const filePath = entries[0].path + entries[0].filename;
-    console.log(filePath);
     // Check if file specified by the filePath exists 
     fs.exists(filePath, function(exists){
         if (exists) {     
@@ -77,6 +93,9 @@ exports.addProject = (req, res) => {
         owner: req.userId,
     })
     .then(project => {
+    User.findByPk(req.userId).then(user => {
+    user.addProjects(project)
+    });
     var projctowner = false;
      if (project.owner == req.userId){
           projctowner = true};

@@ -45,12 +45,21 @@ checkRolesExisted = (req, res, next) => {
       }
     }
   }
-  
   next();
 };
-
+//TODO  invitecode for register
+checkInviteCode = (req, res, next) => {
+  if (req.body.invitecode != "test" ) {
+        res.status(400).send({
+          message: "Failed! InviteCode wrong"
+        });
+        return;
+  }
+  next();
+};
 const verifySignUp = {
   checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
+  checkInviteCode: checkInviteCode,
   checkRolesExisted: checkRolesExisted
 };
 
