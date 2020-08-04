@@ -36,6 +36,7 @@ app.get("/", (req, res) => {
 });
 // routes
 app.use('/files', express.static('/files'));
+app.use('/static', express.static('/files/static'));
 require('./routes/auth.routes')(app);
 require('./routes/user.routes')(app);
 require('./routes/admin.routes')(app);
@@ -52,6 +53,7 @@ const Role = db.role;
 const User = db.user;
 const Project = db.project;
 const Projectfile = db.projectfile;
+const Chatlog = db.chatlog;
 //test db
 db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Db');
@@ -91,6 +93,7 @@ function initial() {
     id: 1,
     username: "admin",
     email: "admin@bim-cloud.org",
+    profile_image: "admin.jpg",
     password: bcrypt.hashSync("123456", 8)
   }).then(user => {
         Project.findAll()
@@ -108,6 +111,7 @@ function initial() {
     id: 2,
     username: "demo",
     email: "demo@bim-cloud.org",
+    profile_image: "demo.jpg",
     password: bcrypt.hashSync("123456", 8)
   })
     .then(user => {

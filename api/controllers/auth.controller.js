@@ -82,6 +82,7 @@ exports.signin = (req, res) => {
           id: user.id,
           username: user.username,
           email: user.email,
+          profile_image: "https://"+process.env.VIRTUAL_HOST+"/static/profile_image/"+user.profile_image,
           roles: authorities,
           projects: userprojects,
           accessToken: token

@@ -13,6 +13,10 @@ const io = require("socket.io")(server, {
 });
 const socketioJwt = require('socketio-jwt');
 
+const db = require("./models");
+const User = db.user;
+const Chatlog = db.chatlog;
+
 io.use(socketioJwt.authorize({
   secret: process.env.IC_Secret,
   handshake: true
@@ -21,10 +25,22 @@ io.use(socketioJwt.authorize({
 io.on('connection', (socket) => {
     console.log(socket.id)
     socket.on('SEND_MESSAGE', function(data) {
-    data.time = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    data.userid = socket.decoded_token.id;
-    console.log(data);
-       io.emit('MESSAGE', data);
+      data.time = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      data.userid = socket.decoded_token.id;
+      Chatlog.create(data);
+      User.findOne({
+        where: {
+          id: data.userid
+        }
+      })
+        .then(user => {
+          console.log("Userid found");
+          data.username = user.username;
+          //TODO Profile url from ENV Url
+          data.profile_image = "https://icapi.bim-cloud.org/static/profile_image/"+user.profile_image;
+          console.log(data);
+          io.emit('MESSAGE', data);
+        });
     });
 });
 //TODO implement second rountrip to improve security
