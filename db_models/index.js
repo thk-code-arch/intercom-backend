@@ -1,5 +1,16 @@
-const config = require("../config/db.config.js");
-
+config = {
+      HOST: "icweb-db",
+      USER: "root",
+      PASSWORD: process.env.IC_DBPassword,
+      DB: process.env.IC_Database,
+      dialect: "mysql",
+      pool: {
+              max: 20,
+              min: 0,
+              acquire: 30000,
+              idle: 10000
+            }
+};
 const Sequelize = require("sequelize");
 const sequelize = new Sequelize(
   config.DB,
