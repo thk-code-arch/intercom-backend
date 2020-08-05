@@ -42,6 +42,7 @@ require('./routes/user.routes')(app);
 require('./routes/admin.routes')(app);
 require('./routes/file.routes')(app);
 require('./routes/project.routes')(app);
+require('./routes/chat.routes')(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
@@ -54,6 +55,7 @@ const User = db.user;
 const Project = db.project;
 const Projectfile = db.projectfile;
 const Chatlog = db.chatlog;
+const Chatroom = db.chatroom;
 //test db
 db.sequelize.sync({force: true}).then(() => {
   console.log('Drop and Resync Db');
@@ -76,7 +78,11 @@ function initial() {
         name: "InterACT",
         owner: 1
     }).then((newProject) => {
-	console.log(newProject.get())
+    Chatroom.create({
+    name: newProject.name,
+    roomtype: "PROJECT",
+    projectid: newProject.id
+    });
     return Projectfile.create({
     filename: "interact.gltf",
     path: "/files/",
