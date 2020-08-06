@@ -4,8 +4,8 @@
   "description": "Sockets.io for Chat etc.",
   "main": "index.js",
   "scripts": {
-	"eslint": "eslint ./",
-	"eslint-fix": "eslint ./ --fix",
+    "eslint": "eslint ./",
+    "eslint-fix": "eslint ./ --fix",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
