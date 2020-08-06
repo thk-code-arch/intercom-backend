@@ -1,5 +1,5 @@
 config = {
-      HOST: "icweb-db",
+      HOST: process.env.IC_DBHost,
       USER: "root",
       PASSWORD: process.env.IC_DBPassword,
       DB: process.env.IC_Database,

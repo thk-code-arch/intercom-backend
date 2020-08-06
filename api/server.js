@@ -6,7 +6,7 @@ const morganBody = require('morgan-body');
 const app = express();
 
 var corsOptions = {
-    origin: ["http://localhost:8080","https://app.bim-cloud.org"]
+    origin: ["http://localhost:8080","https://"+process.env.IC_CORS]
 };
 
 app.use(cors(corsOptions));
