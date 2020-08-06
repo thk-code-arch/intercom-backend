@@ -28,8 +28,8 @@ app.use(bodyParser.json());
 
 // hook morganBody to express app (Unlike typical express middleware you're passing the actual app into the function)
 morganBody(app);
-
-
+// disable 304 cache
+app.disable('etag');
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome." });

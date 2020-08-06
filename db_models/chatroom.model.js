@@ -12,7 +12,6 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.INTEGER
     },
     roomtype: {
-      // eg PUBLIC PRIVATE or PROJECT 
       type: Sequelize.STRING
     }
   });

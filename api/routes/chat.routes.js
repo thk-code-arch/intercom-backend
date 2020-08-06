@@ -17,5 +17,10 @@ module.exports = function(app) {
     controller.chatlog
   );
 
+  app.get(
+    "/api/chat/get_projectroom/",
+    [authJwt.verifyToken, authJwt.isProjectMember],
+    controller.getprojectroom
+  );
 };
 

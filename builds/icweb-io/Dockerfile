@@ -3,6 +3,6 @@ WORKDIR /usr/src/app
 
 RUN apt-get update \
   && apt-get install -y mysql-client
-
+RUN npm install -g nodemon eslint
 EXPOSE 3000
-CMD npm install && node index
+CMD npm install && nodemon index

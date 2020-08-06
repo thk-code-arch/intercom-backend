@@ -68,6 +68,9 @@ db.projectfile.belongsTo(db.project, {
 db.chatlog.belongsTo(db.user, {
   foreignKey: "userid"
 });
+db.chatroom.hasMany(db.chatlog, {
+  targetKey: "roomid"
+});
 // TODO adding subprojects
 // TODO add table for files belongs to projects
 db.ROLES = ["user", "admin"];

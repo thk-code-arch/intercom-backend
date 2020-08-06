@@ -11,9 +11,6 @@ module.exports = (sequelize, Sequelize) => {
     userid: {
       type: Sequelize.INTEGER
     },
-    roomid: {
-      type: Sequelize.INTEGER
-    },
     time: {
       type: Sequelize.STRING
     }
