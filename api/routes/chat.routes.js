@@ -18,7 +18,7 @@ module.exports = function(app) {
   );
 
   app.get(
-    "/api/chat/get_projectroom/",
+    "/api/chat/get_projectroom/:theprojectId",
     [authJwt.verifyToken, authJwt.isProjectMember],
     controller.getprojectroom
   );

@@ -39,9 +39,11 @@ exports.getProjectinfo = (req, res) => {
   };
 
 exports.getProjectfile = (req, res) => {
+  console.log(req.currProject);
    Projectfile.findAll({
 	limit: 1,
 	where: {
+      projectId: req.currProject
 	},
 	order: [ [ 'createdAt', 'DESC' ]]
   }).then(function(entries){
@@ -49,10 +51,13 @@ exports.getProjectfile = (req, res) => {
     // Check if file specified by the filePath exists 
     fs.exists(filePath, function(exists){
         if (exists) {     
+          const Filelastmodified = entries[0].updatedAt.toUTCString();
+          console.log(Filelastmodified);
           // Content-type is very interesting part that guarantee that
           // Web browser will handle response in an appropriate manner.
           res.writeHead(200, {
-            "Content-Type": "model/gltf+json",
+            "Last-Modified": Filelastmodified,
+            "Content-Type": "model/gltf+json"
           });
           fs.createReadStream(filePath).pipe(res);
         } else {

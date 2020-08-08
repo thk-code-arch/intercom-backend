@@ -29,7 +29,7 @@ app.use(bodyParser.json());
 // hook morganBody to express app (Unlike typical express middleware you're passing the actual app into the function)
 morganBody(app);
 // disable 304 cache
-app.disable('etag');
+app.set('etag', 'strong');
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome." });
@@ -90,11 +90,31 @@ function initial() {
     projectId: newProject.id
     })
     });
+
     Project.create({
         id: 2,
         name: "Koelner-Dom",
         owner: 1
+    }).then((newProject) => {
+    Chatroom.create({
+    name: newProject.name,
+    roomtype: "PROJECT",
+    projectid: newProject.id
     });
+    Chatlog.create({
+      userid : 1,
+      message : "Welcome @ InterCom !",
+      chatroomId : 2,
+      time : new Date().toISOString().slice(0, 19).replace('T', ' ')
+    });
+    return Projectfile.create({
+    filename: "koelner-dom.gltf",
+    path: "/files/",
+    uploadedby: 1,
+    projectId: newProject.id
+    })
+    });
+
   User.create({
     id: 1,
     username: "admin",
@@ -102,6 +122,12 @@ function initial() {
     profile_image: "admin.jpg",
     password: bcrypt.hashSync("123456", 8)
   }).then(user => {
+      Chatlog.create({
+        userid : user.id,
+        message : "Welcome @ InterCom !",
+        chatroomId : 1,
+        time : new Date().toISOString().slice(0, 19).replace('T', ' ')
+      });
         Project.findAll()
 			.then(projects => {
           user.setProjects(projects)

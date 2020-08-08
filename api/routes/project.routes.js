@@ -27,12 +27,12 @@ module.exports = function(app) {
     controller.addProject
   );
   app.get(
-    "/api/project/get_projectfile/",
+    "/api/project/get_projectfile/:theprojectId",
     [authJwt.verifyToken, authJwt.isProjectMember],
     controller.getProjectfile
   );
   app.get(
-    "/api/project/get_projectinfo/",
+    "/api/project/get_projectinfo/:theprojectId",
     [authJwt.verifyToken, authJwt.isProjectMember],
     controller.getProjectinfo
   );

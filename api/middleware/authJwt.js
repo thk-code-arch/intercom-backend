@@ -27,7 +27,7 @@ verifyToken = (req, res, next) => {
 //TODO isProjectMember "check if User is projectmember"
 
 isProjectMember = (req, res, next) => {
-  let currentProjct = req.headers["x-current-project"];
+  let currentProjct = req.params.theprojectId;
   User.findByPk(req.userId).then(user => {
     user.getProjects().then(projects => {
     console.log(currentProjct);
