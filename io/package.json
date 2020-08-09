@@ -16,6 +16,7 @@
     "express": "^4.17.1",
     "mysql": "^2.18.1",
     "mysql2": "^2.1.0",
+    "roomdata": "^1.1.7-b",
     "sequelize": "^6.3.4",
     "socket.io": "^2.3.0",
     "socketio-jwt": "^4.6.2",

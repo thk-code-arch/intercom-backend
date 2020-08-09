@@ -1,4 +1,4 @@
-
+var roomdata = require('roomdata');
 const app = require('express')();
 const server = require('http').createServer(app);
 const io = require("socket.io")(server, {
@@ -27,11 +27,16 @@ io.of('/viewport').use(authorizer);
 
 // TODO add Namespaces with Rooms inside. One Namespace for service. eg viewport,
 // Chatrooms, Notificatios x
-let players = [];
 
+
+//create 100 Player rooms
+let players = [];
+for (var i = 0; i <= 100; ++i) {
+    players[i] =[] ;
+}
+// io.nsps[yourNamespace]sss.adapter.rooms[roomName]
 io.of("/viewport").on("connect", socket => {
   socket.on("new-player", (player, ack) => {
-    console.log(socket);
     player.sID = socket.decoded_token.id;
     User.findOne({
         where: {
@@ -39,23 +44,26 @@ io.of("/viewport").on("connect", socket => {
         }
       })
       .then(user => {
+        socket.join(player.chatroom);
+        console.log(socket);
         player.username = user.username;
         player.profile_image = user.profile_image;
-        players.push(player);
-        io.of("/viewport").emit("list-players", players);
+        players[player.chatroom].push(player);
+        io.of("/viewport").in(player.chatroom).emit("list-players", players[player.chatroom]);
         ack(player);
       });
   });
 
   socket.on("move-to", pos => {
-    players = players.map(obj =>
+    players[pos.chatroom.toString()] = players[pos.chatroom.toString()].map(obj =>
     obj.sID === socket.decoded_token.id ? { ...obj, camPos: pos.position } : obj );
-    io.of("/viewport").emit("list-players", players);
+    io.of("/viewport").in(pos.chatroom).emit("list-players", players[pos.chatroom]);
+    // TODO remove duplicate player by sID, keep last !!!
   });
 
-  socket.on("bye-bye", _ => {
-    players = players.filter(e => e.sID !== socket.decoded_token.id);
-    io.of("/viewport").emit("list-players", players);
+  socket.on("bye-bye", player => {
+    players[player.chatroom] = players[player.chatroom].filter(e => e.sID !== socket.decoded_token.id);
+    io.of("/viewport").in(player.chatroom).emit("list-players", players[player.chatroom]);
   });
 });
 
