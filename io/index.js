@@ -18,10 +18,48 @@ const db = require("./models");
 const User = db.user;
 const Chatlog = db.chatlog;
 
-io.use(socketioJwt.authorize({
+var authorizer = socketioJwt.authorize({
   secret: process.env.IC_Secret,
   handshake: true
-}));
+});
+io.use(authorizer);
+io.of('/viewport').use(authorizer);
+
+// TODO add Namespaces with Rooms inside. One Namespace for service. eg viewport,
+// Chatrooms, Notificatios x
+let players = [];
+
+io.of("/viewport").on("connect", socket => {
+  socket.on("new-player", (player, ack) => {
+    console.log(socket);
+    player.sID = socket.decoded_token.id;
+    User.findOne({
+        where: {
+          id: socket.decoded_token.id
+        }
+      })
+      .then(user => {
+        player.username = user.username;
+        player.profile_image = user.profile_image;
+        players.push(player);
+        io.of("/viewport").emit("list-players", players);
+        ack(player);
+      });
+  });
+
+  socket.on("move-to", pos => {
+    players = players.map(obj =>
+    obj.sID === socket.decoded_token.id ? { ...obj, camPos: pos.position } : obj );
+    io.of("/viewport").emit("list-players", players);
+  });
+
+  socket.on("bye-bye", _ => {
+    players = players.filter(e => e.sID !== socket.decoded_token.id);
+    io.of("/viewport").emit("list-players", players);
+  });
+});
+
+
 
 
 io.on('connection', (socket) => {
@@ -51,6 +89,6 @@ io.on('connection', (socket) => {
       io.emit('usercamPos', data);
     });
 });
-//TODO implement second rountrip to improve security
-//TODO implement jwt expire check
+// TODO implement second rountrip to improve security
+// TODO implement jwt expire check
 server.listen(3000);
