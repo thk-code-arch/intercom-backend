@@ -28,9 +28,9 @@ io.of('/chatroom').use(authorizer);
 
 
 // TODO add Namespaces with Rooms inside. One Namespace for service. eg viewport,
-//test
+//1ss1sstest
 
-//create 100 Player rooms
+//crsseate 100 Player rooms
 let players = [];
 for (var i = 0; i <= 100; ++i) {
     players[i] =[] ;
@@ -66,14 +66,15 @@ var chatroom = io.of("/chatroom");
 chatroom.on('connection', (socket) => {
     console.log("Connect NSP/chatroom UserID:",socket.decoded_token.id) //init
     socket.on('join_chatroom', function(room) {
-        console.log("wants room to join:",room);
-        socket.join(room);
+      socket.leave(room.oldRoom);
+      socket.join(room.newRoom);
+      console.log("user joins:",socket.rooms);
     });
     socket.on('send_message', function(data) {
       console.log(data);
       data.userid = socket.decoded_token.id;
       data.time = new Date().toISOString().slice(0, 19).replace('T', ' ');
-      // TODO check if User is allowed to post data in room
+      // TODO check if User is allowed to post data in room.
       if (data.chatroomId !== 0){
       Chatlog.create(data).then(result =>{
         chatroom.in(data.chatroomId).emit('message', result.id);
@@ -83,7 +84,7 @@ chatroom.on('connection', (socket) => {
 });
 
 
-// TODO implement second rountrip to improve security
+// TODO implement second rountrip to improve security,
 // TODO implement jwt expire check
 
 server.listen(3000, function() {
