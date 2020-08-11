@@ -82,42 +82,6 @@ chatroom.on('connection', (socket) => {
     });
 });
 
-// ssjjjdelete sishsksthis namespacse
-// io.nsps[yourNamespace]sss.adapter.rooms[roomName]
-//io.of("/deletethis").on("connect", socket => {
-//  socket.on("new-player", (player, ack) => {
-//    player.sID = socket.decoded_token.id;
-//    User.findOne({
-//        where: {
-//          id: socket.decoded_token.id
-//        }
-//      })
-//      .then(user => {
-//        socket.join(player.chatroom);
-//        console.log(socket);
-//        player.username = user.username;
-//        player.profile_image = user.profile_image;
-//        players[player.chatroom].push(player);
-//        io.of("/viewport").in(player.chatroom).emit("list-players", players[player.chatroom]);
-//        ack(player);
-//      });
-//  });
-//
-//  socket.on("move-to", pos => {
-//    players[pos.chatroom.toString()] = players[pos.chatroom.toString()].map(obj =>
-//    obj.sID === socket.decoded_token.id ? { ...obj, camPos: pos.position } : obj );
-//    io.of("/viewport").in(pos.chatroom).emit("list-players", players[pos.chatroom]);
-//    // TODO remove duplicate player by sID, keep last !!!
-//  });
-//
-//  socket.on("bye-bye", player => {
-//    players[player.chatroom] = players[player.chatroom].filter(e => e.sID !== socket.decoded_token.id);
-//    io.of("/viewport").in(player.chatroom).emit("list-players", players[player.chatroom]);
-//  });
-//});
-
-//
-
 
 // TODO implement second rountrip to improve security
 // TODO implement jwt expire check

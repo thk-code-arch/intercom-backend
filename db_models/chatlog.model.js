@@ -6,7 +6,7 @@ module.exports = (sequelize, Sequelize) => {
       primaryKey: true
     },
     message: {
-      type: Sequelize.STRING
+      type: Sequelize.TEXT
     },
     userid: {
       type: Sequelize.INTEGER
