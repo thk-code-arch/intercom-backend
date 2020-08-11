@@ -10,11 +10,17 @@ module.exports = function(app) {
     next();
   });
 
-
+// TODO lock chatroutes by checkin isChatmember
   app.get(
-    "/api/chat/log/",
+    "/api/chat/log/:chatroomid",
     [authJwt.verifyToken],
     controller.chatlog
+  );
+
+  app.get(
+    "/api/chat/msgbyid/:msgid",
+    [authJwt.verifyToken],
+    controller.msgbyid
   );
 
   app.get(

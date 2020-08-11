@@ -28,8 +28,7 @@ io.of('/chatroom').use(authorizer);
 
 
 // TODO add Namespaces with Rooms inside. One Namespace for service. eg viewport,
-// Chatrooms, Notificatios x
-
+//test
 
 //create 100 Player rooms
 let players = [];
@@ -38,7 +37,7 @@ for (var i = 0; i <= 100; ++i) {
 }
 
 //new NSP
-//sjjss
+//kskkskssjjss
 
 
 var viewport = io.of("/viewport");
@@ -66,28 +65,24 @@ viewport.on('connection', function(socket) {
 var chatroom = io.of("/chatroom");
 chatroom.on('connection', (socket) => {
     console.log("Connect NSP/chatroom UserID:",socket.decoded_token.id) //init
+    socket.on('join_chatroom', function(room) {
+        console.log("wants room to join:",room);
+        socket.join(room);
+    });
     socket.on('send_message', function(data) {
-      data.userid = socket.decoded_token.id;
-      data.chatroomId = 1,
-      data.time = new Date().toISOString().slice(0, 19).replace('T', ' ');
       console.log(data);
-      Chatlog.create(data);
-      User.findOne({
-        where: {
-          id: socket.decoded_token.id
-        }
-      })
-      .then(user => {
-        console.log("Userid found");
-        data.username = user.username;
-        data.profile_image = user.profile_image;
-        console.log(data);
-        chatroom.emit('message', data);
+      data.userid = socket.decoded_token.id;
+      data.time = new Date().toISOString().slice(0, 19).replace('T', ' ');
+      // TODO check if User is allowed to post data in room
+      if (data.chatroomId !== 0){
+      Chatlog.create(data).then(result =>{
+        chatroom.in(data.chatroomId).emit('message', result.id);
       });
+      }
     });
 });
 
-// ssjjjdelete this namespace
+// ssjjjdelete sishsksthis namespacse
 // io.nsps[yourNamespace]sss.adapter.rooms[roomName]
 //io.of("/deletethis").on("connect", socket => {
 //  socket.on("new-player", (player, ack) => {
