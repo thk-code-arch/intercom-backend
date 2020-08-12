@@ -30,6 +30,15 @@ io.of('/chatroom').use(authorizer);
 
 var viewport = io.of("/viewport");
 viewport.on('connection', function(socket) {
+  User.findOne({
+    where: {
+      id: socket.decoded_token.id
+    }
+    })
+    .then(user => {
+      socket.userName = user.username;
+      socket.userImage = user.profile_image;
+    });
   console.log("Connect NSP/viewport UserID:",socket.decoded_token.id)//init
   socket.on('join_viewport',  function(room) {
     if (room.oldRoom !== 0){
@@ -39,16 +48,17 @@ viewport.on('connection', function(socket) {
     console.log("/viewport user joins:",socket.rooms);
   });
   socket.on('moveTo', function(data){
-    console.log(io.of('/viewport').clients(data.chatroomId));
-    //players[pos.chatroom.toString()] = players[pos.chatroom.toString()].map(obj =>
-    //obj.sID === socket.decoded_token.id ? { ...obj, camPos: pos.position } : obj );
+    data.userid = socket.decoded_token.id;
+    data.username = socket.userName;
+    data.profile_image = socket.userImage;
+    console.log(data);
 	if (data.chatroomId !== 0){
-	  chatroom.in(data.chatroomId).emit('getpositions', data.position);
+	  viewport.in(data.chatroomId).emit('getplayers', data);
 	}
-    // TODO remove duplicate player by sID, keep last !!!
   });
 
   socket.on('disconnect', function(){
+    // TODO emit disconnet message to Viewport NSP
     //nsp.emit("chat message", name+": disconnection");
   });
 });

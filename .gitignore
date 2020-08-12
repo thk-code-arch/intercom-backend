@@ -1,0 +1,5 @@
+api/node_modules/
+io/node_modules/
+db/
+files/
+docker-compose.yml
