@@ -18,7 +18,7 @@ module.exports = function(app) {
   );
 
   app.post(
-    "/api/uploadifc",
+    "/api/uploadifc/:theprojectId",
     [authJwt.verifyToken, authJwt.isProjectMember],
     controller.uploadIFC
   );
