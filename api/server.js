@@ -157,4 +157,22 @@ function initial() {
           user.setRoles(roles)
         });
 });
+  User.create({
+    id: 3,
+    username: "steffen",
+    email: "steffen@bim-cloud.org",
+    profile_image: "steffen.jpg",
+    password: bcrypt.hashSync("123456", 8)
+  })
+    .then(user => {
+        Project.findAll()
+			.then(projects => {
+          user.setProjects(projects)
+        });
+        Role.findAll({
+            where: {name: "user"}
+        }).then(roles => {
+          user.setRoles(roles)
+        });
+});
 }
