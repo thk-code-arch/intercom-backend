@@ -3,6 +3,8 @@ const db = require("../models");
 const User = db.user;
 const Project = db.project;
 const Projectfile = db.projectfile;
+const Chatroom = db.chatroom;
+const Chatlog = db.chatlog;
 
 exports.getProjects = (req, res) => {
   var userprojects = [];
@@ -98,6 +100,19 @@ exports.addProject = (req, res) => {
         owner: req.userId,
     })
     .then(project => {
+    Chatroom.create({
+    name: project.name,
+    roomtype: "PROJECT",
+    projectid: project.id
+    })
+    .then(chatroom => {
+    Chatlog.create({
+      userid : 1,
+      message : "Welcome @ InterCom !",
+      chatroomId : chatroom.id,
+      time : new Date().toISOString().slice(0, 19).replace('T', ' ')
+    })
+    });
     User.findByPk(req.userId).then(user => {
     user.addProjects(project)
     });
