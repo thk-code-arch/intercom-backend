@@ -4,6 +4,7 @@ const User = db.user;
 const Role = db.role;
 const Chatroom = db.chatroom;
 const Project = db.project;
+var mail = require('../mail/mail.service');
 var generator = require('generate-password');
 
 var jwt = require("jsonwebtoken");
@@ -11,7 +12,7 @@ var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
   // Save User to Database
-  var SafePassword = generator.generate({length: 10,numbers:true,symbols:true});
+  var SafePassword = generator.generate({length: 10,numbers:true});
   User.create({
     username: req.body.username,
     email: req.body.email,
@@ -30,6 +31,7 @@ exports.signup = (req, res) => {
           }).then(roles => {
           user.setRoles(roles).then(() => {
             console.log(SafePassword);
+            mail.sendMail(req.body.email,"InterCom:New User registered","Welcome "+req.body.username+", your password is: "+SafePassword);
             res.send({ message: "Registred. Check your Mails" });
           });
         });
