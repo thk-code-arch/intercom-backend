@@ -44,7 +44,6 @@ exports.uploadIFC = (req, res) => {
             //Use the mv() method to place the file in upload directory (i.e.
             console.log(filename);
             project.mv('/files/input/' + filename);
-            var outFilename = "/files/output/"+file+".gltf"
             var outLogfile = "files/output/"+file+".log"
             Projectfile.create({
               filename: file+".gltf",

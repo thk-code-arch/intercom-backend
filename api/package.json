@@ -21,6 +21,7 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.7-alpha.4",
+    "generate-password": "^1.5.1",
     "jsonwebtoken": "^8.5.1",
     "morgan-body": "^2.4.14",
     "mysql2": "^2.1.0",
