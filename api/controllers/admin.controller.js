@@ -21,7 +21,7 @@ exports.getProjects = (req, res) => {
     where: {
     },
   attributes: ["id","name","description","owner","createdAt"],
-  include: [{model: db.user, attributes: ["username"]}]
+    include: [{model: db.user, attributes: ["username"]}]
   }).then(entries => {
     res.status(200).json(entries)
   });
