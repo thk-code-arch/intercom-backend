@@ -3,26 +3,10 @@ const db = require("./models");
 const Role = db.role;
 const User = db.user;
 const Project = db.project;
-const Projectfile = db.projectfile;
 const Chatlog = db.chatlog;
 const Chatroom = db.chatroom;
+const sequelize_fixtures = require('sequelize-fixtures');
 
-
-var demochatrooms = [
-  {id:1, name: "General",roomtype: "PUBLIC", description:"entrance hall"},
-  {id:2, name: "CODE ARCH",roomtype: "PUBLIC", description:"dev"},
-  {id:3, name: "OffTopic",roomtype: "PUBLIC", description:"chitchat"},
-  {id:4, name: "InterACT",roomtype: "PROJECT", projectid:1, description:"Project chat"},
-  {id:5, name: "Haus",roomtype: "PROJECT", projectid:2, description:"Project chat"}
-];
-var demoprojects = [
-  {id:1,name: "InterACT",owner:1, description:"InterACT project description"},
-  {id:2,name: "Haus",owner:1, description:"Haus project description"}
-];
-var demoprojectfiles = [
-  {id:1, filename: "interact.gltf",path: "/files/", uploadedby: 1, projectId:1},
-  {id:2, filename: "koelner-dom.gltf",path: "/files/", uploadedby: 1, projectId:2}
-];
 var demoadmins = [
   {id:1, username:"admin",email:"admin@bim-cloud.org",profile_image:"admin.jpg",password: bcrypt.hashSync("123456", 8)},
   {id:2, username:"steffen",email:"steffen@bim-cloud.org",profile_image:"steffen.jpg",password: bcrypt.hashSync("123456", 8)},
@@ -34,24 +18,8 @@ var demousers = [
 
 module.exports = {
   initial: function () {
-  Role.create({
-    id: 1,
-    name: "user"
-  });
-  Role.create({
-    id: 2,
-    name: "admin"
-  });
-// dev only adding DEMO data
-    Chatroom.bulkCreate(demochatrooms)
-      .then(() => {
-
-  console.log('\x1b[33m%s\x1b[0m',"step 1");
-    Project.bulkCreate(demoprojects)
-  console.log('\x1b[33m%s\x1b[0m',"step2. demoprojects found",demoprojects.length);
-      }).then(() => {
-    Projectfile.bulkCreate(demoprojectfiles)
-      }).then(() => {
+    sequelize_fixtures.loadFile('fixtures/*.json', db).then(function () {
+    console.dir("DEV DATA CREATED SUCCESSFULLY");
     User.bulkCreate(demoadmins).then(() => {
       User.findAll({where: {username: "admin"}}).then(user =>{
    console.log('\x1b[33m%s\x1b[0m',"step4. adding admins",user.length);
@@ -61,7 +29,6 @@ module.exports = {
           });
         }
       });
-    })
     }).then(() => {
     User.bulkCreate(demousers).then(() => {
       User.findAll().then(user =>{
@@ -92,6 +59,7 @@ module.exports = {
         }
       });
     })
+});
 }
 }
 

@@ -53,7 +53,7 @@ var dbdemodata = require('./db.demo.data');
 const db = require("./models");
 //test db
 db.sequelize.sync(
-//{force: true}
+{force: true}
 
 ).then(() => {
   console.log('Drop and Resync Db');

@@ -1,0 +1,84 @@
+[
+{
+  "model": "role",
+  "data": {
+    "id": 1,
+    "name": "user"
+  }
+},
+{
+  "model": "role",
+  "data": {
+    "id": 2,
+    "name": "admin"
+  }
+},
+{
+  "model": "project",
+  "data": {
+    "id": 1,
+    "name": "InterACT",
+    "owner": 1,
+    "description": "Interact project desc."
+  }
+},
+{
+  "model": "project",
+  "data": {
+    "id": 2,
+    "name": "Haus",
+    "owner": 1,
+    "description": "Haus project desc."
+  }
+},
+{
+  "model": "projectfile",
+  "data": {
+    "id": 1,
+    "filename": "interact.gltf",
+    "path": "/files/",
+    "uploadedby": 1,
+    "projectId": 1
+  }
+},
+{
+  "model": "projectfile",
+  "data": {
+    "id": 2,
+    "filename": "koelner-dom.gltf",
+    "path": "/files/",
+    "uploadedby": 1,
+    "projectId": 2
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":1, "name": "General","roomtype": "PUBLIC", "description":"entrance hall"
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":2, "name": "CODE ARCH","roomtype": "PUBLIC", "description":"talk"
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":3, "name": "OffTopic","roomtype": "PUBLIC", "description":"chitchat"
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":4, "name": "InterAct","roomtype": "PROJECT", "description":"Project chat"
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":5, "name": "Haus","roomtype": "PROJECT", "description":"Project Chat"
+  }
+}
+]
