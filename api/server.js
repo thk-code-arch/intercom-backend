@@ -43,6 +43,7 @@ require('./routes/admin.routes')(app);
 require('./routes/file.routes')(app);
 require('./routes/project.routes')(app);
 require('./routes/chat.routes')(app);
+require('./routes/projectview.routes')(app);
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
