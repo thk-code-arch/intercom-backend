@@ -15,7 +15,7 @@ var demousers = [
   {id:3, username:"demo",email:"demo@bim-cloud.org",profile_image:"demo.jpg",password: bcrypt.hashSync("123456", 8)},
   {id:4, username:"student",email:"student@bim-cloud.org",profile_image:"student.jpg",password: bcrypt.hashSync("123456", 8)},
 ];
-
+//init
 module.exports = {
   initial: function () {
     sequelize_fixtures.loadFile('fixtures/*.json', db).then(function () {

@@ -7,6 +7,7 @@ exports.listviews = (req, res) => {
       projectId: req.currProject
     },
   attributes: ["id","camPos","description","projectId","createdAt","uploadedby"],
+  order: [ [ 'createdAt', 'DESC' ]]
   }).then(views => {
     res.status(200).json(views)
   });
@@ -24,6 +25,7 @@ exports.addview = (req, res) => {
           projectId: req.currProject
         },
       attributes: ["id","camPos","description","projectId","createdAt","uploadedby"],
+	  order: [ [ 'createdAt', 'DESC' ]]
       }).then(views => {
         res.status(200).json(views)
       });

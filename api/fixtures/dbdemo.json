@@ -72,13 +72,13 @@
 {
   "model": "chatroom",
   "data": {
-  "id":4, "name": "InterAct","roomtype": "PROJECT", "description":"Project chat"
+  "id":4, "name": "InterAct","roomtype": "PROJECT", "description":"Project chat", "projectid":1
   }
 },
 {
   "model": "chatroom",
   "data": {
-  "id":5, "name": "Haus","roomtype": "PROJECT", "description":"Project Chat"
+  "id":5, "name": "Haus","roomtype": "PROJECT", "description":"Project Chat", "projectid":2
   }
 }
 ]
