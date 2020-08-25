@@ -1,18 +1,34 @@
 const db = require("../models");
-const User = db.user;
-const Chatlog = db.chatlog;
-const Chatroom = db.chatroom;
+const Learning = db.learning;
 
-exports.chatlog = (req, res) => {
-   Chatroom.findOne({
-	where: { id: req.params.chatroomid
-	},
-    include: [{// Notice `include` takes an ARRAY
-    model: db.chatlog, attributes: ["message","time"] , required: true,
-    include: [{model: db.user, attributes: ["username","profile_image"]}]
-    }]
-  }).then(function(entries){
-    res.status(200).json(entries)
-    });
+exports.addLearning = (req, res) => {
+  Learning.create({
+    category: req.body.category,
+    url: req.body.url,
+    thumbnail: req.body.thumbnail,
+    title:req.body.title,
+    description:req.body.description,
+    type: req.body.type,
+    projectId: req.body.projectId,
+    userId: req.userId
+  }).then(post=>{
+    res.status(200).json(post)
+  });
 };
-// TODO fix search for msgid
+
+exports.listAllPublic = (req, res) => {
+  Learning.findAll({
+    where: { type: "PUBLIC"}
+  }).then(entries =>{
+    res.status(200).json(entries)
+  })
+};
+
+exports.showOne = (req, res) => {
+  Learning.findOne({
+    where: { id: req.params.id}
+  }).then(entries =>{
+    Learning.increment({views: 1}, { where: { id: entries.id }});
+    res.status(200).json(entries)
+  })
+};

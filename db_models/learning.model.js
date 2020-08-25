@@ -10,11 +10,14 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     },
     url: {
+      type: Sequelize.STRING(4000)
+    },
+    thumbnail: {
       type: Sequelize.STRING
     },
     title: {
     //user added description
-      type: Sequelize.STRING
+      type: Sequelize.STRING(400)
     },
     description: {
     //user added description
@@ -25,6 +28,10 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING
     },
     projectId: {
+    // when project related
+      type: Sequelize.INTEGER
+    },
+    views: {
     // when project related
       type: Sequelize.INTEGER
     }

@@ -1,5 +1,5 @@
 const { authJwt } = require("../middleware");
-const controller = require("../controllers/chat.controller");
+const controller = require("../controllers/learning.controller");
 
 module.exports = function(app) {
   app.use(function(req, res, next) {
@@ -10,28 +10,22 @@ module.exports = function(app) {
     next();
   });
 
-// TODO lock chatroutes by checkin isChatmember
-  app.get(
-    "/api/chat/log/:chatroomid",
+  app.post(
+    "/api/learning/add",
     [authJwt.verifyToken],
-    controller.chatlog
+    controller.addLearning
   );
 
   app.get(
-    "/api/chat/msgbyid/:msgid",
+    "/api/learning/public",
     [authJwt.verifyToken],
-    controller.msgbyid
+    controller.listAllPublic
   );
 
   app.get(
-    "/api/chat/get_projectroom/:theprojectId",
-    [authJwt.verifyToken, authJwt.isProjectMember],
-    controller.getprojectroom
-  );
-  app.get(
-    "/api/chat/get_chatrooms",
+    "/api/learning/show/:learningId",
     [authJwt.verifyToken],
-    controller.getchatrooms
+    controller.showOne
   );
 };
 
