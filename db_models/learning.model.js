@@ -33,7 +33,8 @@ module.exports = (sequelize, Sequelize) => {
     },
     views: {
     // when project related
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
+      defaultValue: 1
     }
   });
 

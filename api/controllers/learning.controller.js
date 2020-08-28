@@ -26,7 +26,7 @@ exports.listAllPublic = (req, res) => {
 
 exports.showOne = (req, res) => {
   Learning.findOne({
-    where: { id: req.params.id}
+    where: { id: req.params.learningId}
   }).then(entries =>{
     Learning.increment({views: 1}, { where: { id: entries.id }});
     res.status(200).json(entries)
