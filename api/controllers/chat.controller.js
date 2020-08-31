@@ -35,3 +35,15 @@ exports.getprojectroom = (req, res) => {
     res.status(200).json(entries)
     });
 };
+
+exports.getchatrooms = (req, res) => {
+  User.findOne({
+    where: {
+      id: req.userId
+    },
+  attributes: ["id","username"],
+  include: [{model: db.chatroom, attributes: ["id","roomtype","name","description"]}]
+  }).then(users => {
+    res.status(200).json(users)
+  });
+};

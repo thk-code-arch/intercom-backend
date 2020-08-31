@@ -15,5 +15,25 @@ module.exports = function(app) {
     [authJwt.verifyToken, authJwt.isAdmin],
     controller.getUsers
   );
+  app.get(
+    "/api/admin/get_projects",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.getProjects
+  );
+  app.get(
+    "/api/admin/get_chatrooms",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.getChatrooms
+  );
+  app.post(
+    "/api/admin/rm_role/:therole/:theuserid",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.rmRole
+  );
+  app.post(
+    "/api/admin/add_role/:therole/:theuserid",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    controller.addRole
+  );
 };
 

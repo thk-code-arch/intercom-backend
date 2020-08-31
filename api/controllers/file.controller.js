@@ -1,3 +1,5 @@
+const db = require("../models");
+const Projectfile = db.projectfile;
 exports.uploadFile = (req, res) => {
     try {
         if(!req.files) {
@@ -42,14 +44,14 @@ exports.uploadIFC = (req, res) => {
             //Use the mv() method to place the file in upload directory (i.e.
             console.log(filename);
             project.mv('/files/input/' + filename);
-            var outFilename = "/files/output/"+file+".gltf"
-            var outLogfile = "/files/output/"+file+".log"
+            var outLogfile = "files/output/"+file+".log"
             Projectfile.create({
               filename: file+".gltf",
               path: "/files/output/",
               uploadedby: req.userId,
               projectId: req.currProject
               });
+              console.log("errro");
             res.send({
             status: true,
             message: 'File is uploaded',

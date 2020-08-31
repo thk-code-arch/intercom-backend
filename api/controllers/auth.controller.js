@@ -2,38 +2,39 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
 const Role = db.role;
-
-const Op = db.Sequelize.Op;
+const Chatroom = db.chatroom;
+const Project = db.project;
+var mail = require('../mail/mail.service');
+var generator = require('generate-password');
 
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
   // Save User to Database
+  var SafePassword = generator.generate({length: 10,numbers:true});
   User.create({
     username: req.body.username,
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
+    password: bcrypt.hashSync(SafePassword, 8),
+    profile_image: "notset.jpg"
   })
     .then(user => {
-      if (req.body.roles) {
-        Role.findAll({
-          where: {
-            name: {
-              [Op.or]: req.body.roles
-            }
-          }
-        }).then(roles => {
+        Chatroom.findAll().then(rooms =>{
+          user.addChatrooms(rooms)
+        });
+        Project.findAll().then(proj =>{
+          user.addProjects(proj)
+        });
+        Role.findOne({
+          where: { name: "user"}
+          }).then(roles => {
           user.setRoles(roles).then(() => {
-            res.send({ message: "User was registered successfully!" });
+            console.log(SafePassword);
+            mail.sendMail(req.body.email,"InterCom:New User registered","Welcome "+req.body.username+", your password is: "+SafePassword);
+            res.send({ message: "Registred. Check your Mails" });
           });
         });
-      } else {
-        // user role = 1
-        user.setRoles([1]).then(() => {
-          res.send({ message: "User was registered successfully!" });
-        });
-      }
     })
     .catch(err => {
       res.status(500).send({ message: err.message });

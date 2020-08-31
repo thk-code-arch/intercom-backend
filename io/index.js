@@ -58,6 +58,8 @@ viewport.on('connection', function(socket) {
   });
 
   socket.on('disconnect', function(){
+    socket.disconnect();
+    console.log("Viewport: Client disconnected");
     // TODO emit disconnet message to Viewport NSP
     //nsp.emit("chat message", name+": disconnection");
   });
@@ -86,6 +88,8 @@ chatroom.on('connection', (socket) => {
     }
   });
   socket.on('disconnect', function(){
+    socket.disconnect();
+    console.log("Chatroom: Client disconnected");
     //nsp.emit("chat message", name+": disconnection");
   });
 });

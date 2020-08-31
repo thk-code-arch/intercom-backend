@@ -6,7 +6,6 @@ const User = db.user;
 verifyToken = (req, res, next) => {
   let token = req.headers["x-access-token"];
 
-//TODO get currentproject
   if (!token) {
     return res.status(403).send({
       message: "No token provided!"
@@ -24,7 +23,6 @@ verifyToken = (req, res, next) => {
   });
 };
 
-//TODO isProjectMember "check if User is projectmember"
 
 isProjectMember = (req, res, next) => {
   let currentProjct = req.params.theprojectId;

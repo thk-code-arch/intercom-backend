@@ -1,0 +1,102 @@
+[
+{
+  "model": "role",
+  "data": {
+    "id": 1,
+    "name": "user"
+  }
+},
+{
+  "model": "role",
+  "data": {
+    "id": 2,
+    "name": "admin"
+  }
+},
+{
+  "model": "project",
+  "data": {
+    "id": 1,
+    "name": "InterACT",
+    "owner": 1,
+    "description": "Interact project desc."
+  }
+},
+{
+  "model": "project",
+  "data": {
+    "id": 2,
+    "name": "Haus",
+    "owner": 1,
+    "description": "Haus project desc."
+  }
+},
+{
+  "model": "projectfile",
+  "data": {
+    "id": 1,
+    "filename": "interact.gltf",
+    "path": "/files/",
+    "uploadedby": 1,
+    "projectId": 1
+  }
+},
+{
+  "model": "projectfile",
+  "data": {
+    "id": 2,
+    "filename": "koelner-dom.gltf",
+    "path": "/files/",
+    "uploadedby": 1,
+    "projectId": 2
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":1, "name": "General","roomtype": "PUBLIC", "description":"entrance hall"
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":2, "name": "CODE ARCH","roomtype": "PUBLIC", "description":"talk"
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":3, "name": "OffTopic","roomtype": "PUBLIC", "description":"chitchat"
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":4, "name": "InterAct","roomtype": "PROJECT", "description":"Project chat", "projectid":1
+  }
+},
+{
+  "model": "chatroom",
+  "data": {
+  "id":5, "name": "Haus","roomtype": "PROJECT", "description":"Project Chat", "projectid":2
+  }
+},
+{
+  "model": "learning",
+  "data": {
+  "id":1, "category": "Video","url": "https://www.youtube.com/watch?v=fiUr9B2yKiI", "thumbnail":"https://dev.icapi.bim-cloud.org/files/cached/1598471363.jpg", "title":"Revit Beginner Tutorial - Floor plan (part 1)", "description":"Complete 16h Revit Beginner Course", "type":"PUBLIC", "views":2
+  }
+},
+{
+  "model": "learning",
+  "data": {
+  "id":2, "category": "Video","url": "https://www.youtube.com/watch?v=6JiNA_ynAD0", "thumbnail":"https://dev.icapi.bim-cloud.org/files/cached/1598472136.jpg", "title":"190430 Tutorium 1A RasterEbenen", "description":"Revit, Tutorial NO.1", "type":"PUBLIC", "views":32
+  }
+},
+{
+  "model": "learning",
+  "data": {
+  "id":3, "category": "Video","url": "https://vimeo.com/61214892", "thumbnail":"https://dev.icapi.bim-cloud.org/files/cached/1598472360.jpg", "title":"BIM/revit", "description":"This is BIM/revit by will morris on Vimeo, the home for high quality videos and the people who love them.", "type":"PUBLIC", "views":3
+  }
+}
+]

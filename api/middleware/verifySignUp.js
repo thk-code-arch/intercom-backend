@@ -34,22 +34,9 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
   });
 };
 
-checkRolesExisted = (req, res, next) => {
-  if (req.body.roles) {
-    for (let i = 0; i < req.body.roles.length; i++) {
-      if (!ROLES.includes(req.body.roles[i])) {
-        res.status(400).send({
-          message: "Failed! Role does not exist = " + req.body.roles[i]
-        });
-        return;
-      }
-    }
-  }
-  next();
-};
-//TODO  invitecode for register
+//TODO  invitecode for register add Invite to DB and admin Backend
 checkInviteCode = (req, res, next) => {
-  if (req.body.invitecode != "test" ) {
+  if (req.body.invitecode != "code-arch" ) {
         res.status(400).send({
           message: "Failed! InviteCode wrong"
         });
@@ -60,7 +47,6 @@ checkInviteCode = (req, res, next) => {
 const verifySignUp = {
   checkDuplicateUsernameOrEmail: checkDuplicateUsernameOrEmail,
   checkInviteCode: checkInviteCode,
-  checkRolesExisted: checkRolesExisted
 };
 
 module.exports = verifySignUp;

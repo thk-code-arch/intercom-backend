@@ -1,23 +1,26 @@
 module.exports = (sequelize, Sequelize) => {
-  const Chatroom = sequelize.define("chatroom", {
+  const Projectres = sequelize.define("projectresources", {
     id: {
       type: Sequelize.INTEGER,
       autoIncrement: true,
       primaryKey: true
     },
-    name: {
+    category: {
+    // Link, File, ...
+      type: Sequelize.STRING
+    },
+    url: {
       type: Sequelize.STRING
     },
     description: {
+    //user added description
       type: Sequelize.STRING
     },
-    projectid: {
+    addedby: {
+    // uploaded by user id
       type: Sequelize.INTEGER
-    },
-    roomtype: {
-      type: Sequelize.STRING
     }
   });
 
-  return Chatroom;
+  return Projectres;
 };
