@@ -6,8 +6,12 @@ OUTPUTDIR="/files/output"
 inotifywait -m -e moved_to -e create "$MONITORDIR" --format "%f" | while read f
 do
 	mv "${MONITORDIR}/${f}" "${OUTPUTDIR}/${f}"
-	echo "Converting IFC to DAE" | tee "${OUTPUTDIR}/${f%.*}.log"
-	IfcConvert -v -y --use-element-guids "${OUTPUTDIR}/${f%.*}.ifc" "${OUTPUTDIR}/${f%.*}.dae" | tee -a "${OUTPUTDIR}/${f%.*}.log"
+	echo "Start convert:" | tee "${OUTPUTDIR}/${f%.*}.log"
+	if [ "${f}" == "*.ifc" ]
+	then
+		echo "Converting IFC to DAE" | tee -a "${OUTPUTDIR}/${f%.*}.log"
+		IfcConvert -v -y --use-element-guids "${OUTPUTDIR}/${f%.*}.ifc" "${OUTPUTDIR}/${f%.*}.dae" | tee -a "${OUTPUTDIR}/${f%.*}.log"
+	fi
 	echo "Converting DAE to glTF" | tee -a "${OUTPUTDIR}/${f%.*}.log"
 	COLLADA2GLTF -v -i "${OUTPUTDIR}/${f%.*}.dae" -o "${OUTPUTDIR}/${f%.*}.gltf" | tee -a "${OUTPUTDIR}/${f%.*}.log"
 	rm "${OUTPUTDIR}/${f%.*}.ifc"
