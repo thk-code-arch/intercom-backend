@@ -33,3 +33,16 @@ services:
       - ./files:/files
 
 ```
+## Backend
+### Generell
+  - [x] Authentifizierung
+  - [x] Anbindung Datenbank
+  - [x] Anbindung Mailversand
+  - [x] FileUpload
+  - [x] Socketserver
+  - [ ] Anbindung externer APIs
+    - [x] Fetch Video description
+  - [ ] API Umstellung auf NestJS Framework (Vorteile: Security,Modular)
+### IFC Loader
+  - [x] Konvertierung von IFC zu GLTF ueber Skripte
+  - [ ] Anbindung IFC-Model checker (Jakob Beetz, RWTH Aachen)
