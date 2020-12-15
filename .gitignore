@@ -4,3 +4,4 @@ io/node_modules/
 /db/
 files/
 docker-compose.yml
+secrets.env
