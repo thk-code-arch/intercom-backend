@@ -8,6 +8,7 @@ async function bootstrap() {
   );
   app.useStaticAssets('/files', {prefix: '/files'});
   app.useStaticAssets('/files/static', {prefix: '/static'});
+  app.setGlobalPrefix('api');
   await app.listen(3000);
 }
 bootstrap();
