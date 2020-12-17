@@ -29,7 +29,6 @@
     "@nestjs/typeorm": "^7.1.5",
     "@types/passport": "^1.0.4",
     "@types/passport-jwt": "^3.0.3",
-    "mysql": "^2.18.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",

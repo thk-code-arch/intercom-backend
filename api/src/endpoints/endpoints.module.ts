@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+
 import { AdminService } from './admin/admin.service';
 import { ChatService } from './chat/chat.service';
 import { FetchService } from './fetch/fetch.service';
@@ -20,8 +22,11 @@ import { MaintenanceController } from './maintenance/maintenance.controller';
 import { ProjectController } from './project/project.controller';
 import { ViewController } from './view/view.controller';
 import { UserController } from './user/user.controller';
+
+import { User } from '../db/models/user.entity';
+
 @Module({
-	imports: [AuthModule],
+	imports: [AuthModule,TypeOrmModule.forFeature([User])],
   providers: [AdminService,  ChatService, FetchService, FileService,LoginService, LearningService, MaintenanceService, ProjectService, ViewService, UserService],
   controllers: [AdminController, LoginController , ChatController, FetchController, FileController, LearningController, MaintenanceController, ProjectController, ViewController, UserController],
 	exports: [LoginService]

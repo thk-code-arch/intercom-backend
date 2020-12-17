@@ -5,10 +5,10 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column("varchar", { length: 320 })
   username: string;
 
-  @Column()
+  @Column("varchar", { length: 320 })
   email: string;
 
   @Column()
