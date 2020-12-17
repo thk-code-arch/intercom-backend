@@ -18,6 +18,7 @@ export class UserService {
   }
 
   async create(userDto: CreateUserDto): Promise<UserDto> {
+
     const { username, password, email } = userDto;
 
     // check if the user exists in the db
