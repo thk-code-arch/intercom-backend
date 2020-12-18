@@ -26,7 +26,7 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('JWT')
   @Get('profile')
   getProfile(@Request() req) {
     return req.user;

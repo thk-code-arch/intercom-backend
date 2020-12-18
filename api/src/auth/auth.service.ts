@@ -32,7 +32,8 @@ export class AuthService {
     };
 
     try {
-      await this.userService.signup(createuserDto);
+      let res = await this.userService.signup(createuserDto, false);
+      console.log(res);
     } catch (err) {
       status = {
         success: false,
