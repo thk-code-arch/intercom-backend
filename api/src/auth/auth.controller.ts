@@ -2,9 +2,8 @@ import { Controller, Get, Post, Request,Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { LoginUserDto,CreateUserDto } from '../api/user/dto/user.dto';
-import { ApiBearerAuth } from '@nestjs/swagger';
-import { ApiTags } from '@nestjs/swagger';
+import { signupwithInvite } from '../api/user/dto/user.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 
 
@@ -16,20 +15,20 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  async login(@Body() loginUserDto: LoginUserDto) {
-    return this.authService.login(loginUserDto);
+  async login(@Request() req) {
+    return this.authService.login(req.user);
   }
 
   @Post('signup')
-  async register(@Body() createUserDto: CreateUserDto) {
-    return this.authService.signup(createUserDto);
+  async register(@Body() signupwithInvite: signupwithInvite) {
+    return this.authService.signup(signupwithInvite);
   }
 
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT')
   @Get('profile')
   getProfile(@Request() req) {
-    return req.user;
+    return req.user.role;
   }
 
 

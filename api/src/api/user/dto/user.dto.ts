@@ -11,15 +11,25 @@ export class LoginUserDto {
   readonly password: string;
 }
 export class CreateUserDto {
-  @ApiProperty()
   @IsNotEmpty()
   username: string;
 
-  @ApiProperty()
   @IsNotEmpty()
   password: string;
 
   profile_image: string;
+
+  invitecode: string;
+  role: number;
+
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+}
+export class signupwithInvite {
+  @ApiProperty()
+  @IsNotEmpty()
+  username: string;
 
   @ApiProperty()
   invitecode: string;

@@ -1,5 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn , BeforeInsert} from 'typeorm';
+import { Roles } from '../../auth/Roles';
 import * as bcrypt from 'bcrypt';
+
 
 export class UserRO {
     id: number;
@@ -26,6 +28,9 @@ export class User {
 
   @Column({ default: true })
   isActive: boolean;
+
+  @Column({ default: Roles.USER })
+  role: number;
 
   @BeforeInsert()
   async initUser() {

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../api/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { CreateUserDto } from '../api/user/dto/user.dto';
+import { User } from '../api/user/user.entity'
+import { signupwithInvite } from '../api/user/dto/user.dto';
 import * as bcrypt from 'bcrypt';
 
 export interface RegistrationStatus {
@@ -25,14 +26,14 @@ export class AuthService {
     return null;
   }
 
-  async signup(createuserDto: CreateUserDto): Promise<RegistrationStatus> {
+  async signup(signupwithInvite: signupwithInvite): Promise<RegistrationStatus> {
     let status: RegistrationStatus = {
       success: true,
       message: 'user registered',
     };
 
     try {
-      let res = await this.userService.signup(createuserDto, false);
+      let res = await this.userService.signup(signupwithInvite, true, true);
       console.log(res);
     } catch (err) {
       status = {
@@ -43,15 +44,16 @@ export class AuthService {
     return status;
   }
 
-  async login(user: any) {
-    const payload = { username: user.username, sub: user.userId };
+  async login(user: User) {
+    const payload = { username: user.username, sub: user.id };
+    console.log(payload)
 		//TODO return payload
 		//
 		//{"id":1,"username":"admin","email":"admin@bim-cloud.org","profile_image":"https://icapi.bim-cloud.org/static/profile_image/admin.jpg","roles":["ROLE_USER","ROLE_ADMIN"],"projects":["Assigned_Project:_InterACT","Assigned_Project:_Haus","Assigned_Project:_New
 		//Project","Assigned_Project:_New Project","Assigned_Project:_New
 		//Project"],"accessToken":""}
     return {
-      username: user.username,
+      user: user,
       accessToken: this.jwtService.sign(payload),
     };
   }

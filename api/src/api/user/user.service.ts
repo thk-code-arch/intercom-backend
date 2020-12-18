@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
 import { CreateUserDto } from './dto/user.dto';
+import { Roles } from '../../auth/Roles';
 var gravatar = require('gravatar');
 var generator = require('generate-password');
 
@@ -18,16 +19,19 @@ export class UserService {
   async findOne(username: string): Promise<Res | undefined> {
     return this.usersRepository.findOne({ where:{ username: username }});
   }
-  public async signup(userDto: CreateUserDto, quite: boolean): Promise<User> {
-    const { email,username, invitecode } = userDto;
+  async findByUserId(userid: number): Promise<User | undefined> {
+    return this.usersRepository.findOne({ where:{ id: userid }});
+  }
 
+  public async signup(newuser, quite: boolean, isAdmin: boolean): Promise<User> {
+    const { email, username, invitecode } = newuser;
+    let usr :CreateUserDto  = newuser;
     if (invitecode != process.env.IC_Invitecode){
       throw new HttpException(
         'Wrong Invitecode!',
         HttpStatus.BAD_REQUEST,
       );
     }
-
     let user = await this.usersRepository.findOne({ where: [{ email},{username }] });
     if (user) {
       throw new HttpException(
@@ -35,15 +39,17 @@ export class UserService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
     //add Gravatar
-
-    userDto.profile_image = await gravatar.url(email, {s: '100', r: 'x', d: 'retro'}, true);
+    usr.profile_image = await gravatar.url(email, {s: '100', r: 'x', d: 'retro'}, true);
     if(!quite){
-    userDto.password = generator.generate({length: 10,numbers:true});
+    usr.password = generator.generate({length: 10,numbers:true});
+    console.log(usr.password)
     // TODO send mail with password
     }
-    user = this.usersRepository.create(userDto);
+    if(isAdmin){
+      usr.role = Roles.ADMIN
+    }
+    user = this.usersRepository.create(usr);
     return await this.usersRepository.save(user);
   }
 }
