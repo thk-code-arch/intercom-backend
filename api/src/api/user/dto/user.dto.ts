@@ -19,6 +19,11 @@ export class CreateUserDto {
   @IsNotEmpty()
   password: string;
 
+  profile_image: string;
+
+  @ApiProperty()
+  invitecode: string;
+
   @ApiProperty()
   @IsNotEmpty()
   @IsEmail()

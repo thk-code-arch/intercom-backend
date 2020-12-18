@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../api/user/dto/user.dto';
 import * as bcrypt from 'bcrypt';
 
-interface RegistrationStatus {
+export interface RegistrationStatus {
   success: boolean;
   message: string;
 }
@@ -25,14 +25,14 @@ export class AuthService {
     return null;
   }
 
-  async register(userDto: CreateUserDto): Promise<RegistrationStatus> {
+  async signup(createuserDto: CreateUserDto): Promise<RegistrationStatus> {
     let status: RegistrationStatus = {
       success: true,
       message: 'user registered',
     };
 
     try {
-      await this.usersService.create(userDto);
+      await this.userService.signup(createuserDto);
     } catch (err) {
       status = {
         success: false,

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -16,25 +16,24 @@ export class UserService {
   async findOne(username: string): Promise<Res | undefined> {
     return this.usersRepository.findOne({ where:{ username: username }});
   }
+  public async signup(userDto: CreateUserDto): Promise<User> {
+    const { email,username, invitecode } = userDto;
 
-  async create(userDto: CreateUserDto): Promise<UserDto> {
-
-    const { username, password, email } = userDto;
-
-    // check if the user exists in the db
-    const userInDb = await this.usersRepository.findOne({ where: { username } });
-    if (userInDb) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+    if (invitecode != process.env.IC_Invitecode){
+      throw new HttpException(
+        'Wrong Invitecode!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
-    const user: UserEntity = await this.userRepo.create({
-      username,
-      password,
-      email,
-    });
-
-    await this.userRepo.save(user);
-
-    return toUserDto(user);
+    let user = await this.usersRepository.findOne({ where: [{ email},{username }] });
+    if (user) {
+      throw new HttpException(
+        'User or Email already exists',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    user = await this.usersRepository.create(userDto);
+    return await this.usersRepository.save(user);
   }
 }
