@@ -5,3 +5,4 @@ io/node_modules/
 files/
 docker-compose.yml
 secrets.env
+*/ormconfig.json
