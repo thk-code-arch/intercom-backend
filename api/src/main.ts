@@ -15,12 +15,15 @@ async function bootstrap() {
     .setTitle('intercom-backend')
     .setDescription('The intercom web API description')
     .setVersion('1.0')
+    .addServer('/api')
     .addBearerAuth(
       { type: 'http', scheme: 'bearer', bearerFormat: 'JWT' },
       'access-token',
     )
     .build();
   const document = SwaggerModule.createDocument(app, options);
+  app.setGlobalPrefix('api');
+
   SwaggerModule.setup('docs', app, document);
 
   app.useStaticAssets('/files', {prefix: '/files'});
