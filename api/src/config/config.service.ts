@@ -38,14 +38,14 @@ class ConfigService {
       password: this.getValue('POSTGRES_PASSWORD'),
       database: this.getValue('POSTGRES_DB'),
 
-      entities: ['**/*.entity{.ts,.js}'],
+      entities: ['src/database/entities/*.entity.ts'],
 
-      migrationsTableName: 'migration',
+      migrationsTableName: 'migrations',
 
-      migrations: ['src/database/migration/*.ts'],
+      migrations: ['src/database/migrations/*.ts'],
 
       cli: {
-        migrationsDir: 'src/database/migration',
+        migrationsDir: 'src/database/migrations',
       },
 
       ssl: false,

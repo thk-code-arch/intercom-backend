@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserService } from '../api/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../api/user/user.entity'
+import { User } from '../database/entities/user.entity'
 import { signupwithInvite } from '../api/user/dto/user.dto';
 import * as bcrypt from 'bcrypt';
 
@@ -33,7 +33,7 @@ export class AuthService {
     };
 
     try {
-      let res = await this.userService.signup(signupwithInvite, true, true);
+      let res = await this.userService.signup(signupwithInvite, true, false);
       console.log(res);
     } catch (err) {
       status = {
