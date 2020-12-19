@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../database/entities/user.entity';
@@ -15,6 +15,8 @@ export class UserService {
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
   ) {}
+
+  private readonly logger = new Logger(UserService.name);
 
   async findOne(username: string): Promise<Res | undefined> {
     return this.usersRepository.findOne({ where:{ username: username }});
@@ -39,11 +41,12 @@ export class UserService {
         HttpStatus.BAD_REQUEST,
       );
     }
+    this.logger.debug(usr);
     //add Gravatar
     usr.profile_image = await gravatar.url(email, {s: '100', r: 'x', d: 'retro'}, true);
     if(!quite){
     usr.password = generator.generate({length: 10,numbers:true});
-    console.log(usr.password)
+    this.logger.debug(usr.password);
     // TODO send mail with password
     }
     if(isAdmin){

@@ -15,7 +15,6 @@ export class UserController {
 
   @Get('whoami')
   getProfile(@Request() req) {
-    console.log(req)
     return req.role;
   }
 

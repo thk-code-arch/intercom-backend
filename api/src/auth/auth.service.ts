@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable,Logger } from '@nestjs/common';
 import { UserService } from '../api/user/user.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../database/entities/user.entity'
@@ -17,6 +17,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
+    private readonly logger = new Logger(AuthService.name);
+
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.userService.findOne(username);
     if (await bcrypt.compare(pass, user.password)) {
@@ -33,9 +35,10 @@ export class AuthService {
     };
 
     try {
-      let res = await this.userService.signup(signupwithInvite, true, false);
-      console.log(res);
+      let res = await this.userService.signup(signupwithInvite, false, false);
+      this.logger.log('New User registred');
     } catch (err) {
+      this.logger.error('Registrations fails');
       status = {
         success: false,
         message: err,
@@ -46,7 +49,6 @@ export class AuthService {
 
   async login(user: User) {
     const payload = { username: user.username, sub: user.id };
-    console.log(payload)
 		//TODO return payload
 		//
 		//{"id":1,"username":"admin","email":"admin@bim-cloud.org","profile_image":"https://icapi.bim-cloud.org/static/profile_image/admin.jpg","roles":["ROLE_USER","ROLE_ADMIN"],"projects":["Assigned_Project:_InterACT","Assigned_Project:_Haus","Assigned_Project:_New

@@ -32,6 +32,7 @@ export class signupwithInvite {
   username: string;
 
   @ApiProperty()
+  @IsNotEmpty()
   invitecode: string;
 
   @ApiProperty()
