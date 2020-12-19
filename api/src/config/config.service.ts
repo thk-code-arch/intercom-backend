@@ -42,6 +42,7 @@ class ConfigService {
 
       migrationsTableName: 'migrations',
 
+
       migrations: ['src/database/migrations/*.ts'],
 
       cli: {

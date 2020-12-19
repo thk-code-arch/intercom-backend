@@ -33,4 +33,9 @@ npm run typeorm:migration:generate -- init
 npm run typeorm:migration:run
 ```
 
-// TODO migrations in production
+## Add some dummy DATA
+
+```bash
+# seed some Data
+npm run seed:run
+```
