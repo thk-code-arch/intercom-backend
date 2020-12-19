@@ -2,7 +2,7 @@ import { Controller, Get, Post, Request,Body, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { signupwithInvite } from '../api/user/dto/user.dto';
+import { signupwithInvite, LoginUserDto } from '../api/user/dto/user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 
@@ -15,7 +15,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('signin')
-  async login(@Request() req) {
+  async login(@Body() signin: LoginUserDto,@Request() req) {
     return this.authService.login(req.user);
   }
 
