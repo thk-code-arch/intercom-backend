@@ -1,5 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn , BeforeInsert} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn , BeforeInsert,ManyToMany, JoinTable} from 'typeorm';
 import { Roles } from '../../auth/Roles';
+import { Project } from './project.entity';
 import * as bcrypt from 'bcrypt';
 
 
@@ -31,6 +32,10 @@ export class User {
 
   @Column({ default: Roles.USER })
   role: number;
+
+  @ManyToMany(() => Project, project => project.users)
+  @JoinTable()
+  projects: Project[];
 
   @BeforeInsert()
   async initUser() {
