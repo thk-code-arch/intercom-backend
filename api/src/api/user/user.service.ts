@@ -4,8 +4,8 @@ import { Repository } from 'typeorm';
 import { User } from '../../database/entities/user.entity';
 import { CreateUserDto } from './dto/user.dto';
 import { Roles } from '../../auth/Roles';
-var gravatar = require('gravatar');
-var generator = require('generate-password');
+const gravatar = require('gravatar');
+const generator = require('generate-password');
 
 export type Res = any;
 
@@ -19,22 +19,32 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   async findOne(username: string): Promise<Res | undefined> {
-    return this.usersRepository.findOne({ where:{ username: username }});
+    return this.usersRepository.findOne({ where: { username: username } });
+  }
+  async findOneAuthUser(username: string): Promise<Res | undefined> {
+    return this.usersRepository
+      .createQueryBuilder('user')
+      .addSelect('user.password')
+      .where('user.username = :username', { username: username })
+      .getOne();
   }
   async findByUserId(userid: number): Promise<User | undefined> {
-    return this.usersRepository.findOne({ where:{ id: userid }});
+    return this.usersRepository.findOne({ where: { id: userid } });
   }
 
-  public async signup(newuser, quite: boolean, isAdmin: boolean): Promise<User> {
+  public async signup(
+    newuser,
+    quite: boolean,
+    isAdmin: boolean,
+  ): Promise<User> {
     const { email, username, invitecode } = newuser;
-    let usr :CreateUserDto  = newuser;
-    if (invitecode != process.env.IC_Invitecode){
-      throw new HttpException(
-        'Wrong Invitecode!',
-        HttpStatus.BAD_REQUEST,
-      );
+    const usr: CreateUserDto = newuser;
+    if (invitecode != process.env.IC_Invitecode) {
+      throw new HttpException('Wrong Invitecode!', HttpStatus.BAD_REQUEST);
     }
-    let user = await this.usersRepository.findOne({ where: [{ email},{username }] });
+    let user = await this.usersRepository.findOne({
+      where: [{ email }, { username }],
+    });
     if (user) {
       throw new HttpException(
         'User or Email already exists',
@@ -43,14 +53,18 @@ export class UserService {
     }
     this.logger.debug(usr);
     //add Gravatar
-    usr.profile_image = await gravatar.url(email, {s: '100', r: 'x', d: 'retro'}, true);
-    if(!quite){
-    usr.password = generator.generate({length: 10,numbers:true});
-    this.logger.debug(usr.password);
-    // TODO send mail with password
+    usr.profile_image = await gravatar.url(
+      email,
+      { s: '100', r: 'x', d: 'retro' },
+      true,
+    );
+    if (!quite) {
+      usr.password = generator.generate({ length: 10, numbers: true });
+      this.logger.debug(usr.password);
+      // TODO send mail with password
     }
-    if(isAdmin){
-      usr.role = Roles.ADMIN
+    if (isAdmin) {
+      usr.role = Roles.ADMIN;
     }
     user = this.usersRepository.create(usr);
     return await this.usersRepository.save(user);

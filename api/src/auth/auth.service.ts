@@ -20,7 +20,8 @@ export class AuthService {
   private readonly logger = new Logger(AuthService.name);
 
   async validateUser(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(username);
+    const user = await this.userService.findOneAuthUser(username);
+    this.logger.debug(user);
     if (!user) {
       throw new HttpException('Authentication failed!', HttpStatus.BAD_REQUEST);
     }
