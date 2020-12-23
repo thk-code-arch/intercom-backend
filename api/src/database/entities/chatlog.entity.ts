@@ -19,11 +19,11 @@ export class Chatlog {
 
   @OneToOne(() => User)
   @JoinColumn()
-  userid: User;
+  user: User;
 
   @CreateDateColumn({ type: 'timestamp' })
   time: Date;
 
   @ManyToOne(() => Chatroom, (chatroom) => chatroom.chatlog)
-  roomid: Chatroom;
+  room: Chatroom;
 }

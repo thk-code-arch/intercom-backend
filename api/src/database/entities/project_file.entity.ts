@@ -25,5 +25,5 @@ export class Projectfile {
 
   @OneToOne(() => Project)
   @JoinColumn()
-  projectId: Project;
+  project: Project;
 }

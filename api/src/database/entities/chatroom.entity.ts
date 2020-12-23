@@ -4,9 +4,12 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   OneToMany,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Chatlog } from './chatlog.entity';
+import { Project } from './project.entity';
 
 @Entity()
 export class Chatroom {
@@ -19,8 +22,9 @@ export class Chatroom {
   @Column()
   description: string;
 
-  @Column()
-  projectid: number;
+  @OneToOne(() => Project)
+  @JoinColumn()
+  project: Project;
 
   @Column()
   roomtype: string;
