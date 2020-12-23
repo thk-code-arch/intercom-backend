@@ -4,10 +4,14 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   ManyToMany,
+  OneToMany,
   JoinTable,
 } from 'typeorm';
 import { Roles } from '../../auth/Roles';
 import { Project } from './project.entity';
+import { Chatroom } from './chatroom.entity';
+import { Projectfile } from './project_file.entity';
+
 import * as bcrypt from 'bcrypt';
 
 export class UserRO {
@@ -42,6 +46,13 @@ export class User {
   @ManyToMany(() => Project, (project) => project.users)
   @JoinTable()
   projects: Project[];
+
+  @ManyToMany(() => Chatroom, (chatroom) => chatroom.users)
+  @JoinTable()
+  chatrooms: Chatroom[];
+
+  @OneToMany(() => Projectfile, (projectfile) => projectfile.user)
+  projectfiles: Projectfile[];
 
   @BeforeInsert()
   async initUser() {

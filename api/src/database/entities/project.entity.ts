@@ -1,11 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  ManyToMany,
+  JoinColumn,
+} from 'typeorm';
 import { User } from './user.entity';
+import { Chatroom } from './chatroom.entity';
+
 @Entity()
 export class Project {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column("varchar", { length: 100 })
+  @Column('varchar', { length: 100 })
   name: string;
 
   @Column()
@@ -20,6 +29,10 @@ export class Project {
   @Column({ default: true })
   isActive: boolean;
 
-  @ManyToMany(() => User, user => user.projects)
+  @ManyToMany(() => User, (user) => user.projects)
   users: User[];
+
+  @OneToOne(() => Chatroom)
+  @JoinColumn()
+  chatroom: Chatroom;
 }

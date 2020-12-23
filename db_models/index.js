@@ -58,40 +58,6 @@ db.user.belongsToMany(db.role, {
   foreignKey: "userId",
   otherKey: "roleId"
 });
-/////////////////////User has many Projects
-db.project.belongsToMany(db.user, {
-  through: "user_projects",
-  foreignKey: "projectId",
-  otherKey: "userId"
-});
-db.user.belongsToMany(db.project, {
-  through: "user_projects",
-  foreignKey: "userId",
-  otherKey: "projectId"
-});
-/////////////////////User is assigned to many Public & Private Chatrooms
-db.chatroom.belongsToMany(db.user, {
-  through: "user_chatrooms",
-  foreignKey: "chatroomId",
-  otherKey: "userId"
-});
-db.user.belongsToMany(db.chatroom, {
-  through: "user_chatrooms",
-  foreignKey: "userId",
-  otherKey: "chatroomId"
-});
-/////////////////////A Projectfile (e.g. IFC) belongs to one Project
-db.projectfile.belongsTo(db.project, {
-  foreignKey: "projectId",
-});
-/////////////////////A Chat message is emited by one User
-db.chatlog.belongsTo(db.user, {
-  foreignKey: "userid"
-});
-///////////////////// One Chatroom has  many messages
-db.chatroom.hasMany(db.chatlog, {
-  targetKey: "roomid"
-});
 
 ///////////////////// One Project has  many issues
 db.project.hasMany(db.projectissue, {
