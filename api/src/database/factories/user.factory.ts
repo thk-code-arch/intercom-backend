@@ -1,10 +1,14 @@
-import { Roles } from '../../auth/Roles';
 import * as Faker from 'faker';
 import { define } from 'typeorm-seeding';
 import { User } from '../entities/user.entity';
+import { Role } from '../entities/role.entity';
 const gravatar = require('gravatar');
 
 define(User, (faker: typeof Faker) => {
+  const role1 = new Role();
+  role1.name = 'user';
+  role1.id = 1;
+
   const gender = faker.random.number(1);
   const firstName = faker.name.firstName(gender);
   const lastName = faker.name.lastName(gender);
@@ -19,7 +23,7 @@ define(User, (faker: typeof Faker) => {
   user.username = `${firstName}${lastName}`;
   user.password = faker.random.word();
   user.email = `${user.username.toLowerCase()}@bim-cloud.org`;
-  user.role = Roles.USER;
   user.profile_image = profile_image;
+  user.roles = [role1];
   return user;
 });

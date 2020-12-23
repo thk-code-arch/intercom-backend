@@ -8,6 +8,7 @@ import {
   JoinTable,
 } from 'typeorm';
 import { Roles } from '../../auth/Roles';
+import { Role } from './role.entity';
 import { Project } from './project.entity';
 import { Chatroom } from './chatroom.entity';
 import { Projectfile } from './project_file.entity';
@@ -40,8 +41,9 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
-  @Column({ default: Roles.USER })
-  role: number;
+  @ManyToMany(() => Role, (role) => role.users)
+  @JoinTable()
+  roles: Role[];
 
   @ManyToMany(() => Project, (project) => project.users)
   @JoinTable()

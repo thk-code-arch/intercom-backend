@@ -26,10 +26,14 @@ export class UserService {
       .createQueryBuilder('user')
       .addSelect('user.password')
       .where('user.username = :username', { username: username })
+      .leftJoinAndSelect('user.roles', 'role')
       .getOne();
   }
   async findByUserId(userid: number): Promise<User | undefined> {
-    return this.usersRepository.findOne({ where: { id: userid } });
+    return this.usersRepository.findOne({
+      relations: ['roles'],
+      where: { id: userid },
+    });
   }
 
   public async signup(

@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from '../database/entities/user.entity';
 import { signupwithInvite } from '../api/user/dto/user.dto';
 import * as bcrypt from 'bcrypt';
+import _ = require('lodash');
 
 export interface RegistrationStatus {
   success: boolean;
@@ -55,13 +56,12 @@ export class AuthService {
 
   async login(user: User) {
     const payload = { username: user.username, sub: user.id };
-    //TODO return payload
-    //
-    //{"id":1,"username":"admin","email":"admin@bim-cloud.org","profile_image":"https://icapi.bim-cloud.org/static/profile_image/admin.jpg","roles":["ROLE_USER","ROLE_ADMIN"],"projects":["Assigned_Project:_InterACT","Assigned_Project:_Haus","Assigned_Project:_New
-    //Project","Assigned_Project:_New Project","Assigned_Project:_New
-    //Project"],"accessToken":""}
     return {
-      user: user,
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      profile_image: user.profile_image,
+      roles: _.map(user.roles, 'name'),
       accessToken: this.jwtService.sign(payload),
     };
   }
