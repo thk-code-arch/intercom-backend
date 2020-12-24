@@ -29,19 +29,19 @@ export class ProjectService {
     console.log(res);
     return res;
   }
-  async addProject(usrid: number) {
+  async newProject(usrid: number) {
     const newProj = new Project();
-    newProj.name = 'test';
-    newProj.description = 'test2';
-    newProj.owner = 2;
+    newProj.name = 'test3';
+    newProj.description = 'test22';
+    newProj.owner = usrid;
     newProj.parentProject = 2;
+
     const res = await this.projectsRepository.save(newProj);
-    const res2 = await this.usersRepository
+
+    return await this.usersRepository
       .createQueryBuilder('user')
       .relation(User, 'projects')
-      .of(usrid) // you can use just post id as well
-      .add(res); // you can use just category id as well
-    console.log(res, res2);
-    return res;
+      .of(usrid)
+      .add(res);
   }
 }

@@ -19,16 +19,16 @@ export class ProjectController {
     return req.role;
   }
 
-  // @UseGuards(RolesGuard)
-  // @RolesAllowed(Roles.ADMIN)
+  //  @UseGuards(RolesGuard)
+  //  @RolesAllowed(Roles.ADMIN)
   @Post('add_project')
-  addProject(@CurrentUser() usr) {
-    return this.projectService.addProject(usr.id);
+  addProject(@CurrentUser('id') usrid: number) {
+    return this.projectService.newProject(usrid);
   }
 
   @Get('get_projects')
-  async getProjects(@CurrentUser() usr) {
-    return this.projectService.get_projects(usr.id);
+  async getProjects(@CurrentUser('id') usrid: number) {
+    return this.projectService.get_projects(usrid);
   }
 
   @Get('get_projectfile/:theprojectId')
