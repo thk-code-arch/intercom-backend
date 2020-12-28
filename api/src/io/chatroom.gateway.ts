@@ -1,43 +1,42 @@
 import {
   SubscribeMessage,
   WebSocketGateway,
-  OnGatewayInit,
+  WsResponse,
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
+import { UseGuards } from '@nestjs/common';
+import { WsJwtGuard } from '../auth/guards/ws-jwt.guard';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import { IoService } from './io.service';
 
+@UseGuards(WsJwtGuard)
 @WebSocketGateway({ namespace: 'chatroom' })
 export class ChatroomGateway
-  implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
+  implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(private readonly ioservice: IoService) {}
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatroomGateway');
 
-  @SubscribeMessage('msgToServer')
-  handleMessage(client: Socket, payload: string): void {
-    this.server.emit('msgToClient', payload);
-  }
-
-  afterInit(server: Server) {
-    this.logger.log('Init');
-  }
-
-  handleDisconnect(client: Socket) {
+  async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  async handleConnection(client: Socket, ...args: any[]) {
-    const user = await this.ioservice.verify(client.handshake.query.token);
+  async handleConnection(client: Socket, data) {}
 
-    //    this.connectedUsers = [...this.connectedUsers, String(user._id)];
-    //
-    //    // Send list of connected users
-    //    this.server.emit('users', this.connectedUsers);
-    //    this.logger.log(`Client connected: ${client.handshake.headers}`);
-    this.logger.debug(`Connected ${JSON.stringify(user)}`);
+  @SubscribeMessage('send_message')
+  async handleMessage(client: Socket, data, payload: string) {
+    console.log('handleclient', data.user);
+    //data.userid = socket.decoded_token.id;
+    //data.time = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    //// TODO check if User is allowed to post data in room.
+    //if (data.chatroomId !== 0){
+    //Chatlog.create(data).then(result =>{
+    //  chatroom.in(data.chatroomId).emit('message', result.id);
+    //});
+    //}
+    this.server.emit('message', payload);
   }
 }

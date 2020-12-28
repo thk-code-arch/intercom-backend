@@ -3,24 +3,24 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../api/user/user.module';
-//import { ApiModule } from '../api/api.module';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
+import { WsJwtStrategy } from './strategies/ws-jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
   imports: [
-//    UserModule,
-    forwardRef(()=>UserModule),
+    //    UserModule,
+    forwardRef(() => UserModule),
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '3d' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy ],
+  providers: [AuthService, LocalStrategy, JwtStrategy, WsJwtStrategy],
   exports: [AuthService],
-  controllers: [AuthController]
+  controllers: [AuthController],
 })
 export class AuthModule {}

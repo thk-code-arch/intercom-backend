@@ -22,9 +22,6 @@ export class RolesGuard implements CanActivate {
     const allRoles = [...methodRoles, ...classRoles];
 
     const resp = _.map(request.user.roles, 'id').includes(allRoles[0]);
-    console.log(allRoles);
-    console.log(_.map(request.user.roles, 'id'));
-    console.log(resp);
     return resp;
   }
 }

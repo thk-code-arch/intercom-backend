@@ -4,13 +4,11 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
-var corsOptions = {
-    origin: ["https://"+process.env.IC_CORS]
+const corsOptions = {
+  origin: ['https://' + process.env.IC_CORS],
 };
 async function bootstrap() {
-  const app = await NestFactory.create<NestExpressApplication>(
-    AppModule,
-  );
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   const options = new DocumentBuilder()
     .setTitle('intercom-backend')
@@ -23,13 +21,13 @@ async function bootstrap() {
     )
     .build();
   const document = SwaggerModule.createDocument(app, options);
-  app.useGlobalPipes(new ValidationPipe({whitelist: true}));
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.setGlobalPrefix('api');
 
   SwaggerModule.setup('docs', app, document);
 
-  app.useStaticAssets('/files', {prefix: '/files'});
-  app.useStaticAssets('/files/static', {prefix: '/static'});
+  app.useStaticAssets('/files', { prefix: '/files' });
+  app.useStaticAssets('/files/static', { prefix: '/static' });
 
   app.enableCors(corsOptions);
   await app.listen(3000);

@@ -11,7 +11,15 @@ export class IoService {
   // in jwtService
   async verify(token: string): Promise<Object | null> {
     try {
-      const payload = <any>jwt.verify(token, jwtConstants.secret);
+      const payload = <any>jwt.verify(
+        token,
+        jwtConstants.secret,
+        function (err) {
+          if (err) {
+            throw new WsException(err.message);
+          }
+        },
+      );
       const user = await this.userService.findByUserId(payload.sub);
 
       if (!user) {
