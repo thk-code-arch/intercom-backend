@@ -53,6 +53,10 @@ export class AuthService {
     }
     return status;
   }
+  async getUserDatafromJWT(token: string) {
+    const payload = this.jwtService.decode(token);
+    return this.userService.findByUserId(payload.sub);
+  }
 
   async login(user: User) {
     const payload = { username: user.username, sub: user.id };

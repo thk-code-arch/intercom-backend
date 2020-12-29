@@ -1,72 +1,37 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { ExecutionContextHost } from '@nestjs/core/helpers/execution-context-host';
+import {
+  Injectable,
+  ExecutionContext,
+  Logger,
+  CanActivate,
+} from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
-import { ConnectedSocket } from './connected-socket';
+import { AuthService } from '../auth.service';
 
 @Injectable()
-export class WsJwtGuard extends AuthGuard('wsjwt') {
-  canActivate(context: ExecutionContext) {
-    const client = context?.switchToWs()?.getClient<ConnectedSocket>();
-    const token = client.handshake.query.token;
+export class WsJwtGuard implements CanActivate {
+  constructor(private readonly authService: AuthService) {}
+  private readonly logger = new Logger(AuthService.name);
+  async canActivate(context: ExecutionContext) {
+    const { token } = context.switchToWs().getClient().handshake.query;
 
     if (!token) {
-      throw new WsException('Authentication token not found.');
+      this.logger.error('no token');
+      throw new WsException('Auth Error!');
     }
 
-    const authHeader = {
-      authorization: token,
-    };
-    const req = { headers: authHeader };
+    const {
+      id,
+      username,
+      profile_image,
+    } = await this.authService.getUserDatafromJWT(token);
 
-    return super.canActivate(new ExecutionContextHost([req]));
-  }
-  handleRequest(err, user, info: Error, context: ExecutionContext) {
-    //const socket = context?.switchToWs()?.getClient();
-    const socket = context.switchToWs().getData();
+    if (!id) {
+      this.logger.error('no user');
+      throw new WsException('Auth Error!');
+    }
 
-    console.log('thereq', socket);
-    //socket.userid = user.userid;
-    //socket.username = user.username;
-    //console.log('thereq', socket.conn, user);
-    // don't throw 401 error when unauthenticated
-    return user;
+    context.switchToWs().getData().user = { id, username, profile_image };
+
+    return Boolean(id);
   }
 }
-//import { AuthGuard } from '@nestjs/passport';
-//import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
-//import { WsException } from '@nestjs/websockets';
-//import { ConnectedSocket } from './connected-socket';
-//@Injectable()
-//export class WsJwtGuard extends AuthGuard('wsjwt') {
-//  async canActivate(context: ExecutionContext): Promise<boolean> {
-//    console.log('SocketSession activated');
-//    const client = context?.switchToWs()?.getClient<ConnectedSocket>();
-//    const token = client.handshake.query.token;
-//    console.log(context);
-//    const user = await super.canActivate(context);
-//    console.log(user);
-//    return true;
-//  }
-//
-//  //  static async verifyToken(
-//  //    jwtService: JwtService,
-//  //    socket: ConnectedSocket,
-//  //    token?: string,
-//  //  ) {
-//  //    if (
-//  //      socket.conn.userid &&
-//  //      (await jwtService.verifyAsync(socket.conn.token))
-//  //    ) {
-//  //      return true;
-//  //    }
-//  //
-//  //    if (!token) return false;
-//  //
-//  //    socket.conn.token = token;
-//  //    const { sub } = await jwtService.decode(token);
-//  //    socket.conn.userId = sub;
-//  //    console.log(`Setting connection userId to "${sub}"`);
-//  //    return true;
-//  //  }
-//}
