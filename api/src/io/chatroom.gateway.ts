@@ -2,23 +2,23 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   MessageBody,
-  WsResponse,
   WebSocketServer,
   OnGatewayConnection,
   OnGatewayDisconnect,
+  ConnectedSocket,
 } from '@nestjs/websockets';
 import { UseGuards } from '@nestjs/common';
 import { WsJwtGuard } from '../auth/guards/ws-jwt.guard';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { IoService } from './io.service';
-import { MessageDto } from './message.dto';
+import { MessageDto, SwitchRoomDto } from './io.dto';
+import { AuthService } from '../auth/auth.service';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({ namespace: 'chatroom' })
 export class ChatroomGateway
   implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly ioservice: IoService) {}
+  constructor(private readonly authService: AuthService) {}
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatroomGateway');
 
@@ -26,21 +26,30 @@ export class ChatroomGateway
     this.logger.log(`Client disconnected: ${client.id}`);
   }
 
-  async handleConnection(client: Socket, data) {}
+  async handleConnection(client: Socket) {
+    const { token } = client.handshake.query;
+    if (!token) {
+      this.logger.debug(`Disconnect: No Token provided`);
+      return this.handleDisconnect(client);
+    }
+  }
+
+  @SubscribeMessage('join_chatroom')
+  async switchRoom(
+    @MessageBody() req: SwitchRoomDto,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    socket.join(String(req.newRoom));
+  }
+
+  @SubscribeMessage('disconnet')
+  async disconnect(@ConnectedSocket() socket: Socket) {
+    socket.disconnect();
+  }
 
   @SubscribeMessage('send_message')
-  async sendMessage(@MessageBody() req: MessageDto, payload: string) {
-    console.log('handleclient', req);
-    console.log('payload', payload);
-    //skjsk
-    //data.userid = socket.decoded_token.id;
-    //data.time = new Date().toISOString().slice(0, 19).replace('T', ' ');
-    //// TODO check if User is allowed to post data in room.
-    //if (data.chatroomId !== 0){
-    //Chatlog.create(data).then(result =>{
-    //  chatroom.in(data.chatroomId).emit('message', result.id);
-    //});
-    //}
-    this.server.emit('message', payload);
+  async sendMessage(@MessageBody() req: MessageDto) {
+    console.log('handleclient', JSON.stringify(req));
+    this.server.emit('message', req.message);
   }
 }

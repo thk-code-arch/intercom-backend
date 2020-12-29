@@ -31,7 +31,7 @@ export class UserService {
   }
   async findByUserId(userid: number): Promise<User | undefined> {
     return this.usersRepository.findOne({
-      relations: ['roles'],
+      relations: ['roles', 'projects'],
       where: { id: userid },
     });
   }
