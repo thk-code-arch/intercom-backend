@@ -8,13 +8,13 @@ export class Learning {
   @Column()
   category: string; // Link, File, ...
 
-  @Column("varchar", { length: 4000 })
+  @Column('varchar', { length: 4000 })
   url: string;
 
   @Column()
   thumbnail: string;
 
-  @Column("varchar", { length: 400 })
+  @Column('varchar', { length: 400 })
   title: string;
 
   @Column()
@@ -26,6 +26,6 @@ export class Learning {
   @Column()
   projectid: number; // when project related
 
-  @Column({default: 1})
+  @Column({ default: 1 })
   views: number; // Count Views
 }
