@@ -1,6 +1,8 @@
 */node_modules/
 api/node_modules/
 io/node_modules/
-db/
+/db/
 files/
 docker-compose.yml
+secrets.env
+*/ormconfig.json
