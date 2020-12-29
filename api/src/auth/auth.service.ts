@@ -1,7 +1,7 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from '../api/user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../database/entities/user.entity';
+import { User } from '../database/entities/models';
 import { signupwithInvite } from '../api/user/dto/user.dto';
 import * as bcrypt from 'bcrypt';
 import _ = require('lodash');
