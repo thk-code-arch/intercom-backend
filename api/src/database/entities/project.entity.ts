@@ -23,7 +23,7 @@ export class Project {
   @Column()
   owner: number;
 
-  @Column()
+  @Column({ nullable: true })
   parentProject: number;
 
   @Column({ default: true })
