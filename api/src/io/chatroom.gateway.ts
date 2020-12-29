@@ -1,6 +1,7 @@
 import {
   SubscribeMessage,
   WebSocketGateway,
+  MessageBody,
   WsResponse,
   WebSocketServer,
   OnGatewayConnection,
@@ -27,8 +28,8 @@ export class ChatroomGateway
   async handleConnection(client: Socket, data) {}
 
   @SubscribeMessage('send_message')
-  async handleMessage(client: Socket, data, payload: string) {
-    console.log('handleclient', data.user);
+  async handleMessage(@MessageBody() req, data, payload: string) {
+    console.log('handleclient', req);
     //data.userid = socket.decoded_token.id;
     //data.time = new Date().toISOString().slice(0, 19).replace('T', ' ');
     //// TODO check if User is allowed to post data in room.

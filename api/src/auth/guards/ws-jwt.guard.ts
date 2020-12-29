@@ -21,6 +21,17 @@ export class WsJwtGuard extends AuthGuard('wsjwt') {
 
     return super.canActivate(new ExecutionContextHost([req]));
   }
+  handleRequest(err, user, info: Error, context: ExecutionContext) {
+    //const socket = context?.switchToWs()?.getClient();
+    const socket = context.switchToWs().getData();
+
+    console.log('thereq', socket);
+    //socket.userid = user.userid;
+    //socket.username = user.username;
+    //console.log('thereq', socket.conn, user);
+    // don't throw 401 error when unauthenticated
+    return user;
+  }
 }
 //import { AuthGuard } from '@nestjs/passport';
 //import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
