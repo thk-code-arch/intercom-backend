@@ -42,7 +42,7 @@ export class ChatService {
       .where('chatroom.projectId = :projectid ', { projectid: projectid })
       .andWhere('chatroom.id IN (:...userrooms)', { userrooms: userrooms })
       .select(['chatroom.id'])
-      .getOne();
+      .getOneOrFail();
     console.log('resulltL:', res);
     return res;
   }
@@ -65,7 +65,7 @@ export class ChatService {
         'chatlog.message',
         'chatroom.id',
       ])
-      .getOne();
+      .getOneOrFail();
   }
 
   async getChatroomsByUserId(userid: number) {}

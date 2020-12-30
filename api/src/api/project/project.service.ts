@@ -22,7 +22,6 @@ export class ProjectService {
       .relation('projects')
       .of(usrid)
       .loadMany<Project>();
-    console.log(res);
     return res;
   }
   async newProject(usrid: number, newProj: NewProject) {
