@@ -47,6 +47,7 @@ class ConfigService {
         migrationsDir: 'src/database/migrations',
       },
 
+      logging: ['error'],
       ssl: false,
     };
   }

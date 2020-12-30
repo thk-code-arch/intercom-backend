@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Request,
+  Param,
   UseGuards,
   Body,
 } from '@nestjs/common';
@@ -51,7 +52,7 @@ export class ProjectController {
   }
 
   @Get('get_projectinfo/:theprojectId')
-  getProjectinfo(@Request() req) {
-    return req.role;
+  getProjectinfo(@CurrentUser('projects') project: number[], @Param() p) {
+    return this.projectService.getProjectinfo(project, p.theprojectId);
   }
 }

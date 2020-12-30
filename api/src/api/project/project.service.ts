@@ -32,6 +32,14 @@ export class ProjectService {
       .getOneOrFail();
     return res;
   }
+  async getProjectinfo(usrprojects: number[], sP: number) {
+    const res = await this.projectsRepository
+      .createQueryBuilder('project')
+      .where('project.id = :projectId ', { projectId: sP })
+      .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
+      .getOneOrFail();
+    return res;
+  }
   async newProject(usrid: number, newProj: NewProject) {
     newProj.owner = usrid;
     const resP = await this.projectsRepository.save(newProj);
