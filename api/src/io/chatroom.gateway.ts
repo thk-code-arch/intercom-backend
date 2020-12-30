@@ -13,12 +13,16 @@ import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import { MessageDto, SwitchRoomDto } from './io.dto';
 import { AuthService } from '../auth/auth.service';
+import { ChatService } from '../api/chat/chat.service';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({ namespace: 'chatroom' })
 export class ChatroomGateway
   implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly chatService: ChatService,
+  ) {}
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatroomGateway');
 
@@ -49,7 +53,7 @@ export class ChatroomGateway
 
   @SubscribeMessage('send_message')
   async sendMessage(@MessageBody() req: MessageDto) {
-    console.log('handleclient', JSON.stringify(req));
-    this.server.emit('message', req.message);
+    const res = await this.chatService.new_message(req.message, req.user.id, 2);
+    this.server.emit('message', res.id);
   }
 }

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { ChatService } from './chat.service';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 
@@ -24,8 +24,20 @@ export class ChatController {
     return this.chatService.getChatroomsByUserId(usrid);
   }
 
-  @Get('getprojectroom/:projectId')
-  async getProjectroom(@Param() params) {
-    return this.chatService.getRoomByProjectId(params.projectId);
+  @Get('msgbyid/:msgid')
+  async getMessagebyId(
+    @CurrentUser('chatrooms') userrooms: [],
+    @Param() params,
+  ) {
+    return this.chatService.getMsgById(params.msgid, userrooms);
+  }
+
+  @Get('get_projectroom/:projectId')
+  async getProjectroom(
+    @Param() params,
+    @CurrentUser('chatrooms') userrooms: number[],
+  ) {
+    console.log('resulltL:', params);
+    return this.chatService.getRoomByProjectId(params.projectId, userrooms);
   }
 }

@@ -7,11 +7,7 @@ import {
   OneToMany,
   JoinTable,
 } from 'typeorm';
-import { Roles } from '../../auth/Roles';
-import { Role } from './role.entity';
-import { Project } from './project.entity';
-import { Chatroom } from './chatroom.entity';
-import { Projectfile } from './project_file.entity';
+import { Role, Chatlog, Project, Chatroom, Projectfile } from './models';
 
 import * as bcrypt from 'bcrypt';
 
@@ -55,6 +51,9 @@ export class User {
 
   @OneToMany(() => Projectfile, (projectfile) => projectfile.user)
   projectfiles: Projectfile[];
+
+  @OneToMany(() => Chatlog, (chatlog) => chatlog.user)
+  chatlog: Chatlog[];
 
   @BeforeInsert()
   async initUser() {

@@ -12,5 +12,6 @@ import {
   imports: [TypeOrmModule.forFeature([User, Project, Chatroom, Chatlog])],
   controllers: [ChatController],
   providers: [ChatService],
+  exports: [ChatService],
 })
 export class ChatModule {}
