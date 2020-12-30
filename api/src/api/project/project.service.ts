@@ -2,7 +2,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { NewProject } from './project.dto';
-import { User, Project, Chatroom } from '../../database/entities/models';
+import {
+  User,
+  Project,
+  Chatroom,
+  Projectfile,
+} from '../../database/entities/models';
+import * as fs from 'fs';
 
 @Injectable()
 export class ProjectService {
@@ -13,6 +19,8 @@ export class ProjectService {
     private readonly projectsRepository: Repository<Project>,
     @InjectRepository(Chatroom)
     private readonly chatroomRepository: Repository<Chatroom>,
+    @InjectRepository(Projectfile)
+    private readonly fileRepository: Repository<Projectfile>,
   ) {}
   private readonly logger = new Logger(ProjectService.name);
 
@@ -64,5 +72,13 @@ export class ProjectService {
     this.logger.debug(`new Projects ${PJ} new Chatroom ${CJ}  `);
 
     return resP;
+  }
+  async getProjectfile(usrprojects: number[], sP: number) {
+    const res = await this.projectsRepository
+      .createQueryBuilder('project')
+      .where('project.id = :projectId ', { projectId: sP })
+      .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
+      .getOneOrFail();
+    return res;
   }
 }
