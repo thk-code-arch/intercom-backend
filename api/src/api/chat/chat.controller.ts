@@ -37,7 +37,6 @@ export class ChatController {
     @Param() params,
     @CurrentUser('chatrooms') userrooms: number[],
   ) {
-    console.log('resulltL:', params);
     return this.chatService.getRoomByProjectId(params.projectId, userrooms);
   }
 }

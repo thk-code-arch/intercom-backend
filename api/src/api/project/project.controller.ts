@@ -13,7 +13,7 @@ import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/Roles';
 import { RolesAllowed } from '../../auth/decorators/roles.decorator';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
-import { addNewProject } from './project.dto';
+import { addNewProject, selectProject } from './project.dto';
 
 @ApiBearerAuth('JWT')
 @ApiTags('project')
@@ -23,8 +23,11 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post('select_project')
-  selectProject(@Request() req) {
-    return req.role;
+  selectProject(
+    @CurrentUser('projects') project: number[],
+    @Body() sP: selectProject,
+  ) {
+    return this.projectService.select_project(project, sP.projectid);
   }
 
   //  @UseGuards(RolesGuard)

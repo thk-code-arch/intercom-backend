@@ -24,6 +24,14 @@ export class ProjectService {
       .loadMany<Project>();
     return res;
   }
+  async select_project(usrprojects: number[], sP: number) {
+    const res = await this.projectsRepository
+      .createQueryBuilder('project')
+      .where('project.id = :projectId ', { projectId: sP })
+      .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
+      .getOneOrFail();
+    return res;
+  }
   async newProject(usrid: number, newProj: NewProject) {
     newProj.owner = usrid;
     const resP = await this.projectsRepository.save(newProj);
@@ -45,8 +53,8 @@ export class ProjectService {
       .of(usrid)
       .add(resC);
 
-    this.logger.debug(`new Projects ${PJ} new Chatroom ${CJ}`);
+    this.logger.debug(`new Projects ${PJ} new Chatroom ${CJ}  `);
 
-    return PJ;
+    return resP;
   }
 }

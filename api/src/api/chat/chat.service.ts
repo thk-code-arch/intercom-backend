@@ -43,7 +43,6 @@ export class ChatService {
       .andWhere('chatroom.id IN (:...userrooms)', { userrooms: userrooms })
       .select(['chatroom.id'])
       .getOneOrFail();
-    console.log('resulltL:', res);
     return res;
   }
 

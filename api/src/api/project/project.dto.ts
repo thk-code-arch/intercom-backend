@@ -19,3 +19,8 @@ export class addNewProject {
   @IsString()
   description: string;
 }
+export class selectProject {
+  @ApiProperty()
+  @IsNumber()
+  projectid: number;
+}

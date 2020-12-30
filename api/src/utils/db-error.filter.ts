@@ -1,29 +1,32 @@
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
-import { QueryFailedError } from 'typeorm';
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
+import { ArgumentsHost, ExceptionFilter, Catch } from '@nestjs/common';
+import { QueryFailedError } from 'typeorm';
 
-@Catch(QueryFailedError, EntityNotFoundError)
-export class DBExeptionsFilter implements ExceptionFilter {
-  catch(exception: unknown, host: ArgumentsHost) {
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse();
-    const request = ctx.getRequest();
+@Catch(EntityNotFoundError)
+export class EntityNotFoundExceptionFilter implements ExceptionFilter {
+  catch(exception: EntityNotFoundError, host: ArgumentsHost): void {
+    const response = host.switchToHttp().getResponse();
 
-    const status =
-      exception instanceof HttpException
-        ? exception.getStatus()
-        : HttpStatus.INTERNAL_SERVER_ERROR;
+    response.status(404).send({ message: exception.message });
+  }
+}
 
-    response.status(status).json({
-      statusCode: status,
-      timestamp: new Date().toISOString(),
-      path: request.url,
-    });
+@Catch(QueryFailedError)
+export class QueryFailedExceptionFilter implements ExceptionFilter {
+  catch(exception: any, host: ArgumentsHost): void {
+    const response = host.switchToHttp().getResponse();
+
+    switch (exception.code) {
+      // Unique Constraint Violation
+      case '23505':
+        response.status(409).send({
+          message: 'Duplicate key violation',
+          error: exception.message,
+        });
+        break;
+
+      default:
+        throw exception;
+    }
   }
 }
