@@ -3,7 +3,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-
+import { AllExceptionsFilter } from './utils/error.filter';
+import {
+  QueryFailedExceptionFilter,
+  EntityNotFoundExceptionFilter,
+} from './utils/db-error.filter';
 const corsOptions = {
   origin: ['https://' + process.env.IC_CORS],
 };
@@ -29,6 +33,9 @@ async function bootstrap() {
   app.useStaticAssets('/files', { prefix: '/files' });
   app.useStaticAssets('/files/static', { prefix: '/static' });
 
+  app.useGlobalFilters(new AllExceptionsFilter());
+  app.useGlobalFilters(new QueryFailedExceptionFilter());
+  app.useGlobalFilters(new EntityNotFoundExceptionFilter());
   app.enableCors(corsOptions);
   await app.listen(3000);
 }

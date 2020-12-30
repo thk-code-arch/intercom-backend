@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Request,
+  Param,
+  UseGuards,
+  Body,
+} from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { ProjectService } from './project.service';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
@@ -6,6 +14,7 @@ import { RolesGuard } from '../../auth/guards/roles.guard';
 import { Roles } from '../../auth/Roles';
 import { RolesAllowed } from '../../auth/decorators/roles.decorator';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
+import { addNewProject, selectProject } from './project.dto';
 
 @ApiBearerAuth('JWT')
 @ApiTags('project')
@@ -15,15 +24,21 @@ export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
   @Post('select_project')
-  selectProject(@Request() req) {
-    return req.role;
+  selectProject(
+    @CurrentUser('projects') project: number[],
+    @Body() sP: selectProject,
+  ) {
+    return this.projectService.select_project(project, sP.projectid);
   }
 
   //  @UseGuards(RolesGuard)
   //  @RolesAllowed(Roles.ADMIN)
   @Post('add_project')
-  addProject(@CurrentUser('id') usrid: number) {
-    return this.projectService.newProject(usrid);
+  addProject(
+    @CurrentUser('id') usrid: number,
+    @Body() newProject: addNewProject,
+  ) {
+    return this.projectService.newProject(usrid, newProject);
   }
 
   @Get('get_projects')
@@ -37,7 +52,7 @@ export class ProjectController {
   }
 
   @Get('get_projectinfo/:theprojectId')
-  getProjectinfo(@Request() req) {
-    return req.role;
+  getProjectinfo(@CurrentUser('projects') project: number[], @Param() p) {
+    return this.projectService.getProjectinfo(project, p.theprojectId);
   }
 }

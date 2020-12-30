@@ -17,8 +17,7 @@ export class Chatlog {
   @Column('text')
   message: string;
 
-  @OneToOne(() => User)
-  @JoinColumn()
+  @ManyToOne(() => User, (user) => user.chatlog)
   user: User;
 
   @CreateDateColumn({ type: 'timestamp' })

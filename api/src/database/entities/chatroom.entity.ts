@@ -19,7 +19,7 @@ export class Chatroom {
   @Column('varchar', { length: 100 })
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   description: string;
 
   @OneToOne(() => Project)

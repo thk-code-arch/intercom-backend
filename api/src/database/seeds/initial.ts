@@ -1,5 +1,4 @@
-import { User } from '../entities/user.entity';
-import { Role } from '../entities/role.entity';
+import { User, Role } from '../entities/models';
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
 const gravatar = require('gravatar');

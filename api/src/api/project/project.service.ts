@@ -1,8 +1,14 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Project } from '../../database/entities/project.entity';
-import { User } from '../../database/entities/user.entity';
+import { NewProject } from './project.dto';
+import {
+  User,
+  Project,
+  Chatroom,
+  Projectfile,
+} from '../../database/entities/models';
+import * as fs from 'fs';
 
 @Injectable()
 export class ProjectService {
@@ -11,37 +17,68 @@ export class ProjectService {
     private readonly usersRepository: Repository<User>,
     @InjectRepository(Project)
     private readonly projectsRepository: Repository<Project>,
+    @InjectRepository(Chatroom)
+    private readonly chatroomRepository: Repository<Chatroom>,
+    @InjectRepository(Projectfile)
+    private readonly fileRepository: Repository<Projectfile>,
   ) {}
   private readonly logger = new Logger(ProjectService.name);
 
-  async get_projects1(usrid: number) {
-    return this.usersRepository.findOne({
-      where: { id: usrid },
-      relations: ['project'],
-    });
-  }
   async get_projects(usrid: number) {
     const res = await this.usersRepository
       .createQueryBuilder('user')
       .relation('projects')
       .of(usrid)
       .loadMany<Project>();
-    console.log(res);
     return res;
   }
-  async newProject(usrid: number) {
-    const newProj = new Project();
-    newProj.name = 'test3';
-    newProj.description = 'test22';
+  async select_project(usrprojects: number[], sP: number) {
+    const res = await this.projectsRepository
+      .createQueryBuilder('project')
+      .where('project.id = :projectId ', { projectId: sP })
+      .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
+      .getOneOrFail();
+    return res;
+  }
+  async getProjectinfo(usrprojects: number[], sP: number) {
+    const res = await this.projectsRepository
+      .createQueryBuilder('project')
+      .where('project.id = :projectId ', { projectId: sP })
+      .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
+      .getOneOrFail();
+    return res;
+  }
+  async newProject(usrid: number, newProj: NewProject) {
     newProj.owner = usrid;
-    newProj.parentProject = 2;
+    const resP = await this.projectsRepository.save(newProj);
 
-    const res = await this.projectsRepository.save(newProj);
+    const newroom = new Chatroom();
+    newroom.name = newProj.name;
+    newroom.project = resP;
+    newroom.roomtype = 'PROJECT';
+    const resC = await this.chatroomRepository.save(newroom);
 
-    return await this.usersRepository
+    const PJ = await this.usersRepository
       .createQueryBuilder('user')
       .relation(User, 'projects')
       .of(usrid)
-      .add(res);
+      .add(resP);
+    const CJ = await this.usersRepository
+      .createQueryBuilder('user')
+      .relation(User, 'chatrooms')
+      .of(usrid)
+      .add(resC);
+
+    this.logger.debug(`new Projects ${PJ} new Chatroom ${CJ}  `);
+
+    return resP;
+  }
+  async getProjectfile(usrprojects: number[], sP: number) {
+    const res = await this.projectsRepository
+      .createQueryBuilder('project')
+      .where('project.id = :projectId ', { projectId: sP })
+      .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
+      .getOneOrFail();
+    return res;
   }
 }

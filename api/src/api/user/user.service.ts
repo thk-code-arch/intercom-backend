@@ -1,7 +1,7 @@
 import { Injectable, HttpStatus, HttpException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { User } from '../../database/entities/user.entity';
+import { User } from '../../database/entities/models';
 import { CreateUserDto } from './dto/user.dto';
 import { Roles } from '../../auth/Roles';
 const gravatar = require('gravatar');
@@ -31,7 +31,7 @@ export class UserService {
   }
   async findByUserId(userid: number): Promise<User | undefined> {
     return this.usersRepository.findOne({
-      relations: ['roles'],
+      relations: ['roles', 'projects', 'chatrooms'],
       where: { id: userid },
     });
   }

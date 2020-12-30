@@ -8,6 +8,6 @@ import { AdminModule } from './admin/admin.module';
 
 @Module({
   controllers: [ApiController, ProjectController],
-  imports: [UserModule, ProjectModule, ChatModule, AdminModule]
+  imports: [UserModule, ProjectModule, ChatModule, AdminModule],
 })
 export class ApiModule {}

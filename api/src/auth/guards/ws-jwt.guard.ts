@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { AuthService } from '../auth.service';
+import _ = require('lodash');
 
 @Injectable()
 export class WsJwtGuard implements CanActivate {
@@ -23,6 +24,9 @@ export class WsJwtGuard implements CanActivate {
       id,
       username,
       profile_image,
+      roles,
+      projects,
+      chatrooms,
     } = await this.authService.getUserDatafromJWT(token);
 
     if (!id) {
@@ -30,7 +34,14 @@ export class WsJwtGuard implements CanActivate {
       throw new WsException('Auth Error!');
     }
 
-    context.switchToWs().getData().user = { id, username, profile_image };
+    context.switchToWs().getData().user = {
+      id,
+      username,
+      profile_image,
+      roles: _.map(roles, 'id'),
+      projects: _.map(projects, 'id'),
+      chatrooms: _.map(chatrooms, 'id'),
+    };
 
     return Boolean(id);
   }

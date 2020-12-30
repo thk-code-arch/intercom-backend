@@ -7,7 +7,6 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { User } from './user.entity';
-import { Chatroom } from './chatroom.entity';
 
 @Entity()
 export class Project {
@@ -23,7 +22,7 @@ export class Project {
   @Column()
   owner: number;
 
-  @Column()
+  @Column({ nullable: true })
   parentProject: number;
 
   @Column({ default: true })
@@ -31,8 +30,4 @@ export class Project {
 
   @ManyToMany(() => User, (user) => user.projects)
   users: User[];
-
-  @OneToOne(() => Chatroom)
-  @JoinColumn()
-  chatroom: Chatroom;
 }

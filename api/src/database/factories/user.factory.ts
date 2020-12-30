@@ -1,7 +1,6 @@
 import * as Faker from 'faker';
 import { define } from 'typeorm-seeding';
-import { User } from '../entities/user.entity';
-import { Role } from '../entities/role.entity';
+import { User, Role } from '../entities/models';
 const gravatar = require('gravatar');
 
 define(User, (faker: typeof Faker) => {
