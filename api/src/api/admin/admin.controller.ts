@@ -11,7 +11,6 @@ import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
-import { CurrentUser } from '../../auth/decorators/user.decorator';
 
 @Auth(Roles.ADMIN)
 @ApiTags('admin')
