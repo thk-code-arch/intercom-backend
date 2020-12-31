@@ -56,6 +56,7 @@ export class ProjectService {
     newroom.name = newProj.name;
     newroom.project = resP;
     newroom.roomtype = 'PROJECT';
+    newroom.description = 'Project Room';
     const resC = await this.chatroomRepository.save(newroom);
 
     const PJ = await this.usersRepository
