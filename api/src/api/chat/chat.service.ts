@@ -73,7 +73,8 @@ export class ChatService {
       .where('chatroom.id = :chatid ', { chatid: chatroomid })
       .andWhere('chatroom.id IN (:...userrooms)', { userrooms: userrooms })
       .leftJoinAndSelect('chatroom.chatlog', 'chatlog')
-      .getMany();
+      .leftJoinAndSelect('chatlog.user', 'user')
+      .getOneOrFail();
   }
   async getChatroomsByUserId(userid: number) {
     return this.userRepository.find({
