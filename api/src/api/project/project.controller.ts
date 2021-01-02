@@ -1,10 +1,26 @@
-import { Controller, Get, Post, Request, Param, Body } from '@nestjs/common';
+import {
+  Controller,
+  Res,
+  Get,
+  Post,
+  Request,
+  Header,
+  Param,
+  Body,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
 import { ProjectService } from './project.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
+import { ApiFile } from '../../auth/decorators/file.decorator';
 import { addNewProject, selectProject } from './project.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { editFileName, IFCFileFilter } from '../../utils/file-upload';
+import * as fs from 'fs';
 
 @Auth(Roles.USER)
 @ApiTags('project')
@@ -34,9 +50,41 @@ export class ProjectController {
     return this.projectService.get_projects(usrid);
   }
 
+  @Post('uploadifc/:projectid')
+  @ApiConsumes('multipart/form-data')
+  @ApiFile()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: '/files/input',
+        filename: editFileName,
+      }),
+      fileFilter: IFCFileFilter,
+    }),
+  )
+  uploadIFCFile(
+    @UploadedFile() file,
+    @CurrentUser('id') usrid: number,
+    @Param('projectid') projectid: number,
+  ) {
+    console.log(file.filename);
+    return this.projectService.uploadIFC(
+      file.path,
+      file.filename,
+      usrid,
+      projectid,
+    );
+  }
+
   @Get('get_projectfile/:theprojectId')
-  getProjectfile(@Request() req) {
-    return req.role;
+  @Header('Content-Type', 'model/gltf+json')
+  async getProjectfile(
+    @Param('theprojectId') pid: number,
+    @CurrentUser('projects') project: number[],
+    @Res() response,
+  ) {
+    const file = await this.projectService.getProjectfile(project, pid);
+    return fs.createReadStream('/files/output/' + file.filename).pipe(response);
   }
 
   @Get('get_projectinfo/:theprojectId')

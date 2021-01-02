@@ -3,11 +3,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToOne,
-  JoinColumn,
+  CreateDateColumn,
 } from 'typeorm';
-import { User } from './user.entity';
-import { Project } from './project.entity';
+import { User, Project } from './models';
 
 @Entity()
 export class Projectfile {
@@ -20,10 +18,12 @@ export class Projectfile {
   @Column('varchar', { length: 255 })
   path: string;
 
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
   @ManyToOne(() => User, (user) => user.projectfiles)
   user: User;
 
-  @OneToOne(() => Project)
-  @JoinColumn()
+  @ManyToOne(() => Project, (project) => project.projectfile)
   project: Project;
 }
