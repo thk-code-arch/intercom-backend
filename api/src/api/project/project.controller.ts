@@ -84,7 +84,14 @@ export class ProjectController {
     @Res() response,
   ) {
     const file = await this.projectService.getProjectfile(project, pid);
-    return fs.createReadStream('/files/output/' + file.filename).pipe(response);
+    const filepath = '/files/output/' + file.filename;
+    fs.exists(filepath, function (exists) {
+      if (exists) {
+        return fs.createReadStream(filepath).pipe(response);
+      } else {
+        return;
+      }
+    });
   }
 
   @Get('get_projectinfo/:theprojectId')
