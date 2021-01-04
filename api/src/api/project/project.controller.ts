@@ -62,18 +62,22 @@ export class ProjectController {
       fileFilter: IFCFileFilter,
     }),
   )
-  uploadIFCFile(
+  async uploadIFCFile(
     @UploadedFile() file,
     @CurrentUser('id') usrid: number,
     @Param('projectid') projectid: number,
   ) {
     console.log(file.filename);
-    return this.projectService.uploadIFC(
+    const upload = await this.projectService.uploadIFC(
       file.path,
       file.filename,
       usrid,
       projectid,
     );
+    return {
+      name: upload.filename,
+      logfile: 'files/output/' + upload.filename.replace('.gltf', '.log'),
+    };
   }
 
   @Get('get_projectfile/:theprojectId')
@@ -84,7 +88,14 @@ export class ProjectController {
     @Res() response,
   ) {
     const file = await this.projectService.getProjectfile(project, pid);
-    return fs.createReadStream('/files/output/' + file.filename).pipe(response);
+    const filepath = '/files/output/' + file.filename;
+    fs.exists(filepath, function (exists) {
+      if (exists) {
+        return fs.createReadStream(filepath).pipe(response);
+      } else {
+        return;
+      }
+    });
   }
 
   @Get('get_projectinfo/:theprojectId')
