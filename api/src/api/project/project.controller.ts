@@ -62,18 +62,22 @@ export class ProjectController {
       fileFilter: IFCFileFilter,
     }),
   )
-  uploadIFCFile(
+  async uploadIFCFile(
     @UploadedFile() file,
     @CurrentUser('id') usrid: number,
     @Param('projectid') projectid: number,
   ) {
     console.log(file.filename);
-    return this.projectService.uploadIFC(
+    const upload = await this.projectService.uploadIFC(
       file.path,
       file.filename,
       usrid,
       projectid,
     );
+    return {
+      name: upload.filename,
+      logfile: 'files/output/' + upload.filename.replace('.gltf', '.log'),
+    };
   }
 
   @Get('get_projectfile/:theprojectId')
