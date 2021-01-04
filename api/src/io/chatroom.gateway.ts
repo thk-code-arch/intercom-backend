@@ -12,17 +12,13 @@ import { WsJwtGuard } from '../auth/guards/ws-jwt.guard';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import { MessageDto, SwitchRoomDto } from './io.dto';
-import { AuthService } from '../auth/auth.service';
 import { ChatService } from '../api/chat/chat.service';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({ namespace: 'chatroom' })
 export class ChatroomGateway
   implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly chatService: ChatService,
-  ) {}
+  constructor(private readonly chatService: ChatService) {}
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatroomGateway');
 
@@ -43,7 +39,11 @@ export class ChatroomGateway
     @MessageBody() req: SwitchRoomDto,
     @ConnectedSocket() socket: Socket,
   ) {
+    if (req.oldRoom !== 0) {
+      socket.leave(String(req.oldRoom));
+    }
     socket.join(String(req.newRoom));
+    console.log('joines', req.newRoom, 'isIn', socket.rooms);
   }
 
   @SubscribeMessage('disconnet')
@@ -53,7 +53,13 @@ export class ChatroomGateway
 
   @SubscribeMessage('send_message')
   async sendMessage(@MessageBody() req: MessageDto) {
-    const res = await this.chatService.new_message(req.message, req.user.id, 2);
-    this.server.emit('message', res.id);
+    if (req.chatroomId !== 0) {
+      const res = await this.chatService.new_message(
+        req.message,
+        req.user.id,
+        req.chatroomId,
+      );
+      this.server.in(String(req.chatroomId)).emit('message', res.id);
+    }
   }
 }

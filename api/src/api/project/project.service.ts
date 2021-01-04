@@ -8,7 +8,6 @@ import {
   Chatroom,
   Projectfile,
 } from '../../database/entities/models';
-import * as fs from 'fs';
 
 @Injectable()
 export class ProjectService {
@@ -56,6 +55,7 @@ export class ProjectService {
     newroom.name = newProj.name;
     newroom.project = resP;
     newroom.roomtype = 'PROJECT';
+    newroom.description = 'Project Room';
     const resC = await this.chatroomRepository.save(newroom);
 
     const PJ = await this.usersRepository
@@ -73,12 +73,30 @@ export class ProjectService {
 
     return resP;
   }
-  async getProjectfile(usrprojects: number[], sP: number) {
-    const res = await this.projectsRepository
-      .createQueryBuilder('project')
-      .where('project.id = :projectId ', { projectId: sP })
-      .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
+
+  async getProjectfile(
+    usrprojects: number[],
+    sP: number,
+  ): Promise<Projectfile | undefined> {
+    return await this.fileRepository
+      .createQueryBuilder('projectfile')
+      .where('projectfile.project = :projectId ', { projectId: sP })
+      .andWhere('projectfile.project IN (:...userpr)', { userpr: usrprojects })
+      .orderBy('projectfile.createdAt', 'DESC')
       .getOneOrFail();
-    return res;
+  }
+
+  async uploadIFC(
+    path: string,
+    filename: string,
+    userid: number,
+    projectid: number,
+  ): Promise<Projectfile | undefined> {
+    const file = new Projectfile();
+    file.filename = filename.replace('.ifc', '.gltf');
+    file.path = path;
+    file.project = <any>projectid;
+    file.user = <any>userid;
+    return this.fileRepository.save(file);
   }
 }

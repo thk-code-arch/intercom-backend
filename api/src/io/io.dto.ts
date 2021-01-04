@@ -12,6 +12,10 @@ export class SocketUserDto {
 export class MessageDto {
   @IsString()
   message: string;
+
+  @IsNumber()
+  chatroomId: number;
+
   user: SocketUserDto;
 }
 

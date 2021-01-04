@@ -19,7 +19,15 @@ import { CurrentUser } from '../../auth/decorators/user.decorator';
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
-  @Get('getchatrooms')
+  @Get('log/:chatroomid')
+  async getChatlogbyRoomId(
+    @CurrentUser('chatrooms') usrrooms: number[],
+    @Param('chatroomid') chatroomid: number,
+  ) {
+    return this.chatService.getChatLog(chatroomid, usrrooms);
+  }
+
+  @Get('get_chatrooms')
   async getChatrooms(@CurrentUser('id') usrid: number) {
     return this.chatService.getChatroomsByUserId(usrid);
   }

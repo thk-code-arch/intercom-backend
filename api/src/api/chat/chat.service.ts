@@ -67,9 +67,21 @@ export class ChatService {
       .getOneOrFail();
   }
 
-  async getChatroomsByUserId(userid: number) {}
+  async getChatLog(chatroomid: number, userrooms: number[]) {
+    return this.roomRepository
+      .createQueryBuilder('chatroom')
+      .where('chatroom.id = :chatid ', { chatid: chatroomid })
+      .andWhere('chatroom.id IN (:...userrooms)', { userrooms: userrooms })
+      .leftJoinAndSelect('chatroom.chatlog', 'chatlog')
+      .leftJoinAndSelect('chatlog.user', 'user')
+      .getOneOrFail();
+  }
+  async getChatroomsByUserId(userid: number) {
+    return this.userRepository.find({
+      where: { id: userid },
+      relations: ['chatrooms'],
+    });
+  }
 
   async getUsersByChatroom() {}
-
-  async getChatlogHistoryByChatroom() {}
 }

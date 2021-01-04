@@ -2,11 +2,10 @@ import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
-  OneToOne,
   ManyToMany,
-  JoinColumn,
+  OneToMany,
 } from 'typeorm';
-import { User } from './user.entity';
+import { User, Projectfile } from './models';
 
 @Entity()
 export class Project {
@@ -30,4 +29,7 @@ export class Project {
 
   @ManyToMany(() => User, (user) => user.projects)
   users: User[];
+
+  @OneToMany(() => Projectfile, (projectfile) => projectfile.project)
+  projectfile: Projectfile[];
 }

@@ -7,8 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { User } from './user.entity';
-import { Chatroom } from './chatroom.entity';
+import { User, Chatroom } from './models';
 @Entity()
 export class Chatlog {
   @PrimaryGeneratedColumn()

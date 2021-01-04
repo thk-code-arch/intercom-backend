@@ -1,24 +1,29 @@
 import {
   Controller,
+  Res,
   Get,
   Post,
   Request,
+  Header,
   Param,
-  UseGuards,
   Body,
+  UseInterceptors,
+  UploadedFile,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
-import { ProjectService } from './project.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { RolesGuard } from '../../auth/guards/roles.guard';
+import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
-import { RolesAllowed } from '../../auth/decorators/roles.decorator';
+import { ProjectService } from './project.service';
+import { ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
+import { ApiFile } from '../../auth/decorators/file.decorator';
 import { addNewProject, selectProject } from './project.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
+import { editFileName, IFCFileFilter } from '../../utils/file-upload';
+import * as fs from 'fs';
 
-@ApiBearerAuth('JWT')
+@Auth(Roles.USER)
 @ApiTags('project')
-@UseGuards(JwtAuthGuard)
 @Controller('project')
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
@@ -31,8 +36,7 @@ export class ProjectController {
     return this.projectService.select_project(project, sP.projectid);
   }
 
-  //  @UseGuards(RolesGuard)
-  //  @RolesAllowed(Roles.ADMIN)
+  @Auth(Roles.ADMIN)
   @Post('add_project')
   addProject(
     @CurrentUser('id') usrid: number,
@@ -46,9 +50,41 @@ export class ProjectController {
     return this.projectService.get_projects(usrid);
   }
 
+  @Post('uploadifc/:projectid')
+  @ApiConsumes('multipart/form-data')
+  @ApiFile()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: '/files/input',
+        filename: editFileName,
+      }),
+      fileFilter: IFCFileFilter,
+    }),
+  )
+  uploadIFCFile(
+    @UploadedFile() file,
+    @CurrentUser('id') usrid: number,
+    @Param('projectid') projectid: number,
+  ) {
+    console.log(file.filename);
+    return this.projectService.uploadIFC(
+      file.path,
+      file.filename,
+      usrid,
+      projectid,
+    );
+  }
+
   @Get('get_projectfile/:theprojectId')
-  getProjectfile(@Request() req) {
-    return req.role;
+  @Header('Content-Type', 'model/gltf+json')
+  async getProjectfile(
+    @Param('theprojectId') pid: number,
+    @CurrentUser('projects') project: number[],
+    @Res() response,
+  ) {
+    const file = await this.projectService.getProjectfile(project, pid);
+    return fs.createReadStream('/files/output/' + file.filename).pipe(response);
   }
 
   @Get('get_projectinfo/:theprojectId')

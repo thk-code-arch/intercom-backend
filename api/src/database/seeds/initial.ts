@@ -1,4 +1,4 @@
-import { User, Role } from '../entities/models';
+import { User, Role, Project } from '../entities/models';
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
 const gravatar = require('gravatar');
@@ -41,6 +41,7 @@ export default class Initial implements Seeder {
 
     if (process.env.IC_SEEDDEMODATA === 'true') {
       await factory(User)().createMany(10);
+      //      await factory(Project)().createMany(5);
     }
   }
 }
