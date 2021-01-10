@@ -1,4 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 require('dotenv').config();
 
 class ConfigService {
@@ -25,6 +26,30 @@ class ConfigService {
   public isProduction() {
     const mode = this.getValue('MODE', false);
     return mode != 'DEV';
+  }
+
+  public getNodeMailerConfig() {
+    return {
+      transport: {
+        host: this.getValue('EMAIL_HOST'),
+        port: parseInt(this.getValue('EMAIL_PORT')),
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user: this.getValue('EMAIL_USER'),
+          pass: this.getValue('EMAIL_PASS'),
+        },
+      },
+      defaults: {
+        from: this.getValue('EMAIL_FROM'), // outgoing email ID
+      },
+      template: {
+        dir: process.cwd() + '/template/',
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
+    };
   }
 
   public getTypeOrmConfig(): TypeOrmModuleOptions {
@@ -59,6 +84,11 @@ const configService = new ConfigService(process.env).ensureValues([
   'POSTGRES_USER',
   'POSTGRES_PASSWORD',
   'POSTGRES_DB',
+  'EMAIL_PASS',
+  'EMAIL_FROM',
+  'EMAIL_USER',
+  'EMAIL_PORT',
+  'EMAIL_HOST',
 ]);
 
 export { configService };
