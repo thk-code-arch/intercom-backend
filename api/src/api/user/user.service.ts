@@ -64,13 +64,13 @@ export class UserService {
     );
     if (!quite) {
       usr.password = generator.generate({ length: 10, numbers: true });
-      this.logger.debug(usr.password);
-      // TODO send mail with password
     }
     if (isAdmin) {
       usr.role = Roles.ADMIN;
     }
     user = this.usersRepository.create(usr);
-    return await this.usersRepository.save(user);
+    const result = await this.usersRepository.save(user);
+    result.password = usr.password;
+    return result;
   }
 }

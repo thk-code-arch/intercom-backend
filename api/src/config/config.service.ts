@@ -34,10 +34,10 @@ class ConfigService {
         host: this.getValue('EMAIL_HOST'),
         port: parseInt(this.getValue('EMAIL_PORT')),
         secure: false, // true for 465, false for other ports
-        auth: {
-          user: this.getValue('EMAIL_USER'),
-          pass: this.getValue('EMAIL_PASS'),
-        },
+        //    auth: {
+        //      user: this.getValue('EMAIL_USER'),
+        //      pass: this.getValue('EMAIL_PASS'),
+        //    },
       },
       defaults: {
         from: this.getValue('EMAIL_FROM'), // outgoing email ID

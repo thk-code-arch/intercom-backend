@@ -7,5 +7,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
   imports: [MailerModule.forRoot(configService.getNodeMailerConfig())],
   controllers: [],
   providers: [UtilsService],
+  exports: [UtilsService],
 })
 export class UtilsModule {}
