@@ -1,5 +1,6 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from '../api/user/user.service';
+import { UtilsService } from '../utils/utils.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../database/entities/models';
 import { signupwithInvite } from '../api/user/dto/user.dto';
@@ -16,6 +17,7 @@ export class AuthService {
   constructor(
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
+    private readonly utils: UtilsService,
   ) {}
 
   private readonly logger = new Logger(AuthService.name);
@@ -44,6 +46,7 @@ export class AuthService {
     try {
       const res = await this.userService.signup(signupwithInvite, false, false);
       this.logger.log(JSON.stringify(res) + 'New User registred');
+      this.utils.signup(res.email, res.username, res.password);
     } catch (err) {
       this.logger.error('Registrations fails');
       status = {

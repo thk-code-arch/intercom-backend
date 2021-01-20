@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param } from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
@@ -21,5 +21,19 @@ export class AdminController {
   @Get('get_chatrooms')
   async getChatrooms() {
     return this.adminService.allChatrooms();
+  }
+  @Post('rm_role/:theRole/:theUserId')
+  async removeRole(
+    @Param('theRole') role: string,
+    @Param('theUserId') selUser: number,
+  ) {
+    return this.adminService.rmRole(role, selUser);
+  }
+  @Post('add_role/:theRole/:theUserId')
+  async addRole(
+    @Param('theRole') role: string,
+    @Param('theUserId') selUser: number,
+  ) {
+    return this.adminService.addRole(role, selUser);
   }
 }
