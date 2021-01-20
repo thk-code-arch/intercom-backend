@@ -1,5 +1,5 @@
 import { Injectable, Logger, HttpStatus, HttpException } from '@nestjs/common';
-import { User, Project, Chatroom } from '../../database/entities/models';
+import { User, Project, Chatroom, Role } from '../../database/entities/models';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -10,6 +10,8 @@ export class AdminService {
     private readonly roomRepository: Repository<Chatroom>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
     @InjectRepository(Project)
     private readonly projectRepository: Repository<Project>,
   ) {}
@@ -17,7 +19,7 @@ export class AdminService {
 
   async allUsers() {
     return this.userRepository.find({
-      relations: ['projects'],
+      relations: ['projects', 'roles'],
     });
   }
   async allProjects() {
@@ -29,5 +31,23 @@ export class AdminService {
     return this.roomRepository.find({
       relations: ['users'],
     });
+  }
+  async addRole(role, usrid) {
+    const roleId = await this.roleRepository.findOne({ where: { name: role } });
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'roles')
+      .of(usrid)
+      .add(roleId.id);
+    return this.allUsers();
+  }
+  async rmRole(role, usrid) {
+    const roleId = await this.roleRepository.findOne({ where: { name: role } });
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'roles')
+      .of(usrid)
+      .remove(roleId.id);
+    return this.allUsers();
   }
 }
