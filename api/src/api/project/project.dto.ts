@@ -16,12 +16,15 @@ export class NewProject {
 }
 
 export class UpdateProject {
+  @ApiProperty()
   @IsString()
   name: string;
 
+  @ApiProperty()
   @IsString()
   description: string;
 
+  @ApiProperty()
   @IsNumber()
   id: number;
 }
