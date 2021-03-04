@@ -9,7 +9,7 @@ import {
   EntityNotFoundExceptionFilter,
 } from './utils/db-error.filter';
 const corsOptions = {
-  origin: ['https://' + process.env.IC_CORS],
+  origin: ['https://' + process.env.IC_CORS, 'http://localhost:8080'],
 };
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

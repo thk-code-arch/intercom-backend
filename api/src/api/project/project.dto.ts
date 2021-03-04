@@ -14,6 +14,18 @@ export class NewProject {
   @IsNumber()
   parentProject?: number;
 }
+
+export class UpdateProject {
+  @IsString()
+  name: string;
+
+  @IsString()
+  description: string;
+
+  @IsNumber()
+  id: number;
+}
+
 export class addNewProject {
   @ApiProperty()
   @IsString()

@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NewProject } from './project.dto';
+import { NewProject, UpdateProject } from './project.dto';
 import {
   User,
   Project,
@@ -72,6 +72,22 @@ export class ProjectService {
     this.logger.debug(`new Projects ${PJ} new Chatroom ${CJ}  `);
 
     return resP;
+  }
+
+  async updateProject(usrid: number, updateProject: UpdateProject) {
+    const getProject = await this.projectsRepository.findOne({
+      where: { id: updateProject.id, owner: usrid },
+    });
+    getProject.name = updateProject.name;
+    getProject.description = updateProject.description;
+    const UP = await this.projectsRepository.save(getProject);
+    const getChatroom = await this.chatroomRepository.findOne({
+      where: { project: getProject },
+    });
+    getChatroom.name = UP.name;
+    const UC = await this.chatroomRepository.save(getChatroom);
+    this.logger.debug(`new Projectinfo ${UP} new Chatroom name ${UC}  `);
+    return UP;
   }
 
   async getProjectfile(

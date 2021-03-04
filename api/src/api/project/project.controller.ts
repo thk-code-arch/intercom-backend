@@ -16,7 +16,7 @@ import { ProjectService } from './project.service';
 import { ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 import { ApiFile } from '../../auth/decorators/file.decorator';
-import { addNewProject, selectProject } from './project.dto';
+import { addNewProject, selectProject, UpdateProject } from './project.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, IFCFileFilter } from '../../utils/file-upload';
@@ -43,6 +43,14 @@ export class ProjectController {
     @Body() newProject: addNewProject,
   ) {
     return this.projectService.newProject(usrid, newProject);
+  }
+
+  @Post('edit_project')
+  updateProject(
+    @CurrentUser('id') usrid: number,
+    @Body() editProject: UpdateProject,
+  ) {
+    return this.projectService.updateProject(usrid, editProject);
   }
 
   @Get('get_projects')
