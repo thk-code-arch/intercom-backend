@@ -41,7 +41,7 @@ export class addNewProject {
   @ApiProperty()
   @IsOptional()
   @IsNumber()
-  parentprojectid?: number;
+  parentProject?: number;
 }
 export class selectProject {
   @ApiProperty()
