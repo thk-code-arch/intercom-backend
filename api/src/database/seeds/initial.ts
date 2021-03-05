@@ -41,7 +41,7 @@ export default class Initial implements Seeder {
 
     if (process.env.IC_SEEDDEMODATA === 'true') {
       await factory(User)().createMany(3);
-      //      await factory(Project)().createMany(5);
+      await factory(Project)().createMany(2);
     }
   }
 }
