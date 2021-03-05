@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Storage } from './models';
 
 @Entity()
 export class Learning {
@@ -28,4 +29,7 @@ export class Learning {
 
   @Column({ default: 1 })
   views: number; // Count Views
+
+  @OneToMany(() => Storage, (storage) => storage.learning)
+  storage: Storage[];
 }

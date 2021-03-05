@@ -28,6 +28,7 @@ export class WsJwtGuard implements CanActivate {
       projects,
       chatrooms,
     } = await this.authService.getUserDatafromJWT(token);
+    //TODO : get all subprojects, so users were assingned automatticly.
 
     if (!id) {
       this.logger.error('no user');
