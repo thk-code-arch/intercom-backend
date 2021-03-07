@@ -58,6 +58,11 @@ export class ProjectController {
     return this.projectService.get_projects(usrid);
   }
 
+  @Get('get_projects_subprojects')
+  async getProjectsAndSubprojects(@CurrentUser('id') usrid: number) {
+    return this.projectService.get_projects_and_subprojects(usrid);
+  }
+
   @Post('uploadifc/:projectid')
   @ApiConsumes('multipart/form-data')
   @ApiFile()

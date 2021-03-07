@@ -8,6 +8,7 @@ import {
   Chatroom,
   Projectfile,
 } from '../../database/entities/models';
+import _ = require('lodash');
 
 @Injectable()
 export class ProjectService {
@@ -31,6 +32,36 @@ export class ProjectService {
       .loadMany<Project>();
     return res;
   }
+  async get_projects_and_subprojects(usrid: number) {
+    const allprojects = await this.usersRepository
+      .createQueryBuilder('user')
+      .relation('projects')
+      .of(usrid)
+      .loadMany<Project>();
+
+    const projects = allprojects.filter((p) => p.parentProject === null);
+    const parentprojects = _.map(projects, 'id');
+
+    const subprojects = await this.projectsRepository
+      .createQueryBuilder('project')
+      .where('project.parentProject IN (:...parenProjs)', {
+        parenProjs: parentprojects,
+      })
+      .getMany();
+
+    for (let i = 0; i < projects.length; i++) {
+      projects[i]['sub'] = [];
+      const found = subprojects.find(
+        (sp) => sp['parentProject'] === projects[i].id,
+      );
+      if (found) {
+        projects[i]['sub'].push(found.id);
+      }
+    }
+
+    return [...projects, ...subprojects];
+  }
+
   async select_project(usrprojects: number[], sP: number) {
     const res = await this.projectsRepository
       .createQueryBuilder('project')

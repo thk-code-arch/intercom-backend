@@ -8,6 +8,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 
 @Module({
   imports: [
+    // path will serve VUEJS Frontend, when intercom-backend is built from
+    // Dockerfile. In production no need for several subdomain. eg
+    // app.bim-cloud.org is enough.
     ServeStaticModule.forRoot({
       rootPath: '/intercom-frontend/',
     }),
