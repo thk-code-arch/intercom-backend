@@ -50,4 +50,13 @@ export class AdminService {
       .remove(roleId.id);
     return this.allUsers();
   }
+  async addUserstoProject(emails) {
+    console.log(emails);
+    const userIds = await this.userRepository
+      .createQueryBuilder()
+      .where('User.email IN (:...mails)', { mails: emails })
+      .getMany();
+    return userIds;
+    //TODO Batch insert relations
+  }
 }

@@ -79,7 +79,7 @@ export class ProjectService {
     newroom.name = newProj.name;
     newroom.project = resP;
     newroom.roomtype = 'PROJECT';
-    if (!newProj.parentProject) {
+    if (newProj.parentProject) {
       newroom.roomtype = 'SUBPROJECT';
     }
     newroom.description = 'Project Room';
