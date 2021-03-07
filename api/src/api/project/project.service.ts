@@ -24,14 +24,6 @@ export class ProjectService {
   ) {}
   private readonly logger = new Logger(ProjectService.name);
 
-  async get_projects(usrid: number) {
-    const res = await this.usersRepository
-      .createQueryBuilder('user')
-      .relation('projects')
-      .of(usrid)
-      .loadMany<Project>();
-    return res;
-  }
   async get_projects_and_subprojects(usrid: number) {
     const allprojects = await this.usersRepository
       .createQueryBuilder('user')
