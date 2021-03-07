@@ -50,14 +50,15 @@ export class ProjectService {
       .getMany();
 
     for (let i = 0; i < projects.length; i++) {
-      projects[i]['sub'] = [];
-      const found = subprojects.find(
+      const found = subprojects.filter(
         (sp) => sp['parentProject'] === projects[i].id,
       );
+      console.log('FOUND!!!', found);
       if (found) {
-        projects[i]['sub'].push(found.id);
+        projects[i]['sub'] = found;
       }
     }
+    //TODO CLEANUP
 
     return [...projects, ...subprojects];
   }
@@ -86,21 +87,27 @@ export class ProjectService {
     newroom.name = newProj.name;
     newroom.project = resP;
     newroom.roomtype = 'PROJECT';
+    if (!newProj.parentProject) {
+      newroom.roomtype = 'SUBPROJECT';
+    }
     newroom.description = 'Project Room';
     const resC = await this.chatroomRepository.save(newroom);
+    this.logger.debug(`newChatroom ${resC}  `);
 
-    const PJ = await this.usersRepository
-      .createQueryBuilder('user')
-      .relation(User, 'projects')
-      .of(usrid)
-      .add(resP);
-    const CJ = await this.usersRepository
-      .createQueryBuilder('user')
-      .relation(User, 'chatrooms')
-      .of(usrid)
-      .add(resC);
-
-    this.logger.debug(`new Projects ${PJ} new Chatroom ${CJ}  `);
+    //Dont create relations when its a subproject
+    if (!newProj.parentProject) {
+      const PJ = await this.usersRepository
+        .createQueryBuilder('user')
+        .relation(User, 'projects')
+        .of(usrid)
+        .add(resP);
+      const CJ = await this.usersRepository
+        .createQueryBuilder('user')
+        .relation(User, 'chatrooms')
+        .of(usrid)
+        .add(resC);
+      this.logger.debug(`new relation Projects ${PJ} new Chatroom ${CJ}  `);
+    }
 
     return resP;
   }
