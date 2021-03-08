@@ -53,3 +53,9 @@ npm run typeorm:migration:run
 # seed some Data
 npm run seed:run
 ```
+
+## Reinit DB
+
+```bash
+npm run schema:drop && npm run typeorm:migration:run && npm run seed:run
+```

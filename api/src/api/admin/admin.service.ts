@@ -53,6 +53,13 @@ export class AdminService {
 
   async addUserstoProject(emails) {
     console.log(emails);
+    const chatroomId = await this.roomRepository
+      .createQueryBuilder('chatroom')
+      .where('chatroom.projectId = :projectid ', {
+        projectid: emails.projectId,
+      })
+      .select(['chatroom.id'])
+      .getOneOrFail();
     const userIds = await this.userRepository
       .createQueryBuilder()
       .where('User.email IN (:...mails)', { mails: emails.email })
@@ -65,6 +72,11 @@ export class AdminService {
         .relation(User, 'projects')
         .of(usr.id)
         .add(emails.projectId);
+      this.userRepository
+        .createQueryBuilder()
+        .relation(User, 'chatrooms')
+        .of(usr.id)
+        .add(chatroomId);
     });
     return 'true';
   }

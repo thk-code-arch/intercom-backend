@@ -48,10 +48,13 @@ export class UserService {
       res.projects.filter((p) => p.parentProject !== null),
       'id',
     );
-    const catcheRooms = await this.chatService.getSubProjectChatrooms(
-      subprojects,
-    );
-    res.chatrooms = [...res.chatrooms, ...catcheRooms];
+    console.log('suuuuubb', subprojects);
+    if (Array.isArray(subprojects) && subprojects.length) {
+      const catcheRooms = await this.chatService.getSubProjectChatrooms(
+        subprojects,
+      );
+      res.chatrooms = [...res.chatrooms, ...catcheRooms];
+    }
     console.log(res);
     return res;
   }
@@ -85,11 +88,19 @@ export class UserService {
     if (!quite) {
       usr.password = generator.generate({ length: 10, numbers: true });
     }
+    usr.role = 1;
     if (isAdmin) {
-      usr.role = Roles.ADMIN;
+      // no further actions
     }
     user = this.usersRepository.create(usr);
     const result = await this.usersRepository.save(user);
+
+    await this.usersRepository
+      .createQueryBuilder('user')
+      .relation(User, 'roles')
+      .of(result)
+      .add([1]);
+
     result.password = usr.password;
     return result;
   }
