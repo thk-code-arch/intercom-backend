@@ -40,6 +40,6 @@ export class AdminController {
   @Post('add_users_to_project')
   async addUserstoProject(@Body() emails: AddUsersByEmail) {
     console.log(emails);
-    return this.adminService.addUserstoProject(emails.email);
+    return this.adminService.addUserstoProject(emails);
   }
 }

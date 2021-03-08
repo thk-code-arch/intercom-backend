@@ -1,4 +1,4 @@
-import { IsEmail, IsString, IsArray, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsString, IsArray, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AddUsersByEmail {
@@ -8,4 +8,9 @@ export class AddUsersByEmail {
   @IsString({ each: true })
   //  @IsEmail()
   email: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  projectId: number;
 }
