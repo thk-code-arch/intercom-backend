@@ -19,6 +19,39 @@ export class MessageDto {
   user: SocketUserDto;
 }
 
+export class moveTo {
+  position: {
+    x: number;
+    y: number;
+    z: number;
+    dir: {
+      x: number;
+      y: number;
+      z: number;
+    };
+  };
+  @IsNumber()
+  chatroomId: number;
+  user: SocketUserDto;
+}
+
+export class getPlayers {
+  position: {
+    x: number;
+    y: number;
+    z: number;
+    dir: {
+      x: number;
+      y: number;
+      z: number;
+    };
+  };
+  chatroomId: number;
+  userId: number;
+  username: string;
+  profile_image: string;
+}
+
 export class SwitchRoomDto {
   @IsNumber()
   oldRoom: number;

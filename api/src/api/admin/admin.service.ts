@@ -65,6 +65,7 @@ export class AdminService {
       .where('User.email IN (:...mails)', { mails: emails.email })
       .getMany();
     console.log(userIds);
+    // TODO: remove loop reverse add relation,, add takes array
     userIds.forEach((usr) => {
       console.log(usr);
       this.userRepository

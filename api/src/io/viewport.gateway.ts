@@ -11,7 +11,7 @@ import { UseGuards } from '@nestjs/common';
 import { WsJwtGuard } from '../auth/guards/ws-jwt.guard';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
-import { MessageDto, SwitchRoomDto } from './io.dto';
+import { getPlayers, moveTo, SwitchRoomDto } from './io.dto';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({ namespace: 'viewport' })
@@ -51,9 +51,18 @@ export class ViewportGateway
   }
 
   @SubscribeMessage('moveTo')
-  async sendMessage(@MessageBody() req: MessageDto) {
+  async sendMessage(@MessageBody() req: moveTo) {
+    console.log(req);
     if (req.chatroomId !== 0) {
-      this.server.in(String(req.chatroomId)).emit('message', { req });
+      const res = new getPlayers();
+      res.position = req.position;
+      res.chatroomId = req.chatroomId;
+      res.userId = req.user.id;
+      res.username = req.user.username;
+      res.profile_image = req.user.profile_image;
+      console.log(res);
+
+      this.server.in(String(req.chatroomId)).emit('getplayers', res);
     }
   }
 }
