@@ -45,7 +45,6 @@ export class ProjectService {
       const found = subprojects.filter(
         (sp) => sp['parentProject'] === projects[i].id,
       );
-      console.log('FOUND!!!', found);
       if (found) {
         projects[i]['sub'] = found;
       }

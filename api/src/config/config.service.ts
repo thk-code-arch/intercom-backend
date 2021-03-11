@@ -72,7 +72,6 @@ class ConfigService {
         migrationsDir: 'src/database/migrations',
       },
 
-      logging: 'all',
       ssl: false,
     };
   }

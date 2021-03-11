@@ -43,6 +43,13 @@ export class ViewportGateway
     }
     socket.join(String(req.newRoom));
     console.log('joines Viewport', req.newRoom, 'isIn', socket.rooms);
+    this.server
+      .of('/viewport')
+      .in(String(req.newRoom))
+      .clients(function (error, clients) {
+        console.log('theClientsError', error);
+        console.log('theClients', clients);
+      });
   }
 
   @SubscribeMessage('disconnet')
@@ -52,7 +59,6 @@ export class ViewportGateway
 
   @SubscribeMessage('moveTo')
   async sendMessage(@MessageBody() req: moveTo) {
-    console.log(req);
     if (req.chatroomId !== 0) {
       const res = new getPlayers();
       res.position = req.position;
@@ -60,8 +66,6 @@ export class ViewportGateway
       res.userId = req.user.id;
       res.username = req.user.username;
       res.profile_image = req.user.profile_image;
-      console.log(res);
-
       this.server.in(String(req.chatroomId)).emit('getplayers', res);
     }
   }

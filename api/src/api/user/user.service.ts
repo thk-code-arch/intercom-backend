@@ -48,14 +48,12 @@ export class UserService {
       res.projects.filter((p) => p.parentProject !== null),
       'id',
     );
-    console.log('suuuuubb', subprojects);
     if (Array.isArray(subprojects) && subprojects.length) {
       const catcheRooms = await this.chatService.getSubProjectChatrooms(
         subprojects,
       );
       res.chatrooms = [...res.chatrooms, ...catcheRooms];
     }
-    console.log(res);
     return res;
   }
 

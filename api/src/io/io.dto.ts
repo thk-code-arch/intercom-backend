@@ -19,6 +19,13 @@ export class MessageDto {
   user: SocketUserDto;
 }
 
+export class activeAvatar {
+  chatroomId: number;
+  userId: number;
+  username: string;
+  profile_image: string;
+}
+
 export class moveTo {
   position: {
     x: number;
