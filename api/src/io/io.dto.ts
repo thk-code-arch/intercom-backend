@@ -8,7 +8,9 @@ export class SocketUserDto {
   projects: [];
   chatrooms: [];
 }
-
+export class lastSendInRoom {
+  [key: number]: Date; //theChatroomId
+}
 export class Avatar {
   //userId
   [key: number]: {
@@ -41,11 +43,6 @@ export class MessageDto {
   user: SocketUserDto;
 }
 
-export class onlineAvatars {
-  chatroomId: number;
-  avatar: SocketUserDto[];
-}
-
 export class moveTo {
   position: {
     x: number;
@@ -60,23 +57,6 @@ export class moveTo {
   @IsNumber()
   chatroomId: number;
   user: SocketUserDto;
-}
-
-export class getPlayers {
-  position: {
-    x: number;
-    y: number;
-    z: number;
-    dir: {
-      x: number;
-      y: number;
-      z: number;
-    };
-  };
-  chatroomId: number;
-  userId: number;
-  username: string;
-  profile_image: string;
 }
 
 export class SwitchRoomDto {

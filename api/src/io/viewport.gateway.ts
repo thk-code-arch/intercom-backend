@@ -12,13 +12,12 @@ import { WsJwtGuard } from '../auth/guards/ws-jwt.guard';
 import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import {
-  getPlayers,
   moveTo,
   SwitchRoomDto,
   Avatar,
+  lastSendInRoom,
   OnlineUsers,
 } from './io.dto';
-import _ = require('lodash');
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({ namespace: 'viewport' })
@@ -28,6 +27,7 @@ export class ViewportGateway
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatroomGateway');
   private onlineUsers = new OnlineUsers();
+  private lastSent = new lastSendInRoom();
 
   async handleDisconnect(client: Socket) {
     this.logger.log(`Client disconnected: ${client.id}`);
@@ -48,6 +48,7 @@ export class ViewportGateway
   ) {
     if (this.onlineUsers[req.newRoom] == null) {
       this.onlineUsers[req.newRoom] = new Avatar();
+      this.lastSent[req.newRoom] = new Date();
     }
 
     if (req.oldRoom !== 0) {
@@ -64,9 +65,10 @@ export class ViewportGateway
     console.log('heeelllooo', this.onlineUsers);
   }
 
-  @SubscribeMessage('disconnet')
+  @SubscribeMessage('disconnect')
   async disconnect(@ConnectedSocket() socket: Socket) {
     socket.disconnect();
+    //TODO handle disconnect
   }
 
   @SubscribeMessage('moveTo')
@@ -83,11 +85,16 @@ export class ViewportGateway
         username: req.user.username,
         position: req.position,
       };
-      //this.server.in(String(req.chatroomId)).emit('getplayers', res);
-      this.logger.debug(JSON.stringify(this.onlineUsers));
-      this.server
-        .in(String(req.chatroomId))
-        .emit('getplayers', this.onlineUsers[req.chatroomId]);
+      // throttle emits
+      const timeDelta = Math.abs(
+        new Date().getTime() - this.lastSent[req.chatroomId].getTime(),
+      );
+      if (timeDelta >= 500) {
+        this.lastSent[req.chatroomId] = new Date();
+        this.server
+          .in(String(req.chatroomId))
+          .emit('getplayers', this.onlineUsers[req.chatroomId]);
+      }
     }
   }
 }
