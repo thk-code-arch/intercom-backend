@@ -1,4 +1,11 @@
-import { User, Role, Project, Projectfile, Chatroom } from '../entities/models';
+import {
+  User,
+  Role,
+  Project,
+  Avatarfile,
+  Projectfile,
+  Chatroom,
+} from '../entities/models';
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
 const gravatar = require('gravatar');
@@ -73,6 +80,14 @@ export default class Initial implements Seeder {
     file.project = <any>newProj.id;
     file.user = <any>1;
     await projectFileRepo.save(file);
+
+    const avatarRepo = connection.getRepository(Avatarfile);
+    const afile = new Avatarfile();
+    afile.filename = 'InterAct.gltf';
+    afile.id = 1;
+    afile.path = '/files/avatars/no1.gltf';
+    //afile.users = <any>1;
+    await avatarRepo.save(afile);
 
     if (process.env.IC_SEEDDEMODATA === 'true') {
       await factory(User)().createMany(3);

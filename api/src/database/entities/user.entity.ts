@@ -4,10 +4,18 @@ import {
   PrimaryGeneratedColumn,
   BeforeInsert,
   ManyToMany,
+  ManyToOne,
   OneToMany,
   JoinTable,
 } from 'typeorm';
-import { Role, Chatlog, Project, Chatroom, Projectfile } from './models';
+import {
+  Role,
+  Chatlog,
+  Project,
+  Chatroom,
+  Avatarfile,
+  Projectfile,
+} from './models';
 
 import * as bcrypt from 'bcrypt';
 
@@ -51,6 +59,9 @@ export class User {
 
   @OneToMany(() => Projectfile, (projectfile) => projectfile.user)
   projectfiles: Projectfile[];
+
+  @ManyToOne(() => Avatarfile, (avatarfile) => avatarfile.users)
+  avatarfile: Avatarfile;
 
   @OneToMany(() => Chatlog, (chatlog) => chatlog.user)
   chatlog: Chatlog[];
