@@ -28,8 +28,8 @@ export class ChatController {
   }
 
   @Get('get_chatrooms')
-  async getChatrooms(@CurrentUser('id') usrid: number) {
-    return this.chatService.getChatroomsByUserId(usrid);
+  async getChatrooms(@CurrentUser('chatroomsDetails') userChatrooms) {
+    return userChatrooms;
   }
 
   @Get('msgbyid/:msgid')

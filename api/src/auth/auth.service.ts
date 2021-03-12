@@ -24,7 +24,6 @@ export class AuthService {
 
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.userService.findOneAuthUser(username);
-    this.logger.debug(user);
     if (!user) {
       throw new HttpException('Authentication failed!', HttpStatus.BAD_REQUEST);
     }

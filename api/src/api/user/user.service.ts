@@ -4,6 +4,9 @@ import { Repository } from 'typeorm';
 import { User } from '../../database/entities/models';
 import { CreateUserDto } from './dto/user.dto';
 import { Roles } from '../../auth/Roles';
+import { ProjectService } from '../project/project.service';
+import { ChatService } from '../chat/chat.service';
+import _ = require('lodash');
 const gravatar = require('gravatar');
 const generator = require('generate-password');
 
@@ -14,6 +17,8 @@ export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
+    private readonly projectService: ProjectService,
+    private readonly chatService: ChatService,
   ) {}
 
   private readonly logger = new Logger(UserService.name);
@@ -30,10 +35,26 @@ export class UserService {
       .getOne();
   }
   async findByUserId(userid: number): Promise<User | undefined> {
-    return this.usersRepository.findOne({
-      relations: ['roles', 'projects', 'chatrooms'],
+    const res = await this.usersRepository.findOne({
+      relations: ['roles', 'chatrooms'],
       where: { id: userid },
     });
+    //  inject Subprojects
+    res.projects = await this.projectService.get_projects_and_subprojects(
+      res.id,
+    );
+    //  inject Subprojects Chatrooms
+    const subprojects = _.map(
+      res.projects.filter((p) => p.parentProject !== null),
+      'id',
+    );
+    if (Array.isArray(subprojects) && subprojects.length) {
+      const catcheRooms = await this.chatService.getSubProjectChatrooms(
+        subprojects,
+      );
+      res.chatrooms = [...res.chatrooms, ...catcheRooms];
+    }
+    return res;
   }
 
   public async signup(
@@ -65,11 +86,19 @@ export class UserService {
     if (!quite) {
       usr.password = generator.generate({ length: 10, numbers: true });
     }
+    usr.role = 1;
     if (isAdmin) {
-      usr.role = Roles.ADMIN;
+      // no further actions
     }
     user = this.usersRepository.create(usr);
     const result = await this.usersRepository.save(user);
+
+    await this.usersRepository
+      .createQueryBuilder('user')
+      .relation(User, 'roles')
+      .of(result)
+      .add([1]);
+
     result.password = usr.password;
     return result;
   }

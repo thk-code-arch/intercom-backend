@@ -9,7 +9,7 @@ export class UtilsService {
     this.mailerService
       .sendMail({
         to: email, // List of receivers email address
-        subject: 'Welcome to InterAct!',
+        subject: 'Welcome to InterCom!',
         template: 'signup', // The `.pug` or `.hbs` extension is appended automatically.
         context: {
           code: password,

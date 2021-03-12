@@ -54,8 +54,8 @@ export class ProjectController {
   }
 
   @Get('get_projects')
-  async getProjects(@CurrentUser('id') usrid: number) {
-    return this.projectService.get_projects(usrid);
+  async getProjects(@CurrentUser('projectsDetails') projects) {
+    return projects;
   }
 
   @Post('uploadifc/:projectid')

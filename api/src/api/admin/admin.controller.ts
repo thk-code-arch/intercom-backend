@@ -1,8 +1,9 @@
-import { Controller, Get, Post, Param } from '@nestjs/common';
+import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
 import { ApiTags, ApiParam } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
+import { AddUsersByEmail } from './admin.dto';
 
 @Auth(Roles.ADMIN)
 @ApiTags('admin')
@@ -35,5 +36,10 @@ export class AdminController {
     @Param('theUserId') selUser: number,
   ) {
     return this.adminService.addRole(role, selUser);
+  }
+  @Post('add_users_to_project')
+  async addUserstoProject(@Body() emails: AddUsersByEmail) {
+    console.log(emails);
+    return this.adminService.addUserstoProject(emails);
   }
 }

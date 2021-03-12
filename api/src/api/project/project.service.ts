@@ -8,6 +8,7 @@ import {
   Chatroom,
   Projectfile,
 } from '../../database/entities/models';
+import _ = require('lodash');
 
 @Injectable()
 export class ProjectService {
@@ -23,14 +24,36 @@ export class ProjectService {
   ) {}
   private readonly logger = new Logger(ProjectService.name);
 
-  async get_projects(usrid: number) {
-    const res = await this.usersRepository
+  async get_projects_and_subprojects(usrid: number) {
+    const allprojects = await this.usersRepository
       .createQueryBuilder('user')
       .relation('projects')
       .of(usrid)
       .loadMany<Project>();
-    return res;
+
+    const projects = allprojects.filter((p) => p.parentProject === null);
+    const parentprojects = _.map(projects, 'id');
+
+    const subprojects = await this.projectsRepository
+      .createQueryBuilder('project')
+      .where('project.parentProject IN (:...parenProjs)', {
+        parenProjs: parentprojects,
+      })
+      .getMany();
+
+    for (let i = 0; i < projects.length; i++) {
+      const found = subprojects.filter(
+        (sp) => sp['parentProject'] === projects[i].id,
+      );
+      if (found) {
+        projects[i]['sub'] = found;
+      }
+    }
+    //TODO CLEANUP
+
+    return [...projects, ...subprojects];
   }
+
   async select_project(usrprojects: number[], sP: number) {
     const res = await this.projectsRepository
       .createQueryBuilder('project')
@@ -55,21 +78,27 @@ export class ProjectService {
     newroom.name = newProj.name;
     newroom.project = resP;
     newroom.roomtype = 'PROJECT';
+    if (newProj.parentProject) {
+      newroom.roomtype = 'SUBPROJECT';
+    }
     newroom.description = 'Project Room';
     const resC = await this.chatroomRepository.save(newroom);
+    this.logger.debug(`newChatroom ${resC}  `);
 
-    const PJ = await this.usersRepository
-      .createQueryBuilder('user')
-      .relation(User, 'projects')
-      .of(usrid)
-      .add(resP);
-    const CJ = await this.usersRepository
-      .createQueryBuilder('user')
-      .relation(User, 'chatrooms')
-      .of(usrid)
-      .add(resC);
-
-    this.logger.debug(`new Projects ${PJ} new Chatroom ${CJ}  `);
+    //Dont create relations when its a subproject
+    if (!newProj.parentProject) {
+      const PJ = await this.usersRepository
+        .createQueryBuilder('user')
+        .relation(User, 'projects')
+        .of(usrid)
+        .add(resP);
+      const CJ = await this.usersRepository
+        .createQueryBuilder('user')
+        .relation(User, 'chatrooms')
+        .of(usrid)
+        .add(resC);
+      this.logger.debug(`new relation Projects ${PJ} new Chatroom ${CJ}  `);
+    }
 
     return resP;
   }

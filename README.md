@@ -1,19 +1,19 @@
-
 # intercom-backend
 
-API built with Sequelize NodeJs Express MariaDB
+API built with NestJS,Postgres, TypeORM
 
 ## Installation
 
 add docker-compose.yml
+
 ```docker
 version: '3'
 services:
   icweb-db:
-    container_name: icweb-db
-    image: mariadb:latest
+    container_name: dev-icweb-db
+    image: postgres:12
     volumes:
-    - ./db:/var/lib/mysql
+      - ./db:/var/lib/postgresql/data
     restart: always
     environment:
        - MYSQL_ROOT_PASSWORD=TOPSECRET
@@ -33,16 +33,29 @@ services:
       - ./files:/files
 
 ```
-## Backend
-### Generell
-  - [x] Authentifizierung
-  - [x] Anbindung Datenbank
-  - [x] Anbindung Mailversand
-  - [x] FileUpload
-  - [x] Socketserver
-  - [ ] Anbindung externer APIs
-    - [x] Fetch Video description
-  - [ ] API Umstellung auf NestJS Framework (Vorteile: Security,Modular)
-### IFC Loader
-  - [x] Konvertierung von IFC zu GLTF ueber Skripte
-  - [ ] Anbindung IFC-Model checker (Jakob Beetz, RWTH Aachen)
+
+## Run DB migrations
+
+```bash
+# create typeorm config
+npm run pretypeorm
+
+# generate migration
+npm run typeorm:migration:generate -- init
+
+# update/init DB
+npm run typeorm:migration:run
+```
+
+## Add some dummy DATA
+
+```bash
+# seed some Data
+npm run seed:run
+```
+
+## Reinit DB
+
+```bash
+npm run schema:drop && npm run typeorm:migration:run && npm run seed:run
+```

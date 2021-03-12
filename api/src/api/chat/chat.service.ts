@@ -46,6 +46,18 @@ export class ChatService {
     return res;
   }
 
+  async getSubProjectChatrooms(
+    projectids: number[],
+  ): Promise<Chatroom[] | undefined> {
+    const res = await this.roomRepository
+      .createQueryBuilder('chatroom')
+      .where('chatroom.projectId IN (:...manyprojects) ', {
+        manyprojects: projectids,
+      })
+      .getMany();
+    return res;
+  }
+
   async getMsgById(
     msgid: number,
     userrooms: number[],

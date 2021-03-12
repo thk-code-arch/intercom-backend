@@ -5,7 +5,7 @@ import {
   ManyToMany,
   OneToMany,
 } from 'typeorm';
-import { User, Projectfile } from './models';
+import { User, Projectfile, Storage } from './models';
 
 @Entity()
 export class Project {
@@ -32,4 +32,7 @@ export class Project {
 
   @OneToMany(() => Projectfile, (projectfile) => projectfile.project)
   projectfile: Projectfile[];
+
+  @OneToMany(() => Storage, (storage) => storage.project)
+  storage: Storage[];
 }

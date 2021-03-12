@@ -1,4 +1,11 @@
-import { User, Role, Project } from '../entities/models';
+import {
+  User,
+  Role,
+  Project,
+  Avatarfile,
+  Projectfile,
+  Chatroom,
+} from '../entities/models';
 import { Connection } from 'typeorm';
 import { Factory, Seeder } from 'typeorm-seeding';
 const gravatar = require('gravatar');
@@ -39,9 +46,54 @@ export default class Initial implements Seeder {
       .of(usr)
       .add([role1, role2]);
 
+    const projRepo = connection.getRepository(Project);
+    const newProj = new Project();
+    newProj.owner = 1;
+    newProj.name = 'InterACT';
+    newProj.description = 'Laboratory for Architecture, Crafts, Technology';
+    const theProject = await projRepo.save(newProj);
+
+    const chatRepo = connection.getRepository(Chatroom);
+    const newroom = new Chatroom();
+    newroom.name = newProj.name;
+    newroom.description = newProj.description;
+    newroom.project = <any>newProj;
+    newroom.roomtype = 'PROJECT';
+    const theRoom = await chatRepo.save(newroom);
+
+    const res3 = await userRepo
+      .createQueryBuilder('user')
+      .relation(User, 'projects')
+      .of(usr)
+      .add(theProject);
+
+    const res4 = await userRepo
+      .createQueryBuilder('user')
+      .relation(User, 'chatrooms')
+      .of(usr)
+      .add(theRoom);
+
+    const projectFileRepo = connection.getRepository(Projectfile);
+    const file = new Projectfile();
+    file.filename = 'InterAct.gltf';
+    file.path = '/files/input/InterAct.ifc';
+    file.project = <any>newProj.id;
+    file.user = <any>1;
+    await projectFileRepo.save(file);
+
+    const avatarRepo = connection.getRepository(Avatarfile);
+    const afile = new Avatarfile();
+    afile.filename = 'no1.gltf';
+    afile.id = 1;
+    afile.path = '/files/avatars/no1.gltf';
+    //afile.users = <any>1;
+    await avatarRepo.save(afile);
+
     if (process.env.IC_SEEDDEMODATA === 'true') {
-      await factory(User)().createMany(10);
-      //      await factory(Project)().createMany(5);
+      await factory(User)().createMany(3);
+      //await factory(Project)().createMany(2);
+      //seeding
     }
+    console.log(res2, res3, res4);
   }
 }

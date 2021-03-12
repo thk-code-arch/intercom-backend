@@ -11,7 +11,9 @@ export const CurrentUser = createParamDecorator(
       profile_image: user.profile_image,
       roles: _.map(user.roles, 'id'),
       projects: _.map(user.projects, 'id'),
+      projectsDetails: user.projects,
       chatrooms: _.map(user.chatrooms, 'id'),
+      chatroomsDetails: user.chatrooms,
     };
     return data ? req?.[data] : req;
   },
