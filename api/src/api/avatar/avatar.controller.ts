@@ -15,7 +15,7 @@ export class AvatarController {
   @Header('Content-Type', 'model/gltf+json')
   async getAvatarfile(@Param('theavatarId') avatarId: number, @Res() response) {
     const file = await this.avatarService.getAvatarfile(avatarId);
-    const filepath = '/files/output/' + file.filename;
+    const filepath = '/files/avatars/' + file.filename;
     fs.exists(filepath, function (exists) {
       if (exists) {
         return fs.createReadStream(filepath).pipe(response);

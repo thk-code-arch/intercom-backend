@@ -83,7 +83,7 @@ export default class Initial implements Seeder {
 
     const avatarRepo = connection.getRepository(Avatarfile);
     const afile = new Avatarfile();
-    afile.filename = 'InterAct.gltf';
+    afile.filename = 'no1.gltf';
     afile.id = 1;
     afile.path = '/files/avatars/no1.gltf';
     //afile.users = <any>1;
