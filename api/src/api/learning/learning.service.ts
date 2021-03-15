@@ -10,7 +10,7 @@ export class LearningService {
   constructor(
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
-    @InjectRepository(User)
+    @InjectRepository(Learning)
     private readonly learningRepository: Repository<Learning>,
   ) {}
   private readonly logger = new Logger(LearningService.name);
@@ -18,11 +18,16 @@ export class LearningService {
   async listAllPublic(): Promise<Learning[] | undefined> {
     return this.learningRepository.find({ where: { type: 'PUBLIC' } });
   }
-  async addLearning(newlearning: NewLearning): Promise<Learning | undefined> {
+  async addLearning(
+    newlearning: NewLearning,
+    userId: number,
+  ): Promise<Learning | undefined> {
     const learning = new Learning();
     Object.assign(learning, newlearning);
-    this.logger.log(JSON.stringify(learning));
-
-    return this.learningRepository.create(newlearning);
+    learning.user = <any>userId;
+    return this.learningRepository.save(learning);
+  }
+  async getLearningById(learningId: number) {
+    return this.learningRepository.findOne(learningId);
   }
 }

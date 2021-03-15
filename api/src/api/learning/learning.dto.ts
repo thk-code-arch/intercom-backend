@@ -40,6 +40,10 @@ export class NewLearning {
   title: string;
 
   @ApiProperty()
+  @IsString()
+  description: string;
+
+  @ApiProperty()
   @IsEnum(access)
   type: string;
 
