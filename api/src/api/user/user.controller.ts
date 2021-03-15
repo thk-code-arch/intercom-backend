@@ -1,27 +1,18 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
+import { createIssue } from './dto/user.dto';
+import { UtilsService } from '../../utils/utils.service';
 
 @ApiTags('user')
 @Controller('user')
 export class UserController {
-  constructor() {}
+  constructor(private readonly utils: UtilsService) {}
 
-  @Get('whoami')
-  getProfile(@Request() req) {
-    return req.user;
-  }
-
-  @Get('amiuser')
+  @Post('create_issue')
   @Auth(Roles.USER)
-  getAdmin(@Request() req) {
-    return req.user;
-  }
-
-  @Get('amiadmin')
-  @Auth(Roles.ADMIN)
-  getRoot(@Request() req) {
-    return req.user;
+  async createIssue(@Body() issue: createIssue) {
+    return this.utils.createIssue(issue);
   }
 }

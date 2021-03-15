@@ -40,3 +40,16 @@ export class signupwithInvite {
   @IsEmail()
   email: string;
 }
+export class createIssue {
+  @ApiProperty()
+  @IsNotEmpty()
+  title: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  label: string;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  context: string;
+}

@@ -66,4 +66,27 @@ export class UtilsService {
     await this.downloadImage(theresult.image, theresult.thumbnail);
     return theresult;
   }
+
+  async createIssue(issue): Promise<void> {
+    const headersOpt = {
+      headers: {
+        Cookie: 'logged_in=no',
+        Authorization: 'token ' + process.env.GITHUBBOT,
+        'User-Agent':
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/29.0.1521.3 Safari/537.36',
+      },
+    };
+
+    const url =
+      'https://api.github.com/repos/thk-code-arch/intercom-frontend/issues?state=all';
+
+    const response = await this.http
+      .post(
+        url,
+        { title: issue.title, body: issue.context, labels: [issue.label] },
+        headersOpt,
+      )
+      .toPromise();
+    return response.data;
+  }
 }
