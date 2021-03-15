@@ -71,7 +71,7 @@ class ConfigService {
       cli: {
         migrationsDir: 'src/database/migrations',
       },
-
+      logging: true,
       ssl: false,
     };
   }

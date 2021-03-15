@@ -1,4 +1,5 @@
 import { IsNumber, IsString, IsOptional } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class NewProject {
@@ -12,6 +13,7 @@ export class NewProject {
   owner?: number;
 
   @IsNumber()
+  @Type(() => Number)
   parentProject?: number;
 }
 
@@ -40,6 +42,7 @@ export class addNewProject {
 
   @ApiProperty()
   @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   parentProject?: number;
 }

@@ -6,9 +6,11 @@ import { UserService } from './user.service';
 import { AuthModule } from '../../auth/auth.module';
 import { ProjectModule } from '../project/project.module';
 import { ChatModule } from '../chat/chat.module';
+import { UtilsModule } from '../../utils/utils.module';
 
 @Module({
   imports: [
+    UtilsModule,
     ProjectModule,
     ChatModule,
     forwardRef(() => AuthModule),
