@@ -26,7 +26,7 @@ export class LearningController {
   }
   @Get('public')
   async getPublicLearnings() {
-    return;
+    return this.learningService.listAllPublic();
   }
   @Get('show/:learningId')
   async showLearning() {

@@ -16,15 +16,15 @@ export class NewLearning {
   url: string;
 
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   thumbnail?: string;
 
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   title: string;
 
   @ApiProperty()
-  @IsNumber()
+  @IsString()
   type: string;
 
   @ApiProperty()

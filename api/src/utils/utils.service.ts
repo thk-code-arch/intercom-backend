@@ -63,7 +63,7 @@ export class UtilsService {
       Math.round(new Date().getTime() / 1000).toString() +
       '.jpg';
 
-    this.downloadImage(theresult.image, theresult.thumbnail);
+    await this.downloadImage(theresult.image, theresult.thumbnail);
     return theresult;
   }
 }
