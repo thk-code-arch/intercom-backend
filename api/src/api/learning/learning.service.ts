@@ -19,6 +19,10 @@ export class LearningService {
     return this.learningRepository.find({ where: { type: 'PUBLIC' } });
   }
   async addLearning(newlearning: NewLearning): Promise<Learning | undefined> {
+    const learning = new Learning();
+    Object.assign(learning, newlearning);
+    this.logger.log(JSON.stringify(learning));
+
     return this.learningRepository.create(newlearning);
   }
 }

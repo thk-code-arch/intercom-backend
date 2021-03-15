@@ -15,6 +15,7 @@ import {
   Chatroom,
   Avatarfile,
   Projectfile,
+  Learning,
 } from './models';
 
 import * as bcrypt from 'bcrypt';
@@ -65,6 +66,9 @@ export class User {
 
   @OneToMany(() => Chatlog, (chatlog) => chatlog.user)
   chatlog: Chatlog[];
+
+  @OneToMany(() => Learning, (learning) => learning.user)
+  learning: Learning[];
 
   @BeforeInsert()
   async initUser() {

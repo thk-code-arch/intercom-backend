@@ -18,7 +18,7 @@ export class LearningController {
 
   @Post('add')
   async addLearning(@Body() newLearning: NewLearning) {
-    return newLearning;
+    return this.learningService.addLearning(newLearning);
   }
   @Post('fetch')
   async fetchVideo(@Body() videoUrl: videoUrl) {

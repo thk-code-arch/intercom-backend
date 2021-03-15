@@ -1,5 +1,11 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { Storage } from './models';
+import {
+  Column,
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+} from 'typeorm';
+import { Storage, User, Project } from './models';
 
 @Entity()
 export class Learning {
@@ -24,12 +30,15 @@ export class Learning {
   @Column()
   type: string; // PUBLIC, PROJECT related
 
-  @Column()
-  projectid: number; // when project related
+  @ManyToOne(() => Project, (project) => project.learning)
+  project: Project;
 
   @Column({ default: 1 })
   views: number; // Count Views
 
   @OneToMany(() => Storage, (storage) => storage.learning)
   storage: Storage[];
+
+  @ManyToOne(() => User, (user) => user.learning)
+  user: User;
 }
