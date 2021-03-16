@@ -16,6 +16,7 @@ export class Avatar {
   [key: number]: {
     userId: number;
     username: string;
+    profile_image: string;
     position: AvatarPosition;
   };
 }
