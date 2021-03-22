@@ -5,6 +5,7 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
+import { CurrentUser } from '../../auth/decorators/user.decorator';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
 import { StorageService } from './storage.service';
@@ -21,7 +22,6 @@ import { editFileName, imageExtensionFilter } from '../../utils/img-upload';
 export class StorageController {
   constructor(private readonly storageService: StorageService) {}
 
-  @Post('upload_enc_image')
   @ApiConsumes('multipart/form-data')
   @ApiFile()
   @UseInterceptors(
@@ -33,11 +33,9 @@ export class StorageController {
       fileFilter: imageExtensionFilter,
     }),
   )
-  async uploadEncImage(@UploadedFile() file) {
-    console.log('UUUPLLADD');
-    console.log(file);
-    return {
-      file: file.buffer,
-    };
+  @Post('upload_enc_image')
+  async uploadEncImage(@Body() body: UploadEncImage, @UploadedFile() file) {
+    console.log(body.description);
+    return this.storageService.createThumbnail(file.path, file.filename);
   }
 }
