@@ -7,16 +7,18 @@ import { ChatModule } from './chat/chat.module';
 import { AdminModule } from './admin/admin.module';
 import { AvatarModule } from './avatar/avatar.module';
 import { LearningModule } from './learning/learning.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   controllers: [ApiController, ProjectController],
   imports: [
     AvatarModule,
-    UserModule,
-    ProjectModule,
+    AdminModule,
     ChatModule,
     LearningModule,
-    AdminModule,
+    ProjectModule,
+    StorageModule,
+    UserModule,
   ],
 })
 export class ApiModule {}
