@@ -34,6 +34,9 @@ export class User {
   @Column('varchar', { length: 320, unique: true })
   username: string;
 
+  // TODO remove User email from select
+  //  don't expose sensitive data in qeuries.
+
   @Column('varchar', { length: 320, unique: true })
   email: string;
 
