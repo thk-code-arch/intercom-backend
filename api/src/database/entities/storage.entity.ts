@@ -12,11 +12,17 @@ export class Storage {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column('varchar', { length: 255 })
-  filename: string;
+  @Column()
+  category: string; // Screenshot, Project Attachments
 
-  @Column('varchar', { length: 255 })
-  path: string;
+  @Column()
+  filepath: string;
+
+  @Column()
+  thumbnail: string;
+
+  @Column()
+  description: string; //user added description
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
