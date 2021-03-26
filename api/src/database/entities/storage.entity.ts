@@ -18,7 +18,7 @@ export class Storage {
   @Column()
   filepath: string;
 
-  @Column()
+  @Column({ nullable: true })
   thumbnail: string;
 
   @Column()

@@ -13,10 +13,14 @@ import { Roles } from '../../auth/Roles';
 import { StorageService } from './storage.service';
 import { ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { ApiFile } from '../../auth/decorators/file.decorator';
-import { UploadProjectScreenshot } from './storage.dto';
+import { UploadProjectScreenshot, UploadProjectFile } from './storage.dto';
 import { diskStorage } from 'multer';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { editFileName, imageExtensionFilter } from '../../utils/img-upload';
+import {
+  editFileName,
+  imageExtensionFilter,
+  attachmentFilter,
+} from '../../utils/upload';
 
 @Auth(Roles.USER)
 @ApiTags('storage')
@@ -48,6 +52,28 @@ export class StorageController {
       usrid,
       body,
     );
+  }
+
+  @ApiConsumes('multipart/form-data')
+  @ApiFile()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: '/files/storage/files',
+        filename: editFileName,
+      }),
+      fileFilter: attachmentFilter,
+    }),
+  )
+  @Post('upload_project_file')
+  async uploadProjectFile(
+    @Body() body: UploadProjectFile,
+    @UploadedFile() file,
+    @CurrentUser('id') usrid: number,
+  ) {
+    console.log('thebody', body);
+    console.log(file);
+    return this.storageService.uploadProjectFile(file.path, usrid, body);
   }
 
   @Get('get_project_screenshot/:theprojectId')

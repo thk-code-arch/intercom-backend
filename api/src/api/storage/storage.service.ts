@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UploadProjectScreenshot } from './storage.dto';
+import { UploadProjectScreenshot, UploadProjectFile } from './storage.dto';
 import { Storage } from '../../database/entities/models';
 import * as sharp from 'sharp';
 
@@ -25,6 +25,20 @@ export class StorageService {
     file.category = 'Screenshot';
     file.thumbnail = thumbnail;
     file.description = body.description;
+    file.project = <any>body.projectId;
+    file.user = <any>userId;
+    return this.storageRepository.save(file);
+  }
+
+  async uploadProjectFile(
+    filepath: string,
+    userId: number,
+    body: UploadProjectFile,
+  ): Promise<Storage | undefined> {
+    const file = new Storage();
+    file.filepath = filepath;
+    file.category = 'File';
+    file.description = 'User uploaded file';
     file.project = <any>body.projectId;
     file.user = <any>userId;
     return this.storageRepository.save(file);

@@ -12,3 +12,10 @@ export class UploadProjectScreenshot {
   @Type(() => Number)
   projectId: number;
 }
+
+export class UploadProjectFile {
+  @ApiProperty()
+  @IsNumber()
+  @Type(() => Number)
+  projectId: number;
+}

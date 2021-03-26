@@ -14,6 +14,19 @@ export const imageExtensionFilter = (req, file, callback) => {
   callback(null, true);
 };
 
+export const attachmentFilter = (req, file, callback) => {
+  if (file.originalname.match(/\.(exe|bat|pif)$/i)) {
+    return callback(
+      new HttpException(
+        'Executable files arent allowed!',
+        HttpStatus.BAD_REQUEST,
+      ),
+      false,
+    );
+  }
+  callback(null, true);
+};
+
 export const editFileName = (req, file, callback) => {
   const name = file.originalname.split('.')[0];
   const fileExtName = extname(file.originalname);
