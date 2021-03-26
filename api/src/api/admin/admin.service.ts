@@ -30,6 +30,7 @@ export class AdminService {
   }
   async allProjects() {
     return this.projectRepository.find({
+      where: { parentProject: null },
       relations: ['users'],
     });
   }
@@ -86,6 +87,7 @@ export class AdminService {
     }
     // TODO: remove loop reverse add relation,, add takes array
 
+    console.log(emails.newUsers);
     emails.newUsers.forEach(async (newUser) => {
       const newuser = new CreateUserDto();
       newuser.email = newUser;
@@ -105,6 +107,6 @@ export class AdminService {
         .of(regUser.id)
         .add(chatroomId);
     });
-    return 'true';
+    return this.allProjects();
   }
 }

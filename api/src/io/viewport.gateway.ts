@@ -60,6 +60,7 @@ export class ViewportGateway
     this.onlineUsers[req.newRoom][req.user.id] = {
       userId: req.user.id,
       username: req.user.username,
+      profile_image: req.user.profile_image,
       position: { x: 0, y: 0, z: 0, dir: { x: 0, y: 0, z: 0 } },
     };
     console.log('heeelllooo', this.onlineUsers);
@@ -83,6 +84,7 @@ export class ViewportGateway
       this.onlineUsers[req.chatroomId][req.user.id] = {
         userId: req.user.id,
         username: req.user.username,
+        profile_image: req.user.profile_image,
         position: req.position,
       };
       // throttle emits
