@@ -33,12 +33,13 @@ export class StorageService {
   async uploadProjectFile(
     filepath: string,
     userId: number,
+    originalFilename: string,
     body: UploadProjectFile,
   ): Promise<Storage | undefined> {
     const file = new Storage();
     file.filepath = filepath;
     file.category = 'File';
-    file.description = 'User uploaded file';
+    file.description = originalFilename;
     file.project = <any>body.projectId;
     file.user = <any>userId;
     return this.storageRepository.save(file);
@@ -65,6 +66,20 @@ export class StorageService {
       .where('storage.project = :projectId ', { projectId: projectId })
       .andWhere('storage.project IN (:...userpr)', { userpr: usrprojects })
       .andWhere('storage.category = :cat', { cat: 'Screenshot' })
+      .orderBy('storage.createdAt', 'DESC')
+      .getMany();
+  }
+
+  async getAllProjectFiles(
+    usrprojects: number[],
+    projectId: number,
+  ): Promise<Storage[] | undefined> {
+    return await this.storageRepository
+      .createQueryBuilder('storage')
+      .leftJoinAndSelect('storage.user', 'users')
+      .where('storage.project = :projectId ', { projectId: projectId })
+      .andWhere('storage.project IN (:...userpr)', { userpr: usrprojects })
+      .andWhere('storage.category = :cat', { cat: 'File' })
       .orderBy('storage.createdAt', 'DESC')
       .getMany();
   }

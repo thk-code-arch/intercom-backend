@@ -73,14 +73,27 @@ export class StorageController {
   ) {
     console.log('thebody', body);
     console.log(file);
-    return this.storageService.uploadProjectFile(file.path, usrid, body);
+    return this.storageService.uploadProjectFile(
+      file.path,
+      usrid,
+      file.originalname,
+      body,
+    );
   }
 
   @Get('get_project_screenshot/:theprojectId')
-  async getProjectfile(
+  async getAllProjectScreenshots(
     @Param('theprojectId') pid: number,
     @CurrentUser('projects') project: number[],
   ) {
     return this.storageService.getAllProjectScreenshots(project, pid);
+  }
+
+  @Get('get_project_file/:theprojectId')
+  async getProjectfile(
+    @Param('theprojectId') pid: number,
+    @CurrentUser('projects') project: number[],
+  ) {
+    return this.storageService.getAllProjectFiles(project, pid);
   }
 }
