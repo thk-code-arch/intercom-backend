@@ -3,9 +3,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   CreateDateColumn,
-  OneToOne,
   ManyToOne,
-  JoinColumn,
 } from 'typeorm';
 import { User, Chatroom } from './models';
 @Entity()

@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UploadProjectScreenshot, UploadProjectFile } from './storage.dto';
@@ -11,7 +11,6 @@ export class StorageService {
     @InjectRepository(Storage)
     private readonly storageRepository: Repository<Storage>,
   ) {}
-  private readonly logger = new Logger(StorageService.name);
 
   async uploadProjectScreenshot(
     filepath: string,
@@ -60,7 +59,7 @@ export class StorageService {
     usrprojects: number[],
     projectId: number,
   ): Promise<Storage[] | undefined> {
-    return await this.storageRepository
+    return this.storageRepository
       .createQueryBuilder('storage')
       .leftJoinAndSelect('storage.user', 'users')
       .where('storage.project = :projectId ', { projectId: projectId })
@@ -74,7 +73,7 @@ export class StorageService {
     usrprojects: number[],
     projectId: number,
   ): Promise<Storage[] | undefined> {
-    return await this.storageRepository
+    return this.storageRepository
       .createQueryBuilder('storage')
       .leftJoinAndSelect('storage.user', 'users')
       .where('storage.project = :projectId ', { projectId: projectId })

@@ -1,6 +1,6 @@
 import { Injectable, HttpService, Logger } from '@nestjs/common';
 import { MailerService } from '@nestjs-modules/mailer';
-import { fetchVideo } from './utils.dto';
+import { FetchVideo } from './utils.dto';
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 
@@ -48,9 +48,9 @@ export class UtilsService {
     });
   }
 
-  async fetchVideo(scrapeUrl: string): Promise<fetchVideo | undefined> {
+  async fetchVideo(scrapeUrl: string): Promise<FetchVideo | undefined> {
     const response = await this.http.get(scrapeUrl).toPromise();
-    const theresult = new fetchVideo();
+    const theresult = new FetchVideo();
     const html = response.data;
     const $ = cheerio.load(html);
     theresult.title = $("meta[property='og:title']").attr('content');

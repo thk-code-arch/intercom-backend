@@ -3,7 +3,7 @@ import { UserService } from '../api/user/user.service';
 import { UtilsService } from '../utils/utils.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../database/entities/models';
-import { signupwithInvite } from '../api/user/dto/user.dto';
+import { SignupwithInvite } from '../api/user/dto/user.dto';
 import * as bcrypt from 'bcrypt';
 import _ = require('lodash');
 
@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   async signup(
-    signupwithInvite: signupwithInvite,
+    signupwithInvite: SignupwithInvite,
   ): Promise<RegistrationStatus> {
     let status: RegistrationStatus = {
       success: true,

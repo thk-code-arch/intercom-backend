@@ -26,7 +26,7 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 }
-export class signupwithInvite {
+export class SignupwithInvite {
   @ApiProperty()
   @IsNotEmpty()
   username: string;

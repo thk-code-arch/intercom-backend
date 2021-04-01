@@ -1,7 +1,7 @@
 import { IsNumber, IsString, IsOptional, IsEnum } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class videoUrl {
+export class VideoUrl {
   @ApiProperty()
   @IsString()
   scrapeUrl: string;

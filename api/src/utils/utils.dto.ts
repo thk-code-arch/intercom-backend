@@ -1,4 +1,4 @@
-export class fetchVideo {
+export class FetchVideo {
   url: string;
   title: string;
   description: string;

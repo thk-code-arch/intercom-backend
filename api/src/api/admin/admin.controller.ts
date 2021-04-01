@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Param, Body } from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
-import { ApiTags, ApiParam } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { AdminService } from './admin.service';
 import { AddUsersByEmail } from './admin.dto';
 

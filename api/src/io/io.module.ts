@@ -9,4 +9,4 @@ import { UserModule } from '../api/user/user.module';
   imports: [UserModule, ChatModule],
   providers: [ViewportGateway, ChatroomGateway, IoService],
 })
-export class ioModule {}
+export class IoModule {}

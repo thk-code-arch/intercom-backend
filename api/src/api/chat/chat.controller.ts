@@ -1,15 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Param,
-  Request,
-  UseGuards,
-  Body,
-} from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
-import { ApiTags, ApiParam } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { ChatService } from './chat.service';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 
