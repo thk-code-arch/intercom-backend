@@ -31,7 +31,7 @@ export class UpdateProject {
   id: number;
 }
 
-export class addNewProject {
+export class AddNewProject {
   @ApiProperty()
   @IsString()
   name: string;
@@ -46,7 +46,7 @@ export class addNewProject {
   @IsNumber()
   parentProject?: number;
 }
-export class selectProject {
+export class SelectProject {
   @ApiProperty()
   @IsNumber()
   projectid: number;

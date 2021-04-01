@@ -86,12 +86,10 @@ export default class Initial implements Seeder {
     afile.filename = 'no1.gltf';
     afile.id = 1;
     afile.path = '/files/avatars/no1.gltf';
-    //afile.users = <any>1;
     await avatarRepo.save(afile);
 
     if (process.env.IC_SEEDDEMODATA === 'true') {
       await factory(User)().createMany(3);
-      //await factory(Project)().createMany(2);
       //seeding
     }
     console.log(res2, res3, res4);

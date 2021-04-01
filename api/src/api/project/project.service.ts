@@ -54,23 +54,32 @@ export class ProjectService {
     return [...projects, ...subprojects];
   }
 
-  async select_project(usrprojects: number[], sP: number) {
-    const res = await this.projectsRepository
+  async select_project(
+    usrprojects: number[],
+    sP: number,
+  ): Promise<Project | undefined> {
+    return this.projectsRepository
       .createQueryBuilder('project')
       .where('project.id = :projectId ', { projectId: sP })
       .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
       .getOneOrFail();
-    return res;
   }
-  async getProjectinfo(usrprojects: number[], sP: number) {
-    const res = await this.projectsRepository
+
+  async getProjectinfo(
+    usrprojects: number[],
+    sP: number,
+  ): Promise<Project | undefined> {
+    return await this.projectsRepository
       .createQueryBuilder('project')
       .where('project.id = :projectId ', { projectId: sP })
       .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
       .getOneOrFail();
-    return res;
   }
-  async newProject(usrid: number, newProj: NewProject) {
+
+  async newProject(
+    usrid: number,
+    newProj: NewProject,
+  ): Promise<Project | undefined> {
     newProj.owner = usrid;
     const resP = await this.projectsRepository.save(newProj);
 
@@ -103,7 +112,10 @@ export class ProjectService {
     return resP;
   }
 
-  async updateProject(usrid: number, updateProject: UpdateProject) {
+  async updateProject(
+    usrid: number,
+    updateProject: UpdateProject,
+  ): Promise<Project | undefined> {
     const getProject = await this.projectsRepository.findOne({
       where: { id: updateProject.id, owner: usrid },
     });

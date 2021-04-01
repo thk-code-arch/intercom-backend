@@ -3,7 +3,6 @@ import {
   Res,
   Get,
   Post,
-  Request,
   Header,
   Param,
   Body,
@@ -16,7 +15,7 @@ import { ProjectService } from './project.service';
 import { ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 import { ApiFile } from '../../auth/decorators/file.decorator';
-import { addNewProject, selectProject, UpdateProject } from './project.dto';
+import { AddNewProject, SelectProject, UpdateProject } from './project.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, IFCFileFilter } from '../../utils/file-upload';
@@ -31,7 +30,7 @@ export class ProjectController {
   @Post('select_project')
   selectProject(
     @CurrentUser('projects') project: number[],
-    @Body() sP: selectProject,
+    @Body() sP: SelectProject,
   ) {
     return this.projectService.select_project(project, sP.projectid);
   }
@@ -40,7 +39,7 @@ export class ProjectController {
   @Post('add_project')
   addProject(
     @CurrentUser('id') usrid: number,
-    @Body() newProject: addNewProject,
+    @Body() newProject: AddNewProject,
   ) {
     return this.projectService.newProject(usrid, newProject);
   }

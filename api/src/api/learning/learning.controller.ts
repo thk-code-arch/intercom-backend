@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Param, Logger } from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
-import { ApiTags, ApiParam } from '@nestjs/swagger';
+import { ApiTags } from '@nestjs/swagger';
 import { LearningService } from './learning.service';
 import { UtilsService } from '../../utils/utils.service';
-import { videoUrl, NewLearning } from './learning.dto';
+import { VideoUrl, NewLearning } from './learning.dto';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 
 @Auth(Roles.USER)
@@ -26,7 +26,7 @@ export class LearningController {
   }
 
   @Post('fetch')
-  async fetchVideo(@Body() videoUrl: videoUrl) {
+  async fetchVideo(@Body() videoUrl: VideoUrl) {
     return await this.utils.fetchVideo(videoUrl.scrapeUrl);
   }
 

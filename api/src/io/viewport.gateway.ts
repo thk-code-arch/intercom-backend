@@ -7,9 +7,8 @@ import {
   OnGatewayDisconnect,
   ConnectedSocket,
 } from '@nestjs/websockets';
-import { UseGuards } from '@nestjs/common';
+import { UseGuards, Logger } from '@nestjs/common';
 import { WsJwtGuard } from '../auth/guards/ws-jwt.guard';
-import { Logger } from '@nestjs/common';
 import { Socket, Server } from 'socket.io';
 import {
   moveTo,
@@ -23,7 +22,6 @@ import {
 @WebSocketGateway({ namespace: 'viewport' })
 export class ViewportGateway
   implements OnGatewayConnection, OnGatewayDisconnect {
-  constructor() {}
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatroomGateway');
   private onlineUsers = new OnlineUsers();
@@ -56,7 +54,6 @@ export class ViewportGateway
     }
 
     socket.join(String(req.newRoom));
-    //console.log('joines Viewport', req.newRoom, 'isIn', socket.rooms);
     this.onlineUsers[req.newRoom][req.user.id] = {
       userId: req.user.id,
       username: req.user.username,

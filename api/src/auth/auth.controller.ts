@@ -9,7 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { signupwithInvite, LoginUserDto } from '../api/user/dto/user.dto';
+import { SignupwithInvite, LoginUserDto } from '../api/user/dto/user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
@@ -24,7 +24,7 @@ export class AuthController {
   }
 
   @Post('signup')
-  async register(@Body() signupwithInvite: signupwithInvite) {
+  async register(@Body() signupwithInvite: SignupwithInvite) {
     return this.authService.signup(signupwithInvite);
   }
 

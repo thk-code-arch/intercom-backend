@@ -1,10 +1,5 @@
-import { Injectable, Logger, HttpStatus, HttpException } from '@nestjs/common';
-import {
-  User,
-  Project,
-  Chatroom,
-  Chatlog,
-} from '../../database/entities/models';
+import { Injectable } from '@nestjs/common';
+import { User, Chatroom, Chatlog } from '../../database/entities/models';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -17,10 +12,7 @@ export class ChatService {
     private readonly roomRepository: Repository<Chatroom>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-    @InjectRepository(Project)
-    private readonly projectRepository: Repository<Project>,
   ) {}
-  private readonly logger = new Logger(ChatService.name);
 
   async new_message(
     message: string,
@@ -49,13 +41,12 @@ export class ChatService {
   async getSubProjectChatrooms(
     projectids: number[],
   ): Promise<Chatroom[] | undefined> {
-    const res = await this.roomRepository
+    return this.roomRepository
       .createQueryBuilder('chatroom')
       .where('chatroom.projectId IN (:...manyprojects) ', {
         manyprojects: projectids,
       })
       .getMany();
-    return res;
   }
 
   async getMsgById(
@@ -79,7 +70,10 @@ export class ChatService {
       .getOneOrFail();
   }
 
-  async getChatLog(chatroomid: number, userrooms: number[]) {
+  async getChatLog(
+    chatroomid: number,
+    userrooms: number[],
+  ): Promise<Chatroom | undefined> {
     return this.roomRepository
       .createQueryBuilder('chatroom')
       .where('chatroom.id = :chatid ', { chatid: chatroomid })
@@ -88,12 +82,10 @@ export class ChatService {
       .leftJoinAndSelect('chatlog.user', 'user')
       .getOneOrFail();
   }
-  async getChatroomsByUserId(userid: number) {
+  async getChatroomsByUserId(userid: number): Promise<User[] | undefined> {
     return this.userRepository.find({
       where: { id: userid },
       relations: ['chatrooms'],
     });
   }
-
-  async getUsersByChatroom() {}
 }
