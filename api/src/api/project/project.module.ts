@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ProjectService } from './project.service';
+import { UtilsModule } from '../../utils/utils.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProjectController } from './project.controller';
 import {
@@ -10,7 +11,10 @@ import {
 } from '../../database/entities/models';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Project, Chatroom, Projectfile])],
+  imports: [
+    UtilsModule,
+    TypeOrmModule.forFeature([User, Project, Chatroom, Projectfile]),
+  ],
   providers: [ProjectService],
   controllers: [ProjectController],
   exports: [ProjectService],

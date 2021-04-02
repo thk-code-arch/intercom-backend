@@ -12,6 +12,7 @@ import {
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
 import { ProjectService } from './project.service';
+import { UtilsService } from '../../utils/utils.service';
 import { ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 import { ApiFile } from '../../auth/decorators/file.decorator';
@@ -25,7 +26,10 @@ import * as fs from 'fs';
 @ApiTags('project')
 @Controller('project')
 export class ProjectController {
-  constructor(private readonly projectService: ProjectService) {}
+  constructor(
+    private readonly projectService: ProjectService,
+    private readonly utils: UtilsService,
+  ) {}
 
   @Post('select_project')
   selectProject(
@@ -74,7 +78,10 @@ export class ProjectController {
     @CurrentUser('id') usrid: number,
     @Param('projectid') projectid: number,
   ) {
-    console.log(file.filename);
+    const convert = await this.utils.convertIfc(
+      file.filename.replace('.ifc', ''),
+    );
+
     const upload = await this.projectService.uploadIFC(
       file.path,
       file.filename,
@@ -83,7 +90,7 @@ export class ProjectController {
     );
     return {
       name: upload.filename,
-      logfile: 'files/output/' + upload.filename.replace('.glb', '.log'),
+      log: convert,
     };
   }
 

@@ -9,7 +9,6 @@ import {
   Projectfile,
 } from '../../database/entities/models';
 import _ = require('lodash');
-import * as child from 'child_process';
 
 @Injectable()
 export class ProjectService {
@@ -150,21 +149,6 @@ export class ProjectService {
     userid: number,
     projectid: number,
   ): Promise<Projectfile | undefined> {
-    const incomingFile = filename.replace('.ifc', '');
-    child.exec(
-      `IfcConvert -v /files/input/${incomingFile}.ifc /files/output/${incomingFile}.glb | tee -a /files/output/${incomingFile}.log`,
-      (error, stdout, stderr) => {
-        if (error) {
-          console.log(`error: ${error.message}`);
-          return;
-        }
-        if (stderr) {
-          console.log(`stderr: ${stderr}`);
-          return;
-        }
-        console.log(`stdout: ${stdout}`);
-      },
-    );
     const file = new Projectfile();
     file.filename = filename.replace('.ifc', '.glb');
     file.path = path;
