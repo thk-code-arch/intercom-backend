@@ -83,7 +83,7 @@ export class ProjectController {
     );
     return {
       name: upload.filename,
-      logfile: 'files/output/' + upload.filename.replace('.gltf', '.log'),
+      logfile: 'files/output/' + upload.filename.replace('.glb', '.log'),
     };
   }
 
