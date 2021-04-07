@@ -18,7 +18,7 @@
     "typeorm:migration:generate": "npm run typeorm -- migration:generate -n",
     "typeorm:migration:run": "npm run typeorm -- migration:run",
     "schema:drop": "ts-node ./node_modules/typeorm/cli.js schema:drop",
-    "schema:sync": "npm run typeorm -- migration:run",
+    "schema:diagram": "ts-node ./node_modules/.bin/typeorm-uml ormconfig.json",
     "seed:initial": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed -s initial",
     "seed:run": "ts-node ./node_modules/typeorm-seeding/dist/cli.js seed",
     "seed:config": "ts-node ./node_modules/typeorm-seeding/dist/cli.js config",
@@ -86,6 +86,7 @@
     "ts-loader": "^8.0.17",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
+    "typeorm-uml": "^1.6.2",
     "typescript": "^4.2.3"
   },
   "jest": {
