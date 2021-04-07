@@ -5,3 +5,4 @@ io/node_modules/
 docker-compose.yml
 secrets.env
 */ormconfig.json
+/builds/app
