@@ -1,5 +1,8 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { join } from 'path';
+
+// tslint:disable-next-line: no-var-requires
 require('dotenv').config();
 
 class ConfigService {
@@ -62,11 +65,11 @@ class ConfigService {
       password: this.getValue('POSTGRES_PASSWORD'),
       database: this.getValue('POSTGRES_DB'),
 
-      entities: ['src/database/entities/models.ts'],
+      entities: [join(__dirname, '/../database/entities/models.{ts,js}')],
 
       migrationsTableName: 'migrations',
 
-      migrations: ['src/database/migrations/*.ts'],
+      migrations: [join(__dirname, '/../database/migrations/*.{ts,js}')],
 
       cli: {
         migrationsDir: 'src/database/migrations',
