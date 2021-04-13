@@ -1,12 +1,14 @@
-import { IsNumber, IsString, IsOptional } from 'class-validator';
+import { IsNumber, Length, IsString, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class NewProject {
   @IsString()
+  @Length(3, 100)
   name: string;
 
   @IsString()
+  @Length(3, 320)
   description: string;
 
   @IsNumber()
@@ -20,10 +22,12 @@ export class NewProject {
 export class UpdateProject {
   @ApiProperty()
   @IsString()
+  @Length(3, 100)
   name: string;
 
   @ApiProperty()
   @IsString()
+  @Length(3, 320)
   description: string;
 
   @ApiProperty()
@@ -34,10 +38,12 @@ export class UpdateProject {
 export class AddNewProject {
   @ApiProperty()
   @IsString()
+  @Length(3, 100)
   name: string;
 
   @ApiProperty()
   @IsString()
+  @Length(3, 320)
   description: string;
 
   @ApiProperty()

@@ -3,6 +3,7 @@ import {
   Entity,
   PrimaryGeneratedColumn,
   BeforeInsert,
+  BeforeUpdate,
   ManyToMany,
   ManyToOne,
   OneToMany,
@@ -74,8 +75,11 @@ export class User {
   learning: Learning[];
 
   @BeforeInsert()
-  async initUser() {
-    this.password = await bcrypt.hash(this.password, 10);
+  @BeforeUpdate()
+  async hashPassword() {
+    if (this.password) {
+      this.password = await bcrypt.hash(this.password, 10);
+    }
   }
 
   async comparePassword(attempt: string): Promise<boolean> {

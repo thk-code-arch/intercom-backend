@@ -102,4 +102,20 @@ export class UserService {
     result.password = usr.password;
     return result;
   }
+
+  async setPassword(usrId: number, newPassword: string): Promise<User | void> {
+    const getUser = await this.usersRepository.findOne({
+      where: { id: usrId },
+    });
+    getUser.password = newPassword;
+    return await this.usersRepository.save(getUser);
+  }
+
+  async resetPassword(user: User) {
+    const getUser = await this.usersRepository.findOne({
+      where: { id: user.id },
+    });
+    getUser.password = generator.generate({ length: 10, numbers: true });
+    return await this.usersRepository.save(getUser);
+  }
 }
