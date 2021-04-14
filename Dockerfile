@@ -21,6 +21,7 @@ COPY --from=intercom /ifcopenshell/IfcConvert /usr/local/bin/IfcConvert
 
 USER node
 
+COPY --chown=node:node --from=thkcodearch/intercom-frontend-dev /usr/share/nginx/html /intercom-frontend
 COPY --chown=node:node --from=intercom /backend/api /app
 COPY --chown=node:node --from=intercom /backend/files /files
 
