@@ -21,7 +21,9 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: dev:latest
+          repository: thkcodearch/intercom-backend-dev
+          tag_with_ref: true
+          tags: latest
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
