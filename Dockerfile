@@ -1,13 +1,17 @@
 # Dockerfile for development branch delivery
-# Build on push to master branch intercom-backend
+# Build on push to master branch intercom-backend & frontend
 
+# build local intercom-frontend for same domain delivery
 FROM node:14.5.0-slim as intercom
 RUN apt-get update \
  && apt-get install -y git unzip
-
+##
+WORKDIR /frontend
+RUN git clone https://github.com/thk-code-arch/intercom-frontend.git .
+RUN npm install && npm run build
 
 WORKDIR /backend
-COPY . .
+RUN git clone https://github.com/thk-code-arch/intercom-backend.git .
 RUN npm install -g @nestjs/cli
 RUN cd api && npm install && npm run build
 
@@ -21,7 +25,7 @@ COPY --from=intercom /ifcopenshell/IfcConvert /usr/local/bin/IfcConvert
 
 USER node
 
-COPY --chown=node:node --from=thkcodearch/intercom-frontend-dev /usr/share/nginx/html /intercom-frontend
+COPY --chown=node:node --from=intercom /frontend/dist /intercom-frontend
 COPY --chown=node:node --from=intercom /backend/api /app
 COPY --chown=node:node --from=intercom /backend/files /files
 
