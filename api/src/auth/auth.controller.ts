@@ -9,7 +9,11 @@ import {
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
-import { SignupwithInvite, LoginUserDto } from '../api/user/dto/user.dto';
+import {
+  SignupwithInvite,
+  LoginUserDto,
+  ResetPassword,
+} from '../api/user/dto/user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('auth')
@@ -26,6 +30,11 @@ export class AuthController {
   @Post('signup')
   async register(@Body() signupwithInvite: SignupwithInvite) {
     return this.authService.signup(signupwithInvite);
+  }
+
+  @Post('reset-password')
+  async passwordReset(@Body() email: ResetPassword) {
+    return this.authService.passwordReset(email.email);
   }
 
   @UseGuards(JwtAuthGuard)

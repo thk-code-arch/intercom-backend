@@ -2,7 +2,7 @@ import { Injectable, HttpStatus, HttpException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../database/entities/models';
-import { CreateUserDto } from './dto/user.dto';
+import { CreateUserDto, PasswordResetStatus } from './dto/user.dto';
 import { Roles } from '../../auth/Roles';
 import { ProjectService } from '../project/project.service';
 import { ChatService } from '../chat/chat.service';
@@ -111,11 +111,16 @@ export class UserService {
     return await this.usersRepository.save(getUser);
   }
 
-  async resetPassword(user: User) {
+  async resetPassword(email: string): Promise<PasswordResetStatus | undefined> {
     const getUser = await this.usersRepository.findOne({
-      where: { id: user.id },
+      where: { email: email },
     });
     getUser.password = generator.generate({ length: 10, numbers: true });
-    return await this.usersRepository.save(getUser);
+    const user = await this.usersRepository.save(getUser);
+    return {
+      username: user.username,
+      email: user.email,
+      newPassword: getUser.password,
+    };
   }
 }

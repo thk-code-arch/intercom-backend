@@ -3,14 +3,9 @@ import { UserService } from '../api/user/user.service';
 import { UtilsService } from '../utils/utils.service';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../database/entities/models';
-import { SignupwithInvite } from '../api/user/dto/user.dto';
+import { SignupwithInvite, RegistrationStatus } from '../api/user/dto/user.dto';
 import * as bcrypt from 'bcrypt';
 import _ = require('lodash');
-
-export interface RegistrationStatus {
-  success: boolean;
-  message: string;
-}
 
 @Injectable()
 export class AuthService {
@@ -70,5 +65,10 @@ export class AuthService {
       roles: _.map(user.roles, 'name'),
       accessToken: this.jwtService.sign(payload),
     };
+  }
+  async passwordReset(email: string): Promise<string> {
+    const user = await this.userService.resetPassword(email);
+    this.utils.resetPassword(user.email, user.username, user.newPassword);
+    return 'Check your mailbox';
   }
 }
