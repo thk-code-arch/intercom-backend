@@ -87,11 +87,11 @@ export class AdminService {
           .add(chatroomId);
       });
     }
-    // TODO: remove loop reverse add relation,, add takes array
-
     console.log(emails.newUsers);
     if (Array.isArray(emails.newUsers)) {
-      emails.newUsers.forEach(async (newUser) => {
+      emails.newUsers.forEach(async (newUsr) => {
+        //cleanup Username :string for new lines etc.
+        const newUser = newUsr.replace(/(\r\n|\n|\r)/gm, '');
         const newuser = new CreateUserDto();
         newuser.email = newUser;
         newuser.username = newUser.replace(/@[^@]+$/, '');
