@@ -60,3 +60,21 @@ export class SetPassword {
   @IsString()
   newPassword: string;
 }
+
+export class ResetPassword {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+}
+
+export class RegistrationStatus {
+  success: boolean;
+  message: string;
+}
+
+export class PasswordResetStatus {
+  email: string;
+  username: string;
+  newPassword: string;
+}

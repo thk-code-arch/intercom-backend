@@ -13,7 +13,35 @@ export class UtilsService {
   ) {}
   private readonly logger = new Logger(UtilsService.name);
 
-  public signup(email: string, username: string, password: string): void {
+  async signup(
+    email: string,
+    username: string,
+    password: string,
+  ): Promise<void> {
+    this.mailerService
+      .sendMail({
+        to: email, // List of receivers email address
+        subject: `Welcome to InterCom! ${process.env.IC_CORS}`,
+        template: 'signup', // The `.pug` or `.hbs` extension is appended automatically.
+        context: {
+          code: password,
+          username: username,
+          domain: process.env.IC_CORS,
+        },
+      })
+      .then((success) => {
+        this.logger.log(success);
+      })
+      .catch((err) => {
+        this.logger.log(err);
+      });
+  }
+
+  async resetPassword(
+    email: string,
+    username: string,
+    password: string,
+  ): Promise<void> {
     this.mailerService
       .sendMail({
         to: email, // List of receivers email address
