@@ -17,11 +17,12 @@ export class UtilsService {
     this.mailerService
       .sendMail({
         to: email, // List of receivers email address
-        subject: 'Welcome to InterCom!',
+        subject: `Welcome to InterCom! ${process.env.IC_CORS}`,
         template: 'signup', // The `.pug` or `.hbs` extension is appended automatically.
         context: {
           code: password,
           username: username,
+          domain: process.env.IC_CORS,
         },
       })
       .then((success) => {

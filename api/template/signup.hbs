@@ -4,7 +4,7 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <title>InterCom SignUp</title>
+    <title>InterCom SignUp {{domain}}</title>
     <style>
         /* -------------------------------------
           GLOBAL RESETS
@@ -357,7 +357,7 @@
 </head>
 
 <body class="">
-    <span class="preheader">InterCom Account SignUp.</span>
+  <span class="preheader">InterCom Account SignUp. {{domain}}</span>
     <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="body">
         <tr>
             <td>&nbsp;</td>
@@ -379,6 +379,8 @@
                                             <p>Username: {{username}}</p>
                                             <p>Password: {{code}}</p>
 
+                                            <a href="https://{{domain}}">{{domain}}</a>
+
                                         </td>
                                     </tr>
                                 </table>
@@ -392,6 +394,7 @@
 
                     <!-- START FOOTER -->
                     <div class="footer">
+                      <a href="{{domain}}">InterCom</a>
                     </div>
                     <!-- END FOOTER -->
 
