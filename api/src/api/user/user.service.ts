@@ -2,8 +2,11 @@ import { Injectable, HttpStatus, HttpException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../../database/entities/models';
-import { CreateUserDto, PasswordResetStatus } from './dto/user.dto';
-import { Roles } from '../../auth/Roles';
+import {
+  CreateUserDto,
+  PasswordResetStatus,
+  UpdateUserProfile,
+} from './dto/user.dto';
 import { ProjectService } from '../project/project.service';
 import { ChatService } from '../chat/chat.service';
 import _ = require('lodash');
@@ -109,6 +112,24 @@ export class UserService {
     });
     getUser.password = newPassword;
     return await this.usersRepository.save(getUser);
+  }
+
+  async updateProfile(
+    usrId: number,
+    profile: UpdateUserProfile,
+  ): Promise<User | void> {
+    const updateUser = await this.usersRepository.findOne({
+      where: { id: usrId },
+    });
+    updateUser.username = profile.username;
+    updateUser.email = profile.email;
+    return await this.usersRepository.save(updateUser);
+  }
+
+  async getProfile(usrId: number): Promise<User | void> {
+    return this.usersRepository.findOne({
+      where: { id: usrId },
+    });
   }
 
   async resetPassword(email: string): Promise<PasswordResetStatus | undefined> {

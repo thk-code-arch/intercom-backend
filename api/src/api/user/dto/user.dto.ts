@@ -78,3 +78,17 @@ export class PasswordResetStatus {
   username: string;
   newPassword: string;
 }
+
+export class UpdateUserProfile {
+  @IsNotEmpty()
+  username: string;
+
+  @IsNotEmpty()
+  @IsEmail()
+  email: string;
+}
+
+export class UpdateUserImage {
+  @IsNotEmpty()
+  profile_image: string;
+}

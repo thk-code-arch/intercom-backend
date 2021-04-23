@@ -1,8 +1,8 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Get, Controller, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
-import { createIssue, SetPassword } from './dto/user.dto';
+import { UpdateUserProfile, createIssue, SetPassword } from './dto/user.dto';
 import { UtilsService } from '../../utils/utils.service';
 import { UserService } from './user.service';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
@@ -28,5 +28,20 @@ export class UserController {
     @CurrentUser('id') usrId: number,
   ) {
     return this.user.setPassword(usrId, passw.newPassword);
+  }
+
+  @Post('update_profile')
+  @Auth(Roles.USER)
+  async updateProfile(
+    @Body() updateUser: UpdateUserProfile,
+    @CurrentUser('id') usrId: number,
+  ) {
+    return this.user.updateProfile(usrId, updateUser);
+  }
+
+  @Get('get_profile')
+  @Auth(Roles.USER)
+  async getProfile(@CurrentUser('id') usrId: number) {
+    return this.user.getProfile(usrId);
   }
 }
