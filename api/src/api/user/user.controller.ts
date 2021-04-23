@@ -8,6 +8,7 @@ import { UserService } from './user.service';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 
 @ApiTags('user')
+@Auth(Roles.USER)
 @Controller('user')
 export class UserController {
   constructor(
@@ -16,13 +17,11 @@ export class UserController {
   ) {}
 
   @Post('create_issue')
-  @Auth(Roles.USER)
   async createIssue(@Body() issue: createIssue) {
     return this.utils.createIssue(issue);
   }
 
   @Post('update_password')
-  @Auth(Roles.USER)
   async updatePassword(
     @Body() passw: SetPassword,
     @CurrentUser('id') usrId: number,
@@ -31,7 +30,6 @@ export class UserController {
   }
 
   @Post('update_profile')
-  @Auth(Roles.USER)
   async updateProfile(
     @Body() updateUser: UpdateUserProfile,
     @CurrentUser('id') usrId: number,
@@ -40,7 +38,6 @@ export class UserController {
   }
 
   @Get('get_profile')
-  @Auth(Roles.USER)
   async getProfile(@CurrentUser('id') usrId: number) {
     return this.user.getProfile(usrId);
   }
