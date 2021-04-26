@@ -93,5 +93,5 @@ export class UpdateUserProfile {
 export class UpdateUserImage {
   @ApiProperty()
   @IsNotEmpty()
-  profile_image: string;
+  baseUrl: string;
 }

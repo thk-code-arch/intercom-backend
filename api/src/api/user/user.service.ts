@@ -114,6 +114,17 @@ export class UserService {
     return await this.usersRepository.save(getUser);
   }
 
+  async updateProfileImage(
+    usrId: number,
+    profileImageUrl: string,
+  ): Promise<User | void> {
+    const getUser = await this.usersRepository.findOne({
+      where: { id: usrId },
+    });
+    getUser.profile_image = profileImageUrl;
+    return await this.usersRepository.save(getUser);
+  }
+
   async updateProfile(
     usrId: number,
     profile: UpdateUserProfile,

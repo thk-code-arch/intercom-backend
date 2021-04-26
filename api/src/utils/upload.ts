@@ -28,6 +28,7 @@ export const attachmentFilter = (req, file, callback) => {
 };
 
 export const editFileName = (req, file, callback) => {
+  console.log(req.user);
   const name = file.originalname.split('.')[0];
   const fileExtName = extname(file.originalname);
   const randomName = Array(4)
@@ -35,4 +36,12 @@ export const editFileName = (req, file, callback) => {
     .map(() => Math.round(Math.random() * 10).toString(10))
     .join('');
   callback(null, `${name}${randomName}${fileExtName}`);
+};
+
+export const profileImage = (req, file, callback) => {
+  const fileExtName = extname(file.originalname);
+  callback(
+    null,
+    `${req.user.username}_${Math.floor(Date.now() / 1000)}${fileExtName}`,
+  );
 };

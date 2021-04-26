@@ -1,11 +1,27 @@
-import { Body, Get, Controller, Post, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Get,
+  Controller,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+} from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
-import { UpdateUserProfile, createIssue, SetPassword } from './dto/user.dto';
+import {
+  UpdateUserImage,
+  UpdateUserProfile,
+  createIssue,
+  SetPassword,
+} from './dto/user.dto';
 import { UtilsService } from '../../utils/utils.service';
 import { UserService } from './user.service';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
+import { ApiTags, ApiConsumes } from '@nestjs/swagger';
+import { ApiFile } from '../../auth/decorators/file.decorator';
+import { diskStorage } from 'multer';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { profileImage, imageExtensionFilter } from '../../utils/upload';
 
 @ApiTags('user')
 @Auth(Roles.USER)
@@ -40,5 +56,28 @@ export class UserController {
   @Get('get_profile')
   async getProfile(@CurrentUser('id') usrId: number) {
     return this.user.getProfile(usrId);
+  }
+
+  @ApiConsumes('multipart/form-data')
+  @ApiFile()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: '/files/p_img',
+        filename: profileImage,
+      }),
+      fileFilter: imageExtensionFilter,
+    }),
+  )
+  @Post('upload_profile_image')
+  async uploadUserImageProfile(
+    @Body() uploadPimage: UpdateUserImage,
+    @UploadedFile() file,
+    @CurrentUser('id') usrid: number,
+  ) {
+    return this.user.updateProfileImage(
+      usrid,
+      `${uploadPimage.baseUrl}${file.path}`,
+    );
   }
 }
