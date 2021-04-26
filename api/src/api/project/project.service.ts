@@ -90,7 +90,7 @@ export class ProjectService {
     if (newProj.parentProject) {
       newroom.roomtype = 'SUBPROJECT';
     }
-    newroom.description = 'Project Room';
+    newroom.description = newProj.description;
     const resC = await this.chatroomRepository.save(newroom);
     this.logger.debug(`newChatroom ${resC}  `);
 
@@ -126,6 +126,7 @@ export class ProjectService {
       where: { project: getProject },
     });
     getChatroom.name = UP.name;
+    getChatroom.description = UP.description;
     const UC = await this.chatroomRepository.save(getChatroom);
     this.logger.debug(`new Projectinfo ${UP} new Chatroom name ${UC}  `);
     return UP;

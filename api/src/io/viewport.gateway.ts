@@ -60,7 +60,7 @@ export class ViewportGateway
       profile_image: req.user.profile_image,
       position: { x: 0, y: 0, z: 0, dir: { x: 0, y: 0, z: 0 } },
     };
-    console.log('heeelllooo', this.onlineUsers);
+    console.log('Viewport OnlineUser', this.onlineUsers);
   }
 
   @SubscribeMessage('disconnect')
