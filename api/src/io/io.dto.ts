@@ -67,3 +67,9 @@ export class SwitchRoomDto {
   newRoom: number;
   user: SocketUserDto;
 }
+
+export class LeaveViewport {
+  @IsNumber()
+  projectId: number;
+  user: SocketUserDto;
+}

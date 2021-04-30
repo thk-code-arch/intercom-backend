@@ -13,6 +13,7 @@ import { Socket, Server } from 'socket.io';
 import {
   moveTo,
   SwitchRoomDto,
+  LeaveViewport,
   Avatar,
   lastSendInRoom,
   OnlineUsers,
@@ -51,6 +52,7 @@ export class ViewportGateway
 
     if (req.oldRoom !== 0) {
       socket.leave(String(req.oldRoom));
+      delete this.onlineUsers[req.oldRoom][req.user.id];
     }
 
     socket.join(String(req.newRoom));
@@ -60,12 +62,17 @@ export class ViewportGateway
       profile_image: req.user.profile_image,
       position: { x: 0, y: 0, z: 0, dir: { x: 0, y: 0, z: 0 } },
     };
-    console.log('Viewport OnlineUser', this.onlineUsers);
   }
 
   @SubscribeMessage('disconnect')
-  async disconnect(@ConnectedSocket() socket: Socket) {
-    socket.disconnect();
+  async disconnect(
+    @MessageBody() req: LeaveViewport,
+    @ConnectedSocket() socket: Socket,
+  ) {
+    if (req.projectId !== 0) {
+      socket.leave(String(req.projectId));
+      delete this.onlineUsers[req.projectId][req.user.id];
+    }
     //TODO handle disconnect
   }
 
@@ -90,9 +97,10 @@ export class ViewportGateway
       );
       if (timeDelta >= 500) {
         this.lastSent[req.chatroomId] = new Date();
-        this.server
-          .in(String(req.chatroomId))
-          .emit('getplayers', this.onlineUsers[req.chatroomId]);
+        this.server.in(String(req.chatroomId)).emit('getplayers', {
+          projectId: req.chatroomId,
+          pos: this.onlineUsers[req.chatroomId],
+        });
       }
     }
   }
