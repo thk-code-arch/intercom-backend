@@ -1,4 +1,17 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
+import { Auth } from '../auth/decorators/auth.decorator';
+import { Roles } from '../auth/Roles';
+import { ApiTags } from '@nestjs/swagger';
+import * as fs from 'fs';
 
-@Controller('api')
-export class ApiController {}
+@Auth(Roles.USER)
+@ApiTags('api')
+@Controller('')
+export class ApiController {
+  @Get('changelog')
+  async changelog() {
+    const path = '/app/CHANGELOG.md';
+    const resp = fs.readFileSync(path, 'utf8');
+    return resp;
+  }
+}

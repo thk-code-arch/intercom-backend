@@ -10,7 +10,7 @@ WORKDIR /backend
 RUN git clone https://github.com/thk-code-arch/intercom-backend.git .
 RUN npm install -g @nestjs/cli
 RUN cd api && npm install && npm run build
-RUN echo "###INTERCOM BACKEND"  >> /backend/api/CHANGELOG.md &&\
+RUN echo "### INTERCOM BACKEND"  >> /backend/api/CHANGELOG.md &&\
 	echo "```" >> /backend/api/CHANGELOG.md &&\
 	git show --quiet HEAD  >> /backend/api/CHANGELOG.md &&\
 	echo "```" >> /backend/api/CHANGELOG.md
@@ -18,7 +18,7 @@ RUN echo "###INTERCOM BACKEND"  >> /backend/api/CHANGELOG.md &&\
 WORKDIR /frontend
 RUN git clone https://github.com/thk-code-arch/intercom-frontend.git .
 RUN npm install && npm run build
-RUN echo "###INTERCOM FRONTEND"  >> /backend/api/CHANGELOG.md &&\
+RUN echo "### INTERCOM FRONTEND"  >> /backend/api/CHANGELOG.md &&\
 	echo "```" >> /backend/api/CHANGELOG.md &&\
 	git show --quiet HEAD  >> /backend/api/CHANGELOG.md &&\
 	echo "```" >> /backend/api/CHANGELOG.md
