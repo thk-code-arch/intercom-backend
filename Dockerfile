@@ -5,15 +5,19 @@
 FROM node:14.5.0-slim as intercom
 RUN apt-get update \
  && apt-get install -y git unzip
-##
-WORKDIR /frontend
-RUN git clone https://github.com/thk-code-arch/intercom-frontend.git .
-RUN npm install && npm run build
 
 WORKDIR /backend
 RUN git clone https://github.com/thk-code-arch/intercom-backend.git .
 RUN npm install -g @nestjs/cli
 RUN cd api && npm install && npm run build
+RUN echo "###INTERCOM BACKEND"  >> CHANGELOG.md &&\
+	git show -s --format=%ci  >> CHANGELOG.md
+
+WORKDIR /frontend
+RUN git clone https://github.com/thk-code-arch/intercom-frontend.git .
+RUN npm install && npm run build
+RUN echo "###INTERCOM FRONTEND"  >> /backend/api/CHANGELOG.md &&\
+	git show -s --format=%ci  >> /backend/api/CHANGELOG.md
 
 WORKDIR /ifcopenshell
 # Extract precompiled IFCConvert from IFCOpenBot https://github.com/IfcOpenBot/IfcOpenShell/commits/v0.6.0
