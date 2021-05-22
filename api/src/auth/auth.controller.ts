@@ -13,6 +13,7 @@ import {
   SignupwithInvite,
   LoginUserDto,
   ResetPassword,
+  SignupDemoAccount,
 } from '../api/user/dto/user.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
@@ -35,6 +36,13 @@ export class AuthController {
   @Post('reset-password')
   async passwordReset(@Body() email: ResetPassword) {
     return this.authService.passwordReset(email.email);
+  }
+
+  @Post('signup-demo')
+  async registerDemo(@Body() demosignup: SignupDemoAccount) {
+    if (process.env.IC_DEMO === 'true') {
+      return this.authService.createDemoAccount(demosignup.invitecode);
+    }
   }
 
   @UseGuards(JwtAuthGuard)

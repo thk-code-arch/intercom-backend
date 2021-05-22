@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { User, Project, Chatroom, Role } from '../../database/entities/models';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AddUsersByEmail } from './admin.dto';
+import { AddUsersByEmail, AddUserById } from './admin.dto';
 import { UserService } from '../user/user.service';
 import { UtilsService } from '../../utils/utils.service';
 import { CreateUserDto } from '../user/dto/user.dto';
@@ -56,6 +56,31 @@ export class AdminService {
       .of(usrid)
       .remove(roleId.id);
     return this.allUsers();
+  }
+
+  async addUsersByIdToProject(
+    addUser: AddUserById,
+  ): Promise<Project[] | undefined> {
+    const chatroomId = await this.roomRepository
+      .createQueryBuilder('chatroom')
+      .where('chatroom.projectId = :projectid ', {
+        projectid: addUser.projectId,
+      })
+      .select(['chatroom.id'])
+      .getOneOrFail();
+
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'projects')
+      .of(addUser.userId)
+      .add(addUser.projectId);
+
+    await this.userRepository
+      .createQueryBuilder()
+      .relation(User, 'chatrooms')
+      .of(addUser.userId)
+      .add(chatroomId);
+    return this.allProjects();
   }
 
   async addUserstoProject(

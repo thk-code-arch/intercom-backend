@@ -1,16 +1,23 @@
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from '../api/user/user.service';
+import { User, Project } from '../database/entities/models';
+import { AdminService } from '../api/admin/admin.service';
 import { UtilsService } from '../utils/utils.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../database/entities/models';
-import { SignupwithInvite, RegistrationStatus } from '../api/user/dto/user.dto';
+import {
+  SignupwithInvite,
+  RegistrationStatus,
+  DemoRegistrationStatus,
+} from '../api/user/dto/user.dto';
 import * as bcrypt from 'bcrypt';
 import _ = require('lodash');
+import * as faker from 'faker';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly userService: UserService,
+    private readonly adminService: AdminService,
     private readonly jwtService: JwtService,
     private readonly utils: UtilsService,
   ) {}
@@ -70,5 +77,47 @@ export class AuthService {
     const user = await this.userService.resetPassword(email);
     this.utils.resetPassword(user.email, user.username, user.newPassword);
     return 'Check your mailbox';
+  }
+
+  async createDemoAccount(invitecode: string): Promise<DemoRegistrationStatus> {
+    let status: DemoRegistrationStatus = {
+      success: true,
+      message: 'user registered',
+      username: await faker.name.findName(),
+      password: '',
+    };
+
+    try {
+      const res = await this.userService.signup(
+        {
+          username: status.username,
+          invitecode: invitecode,
+          email: await faker.internet.email(),
+        },
+        false,
+        false,
+      );
+      this.logger.log(JSON.stringify(res) + 'New User registred');
+      status.password = res.password;
+      // Add Demo User to all existing projects
+      const projects = await this.adminService.allProjects();
+      this.logger.log(JSON.stringify(res));
+
+      projects.forEach(async (project) => {
+        await this.adminService.addUsersByIdToProject({
+          userId: res.id,
+          projectId: project.id,
+        });
+      });
+    } catch (err) {
+      this.logger.error('Registrations fails');
+      status = {
+        success: false,
+        message: err,
+        username: '',
+        password: '',
+      };
+    }
+    return status;
   }
 }

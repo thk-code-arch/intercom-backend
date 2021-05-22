@@ -13,5 +13,6 @@ import { Role, User, Project, Chatroom } from '../../database/entities/models';
   ],
   controllers: [AdminController],
   providers: [AdminService],
+  exports: [AdminService],
 })
 export class AdminModule {}
