@@ -25,3 +25,15 @@ export class AddUsersByEmail {
   @IsNumber()
   projectId: number;
 }
+
+export class AddUserById {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  userId: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsNumber()
+  projectId: number;
+}

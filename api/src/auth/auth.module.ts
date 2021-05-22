@@ -3,15 +3,18 @@ import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { UserModule } from '../api/user/user.module';
+import { AdminModule } from '../api/admin/admin.module';
 import { UtilsModule } from '../utils/utils.module';
 import { AuthService } from './auth.service';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+
 @Global()
 @Module({
   imports: [
     UtilsModule,
+    AdminModule,
     forwardRef(() => UserModule),
     PassportModule,
     JwtModule.register({

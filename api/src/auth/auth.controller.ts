@@ -40,7 +40,7 @@ export class AuthController {
 
   @Post('signup-demo')
   async registerDemo(@Body() demosignup: SignupDemoAccount) {
-    if (process.env.DEMO === 'true') {
+    if (process.env.IC_DEMO === 'true') {
       return this.authService.createDemoAccount(demosignup.invitecode);
     }
   }
