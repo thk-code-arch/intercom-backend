@@ -6,3 +6,4 @@ docker-compose.yml
 secrets.env
 */ormconfig.json
 /builds/app
+files/input/*

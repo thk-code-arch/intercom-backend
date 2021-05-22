@@ -40,6 +40,13 @@ export class SignupwithInvite {
   @IsEmail()
   email: string;
 }
+
+export class SignupDemoAccount {
+  @ApiProperty()
+  @IsNotEmpty()
+  invitecode: string;
+}
+
 export class createIssue {
   @ApiProperty()
   @IsNotEmpty()
@@ -71,6 +78,13 @@ export class ResetPassword {
 export class RegistrationStatus {
   success: boolean;
   message: string;
+}
+
+export class DemoRegistrationStatus {
+  success: boolean;
+  message: string;
+  username: string;
+  password: string;
 }
 
 export class PasswordResetStatus {
