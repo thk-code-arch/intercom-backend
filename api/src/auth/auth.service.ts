@@ -83,7 +83,7 @@ export class AuthService {
     let status: DemoRegistrationStatus = {
       success: true,
       message: 'user registered',
-      username: await faker.name.findName(),
+      username: await faker.name.findName().replace(" ",""),
       password: '',
     };
 
@@ -92,7 +92,7 @@ export class AuthService {
         {
           username: status.username,
           invitecode: invitecode,
-          email: await faker.internet.email(),
+          email: await faker.internet.email(status.username, '+demo',process.env.IC_CORS),
         },
         false,
         false,
