@@ -82,6 +82,15 @@ export class User {
     }
   }
 
+  @BeforeInsert()
+  @BeforeUpdate()
+  async lowerEmail() {
+    if (this.email) {
+      this.email = this.email.toLowerCase();
+    }
+  }
+
+
   async comparePassword(attempt: string): Promise<boolean> {
     return bcrypt.compare(attempt, this.password);
   }

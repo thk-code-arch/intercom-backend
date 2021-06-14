@@ -75,6 +75,7 @@ export class AuthService {
   }
   async passwordReset(email: string): Promise<string> {
     const user = await this.userService.resetPassword(email);
+    console.log(user)
     this.utils.resetPassword(user.email, user.username, user.newPassword);
     return 'Check your mailbox';
   }
