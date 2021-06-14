@@ -145,14 +145,17 @@ export class UserService {
 
   async resetPassword(email: string): Promise<PasswordResetStatus | undefined> {
     const getUser = await this.usersRepository.findOne({
-      where: { email: email },
+        where:`lower("email") = lower('${email}')`
     });
-    getUser.password = generator.generate({ length: 10, numbers: true });
+    this.logger.log(getUser);
+    // lower because existiong email adresses in db aren't case sensitive
+    const genPassword = await generator.generate({ length: 10, numbers: true });
+    getUser.password = genPassword;
     const user = await this.usersRepository.save(getUser);
     return {
       username: user.username,
       email: user.email,
-      newPassword: getUser.password,
+      newPassword: genPassword,
     };
   }
 }
