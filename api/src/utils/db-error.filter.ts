@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { EntityNotFoundError } from 'typeorm/error/EntityNotFoundError';
 import { ArgumentsHost, ExceptionFilter, Catch } from '@nestjs/common';
 import { QueryFailedError } from 'typeorm';

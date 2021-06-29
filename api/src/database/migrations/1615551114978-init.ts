@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import {MigrationInterface, QueryRunner} from "typeorm";
 
 export class init1615551114978 implements MigrationInterface {

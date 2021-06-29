@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import { UserService } from '../api/user/user.service';
 import { User, Project } from '../database/entities/models';

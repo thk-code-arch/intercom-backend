@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { Module } from '@nestjs/common';
 import { AvatarService } from './avatar.service';
 import { TypeOrmModule } from '@nestjs/typeorm';

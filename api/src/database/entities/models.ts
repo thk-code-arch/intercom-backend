@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 export { Chatlog } from './chatlog.entity';
 export { Chatroom } from './chatroom.entity';
 export { Learning } from './learning.entity';

@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import {MigrationInterface, QueryRunner} from "typeorm";
 
 export class storageNullable1616684080114 implements MigrationInterface {

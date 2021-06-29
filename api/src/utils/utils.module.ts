@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { Module, HttpModule } from '@nestjs/common';
 import { configService } from '../config/config.service';
 import { UtilsService } from './utils.service';

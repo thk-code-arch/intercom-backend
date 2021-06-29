@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import _ = require('lodash');
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
 

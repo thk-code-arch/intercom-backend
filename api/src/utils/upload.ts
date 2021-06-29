@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { extname } from 'path';
 import { HttpException, HttpStatus } from '@nestjs/common';
 

@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { Injectable, Logger } from '@nestjs/common';
 import { User, Project, Chatroom, Role } from '../../database/entities/models';
 import { InjectRepository } from '@nestjs/typeorm';

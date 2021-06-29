@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { Controller, Res, Get, Header, Param } from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';

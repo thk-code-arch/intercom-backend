@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { applyDecorators, UseGuards, SetMetadata } from '@nestjs/common';
 import { Roles } from '../Roles';
 import { RolesGuard } from '../../auth/guards/roles.guard';

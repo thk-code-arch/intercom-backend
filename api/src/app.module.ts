@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { Module } from '@nestjs/common';
 import { DbModule } from './database/db.module';
 import { UtilsModule } from './utils/utils.module';

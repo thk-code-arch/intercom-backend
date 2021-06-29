@@ -1,3 +1,5 @@
+// Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
+
 import { Test, TestingModule } from '@nestjs/testing';
 import { AvatarService } from './avatar.service';
 
