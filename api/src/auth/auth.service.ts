@@ -11,7 +11,7 @@ import {
   RegistrationStatus,
   DemoRegistrationStatus,
 } from '../api/user/dto/user.dto';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import _ = require('lodash');
 import * as faker from 'faker';
 
@@ -77,7 +77,7 @@ export class AuthService {
   }
   async passwordReset(email: string): Promise<string> {
     const user = await this.userService.resetPassword(email);
-    console.log(user)
+    console.log(user);
     this.utils.resetPassword(user.email, user.username, user.newPassword);
     return 'Check your mailbox';
   }
@@ -86,7 +86,7 @@ export class AuthService {
     let status: DemoRegistrationStatus = {
       success: true,
       message: 'user registered',
-      username: await faker.name.findName().replace(" ",""),
+      username: await faker.name.findName().replace(' ', ''),
       password: '',
     };
 
@@ -95,7 +95,11 @@ export class AuthService {
         {
           username: status.username,
           invitecode: invitecode,
-          email: await faker.internet.email(status.username, '+demo',process.env.IC_CORS),
+          email: await faker.internet.email(
+            status.username,
+            '+demo',
+            process.env.IC_CORS,
+          ),
         },
         false,
         false,
