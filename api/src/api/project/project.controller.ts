@@ -58,6 +58,14 @@ export class ProjectController {
     return this.projectService.updateProject(usrid, editProject);
   }
 
+  @Post('delete_project')
+  deleteProject(
+    @CurrentUser('id') usrid: number,
+    @Body() deleteProject: UpdateProject,
+  ) {
+    return this.projectService.deleteProject(usrid, deleteProject);
+  }
+
   @Get('get_projects')
   async getProjects(@CurrentUser('projectsDetails') projects) {
     return projects;

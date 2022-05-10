@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
   ManyToMany,
   OneToMany,
+  DeleteDateColumn,
 } from 'typeorm';
 import { User, Projectfile, Storage, Learning } from './models';
 
@@ -40,4 +41,7 @@ export class Project {
 
   @OneToMany(() => Storage, (storage) => storage.project)
   storage: Storage[];
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

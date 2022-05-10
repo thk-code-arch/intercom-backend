@@ -8,6 +8,7 @@ import {
   OneToMany,
   OneToOne,
   JoinColumn,
+  DeleteDateColumn,
 } from 'typeorm';
 import { User } from './user.entity';
 import { Chatlog } from './chatlog.entity';
@@ -36,4 +37,7 @@ export class Chatroom {
 
   @OneToMany(() => Chatlog, (chatlog) => chatlog.room)
   chatlog: Chatlog[];
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 }

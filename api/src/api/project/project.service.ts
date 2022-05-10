@@ -134,6 +134,24 @@ export class ProjectService {
     return UP;
   }
 
+  async deleteProject(
+    usrid: number,
+    deleteProject: UpdateProject,
+  ): Promise<Project | undefined> {
+    const getProject = await this.projectsRepository.findOne({
+      where: { id: deleteProject.id, owner: usrid },
+    });
+    const delProject = await this.projectsRepository.softDelete(getProject.id);
+    const getChatroom = await this.chatroomRepository.findOne({
+      where: { project: getProject.id },
+    });
+    const deleteChatroom = await this.chatroomRepository.softDelete(
+      getChatroom.id,
+    );
+    this.logger.debug(JSON.stringify({ deleteChatroom, delProject }));
+    return getProject;
+  }
+
   async getProjectfile(
     usrprojects: number[],
     sP: number,
