@@ -15,5 +15,5 @@ COPY --from=intercom /IfcConvert /usr/local/bin/IfcConvert
 WORKDIR /app
 RUN npm install -g @nestjs/cli nodemon
 EXPOSE 3000
-CMD uname -m && yarn install && yarn start:dev
+CMD uname -m && npm install && npm run start:dev
 
