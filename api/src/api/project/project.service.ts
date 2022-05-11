@@ -3,7 +3,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NewProject, UpdateProject } from './project.dto';
+import { NewProject, SelectProject, UpdateProject } from './project.dto';
 import {
   User,
   Project,
@@ -136,10 +136,10 @@ export class ProjectService {
 
   async deleteProject(
     usrid: number,
-    deleteProject: UpdateProject,
+    deleteProject: SelectProject,
   ): Promise<Project | undefined> {
     const getProject = await this.projectsRepository.findOne({
-      where: { id: deleteProject.id, owner: usrid },
+      where: { id: deleteProject.projectid, owner: usrid },
     });
     const delProject = await this.projectsRepository.softDelete(getProject.id);
     const getChatroom = await this.chatroomRepository.findOne({

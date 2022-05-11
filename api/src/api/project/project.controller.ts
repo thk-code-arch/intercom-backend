@@ -61,7 +61,7 @@ export class ProjectController {
   @Post('delete_project')
   deleteProject(
     @CurrentUser('id') usrid: number,
-    @Body() deleteProject: UpdateProject,
+    @Body() deleteProject: SelectProject,
   ) {
     return this.projectService.deleteProject(usrid, deleteProject);
   }
