@@ -50,6 +50,7 @@ export class ProjectController {
     return this.projectService.newProject(usrid, newProject);
   }
 
+  @Auth(Roles.ADMIN)
   @Post('edit_project')
   updateProject(
     @CurrentUser('id') usrid: number,
@@ -58,12 +59,13 @@ export class ProjectController {
     return this.projectService.updateProject(usrid, editProject);
   }
 
-  @Post('delete_project')
+  @Auth(Roles.ADMIN)
+  @Post('delete_subproject')
   deleteProject(
     @CurrentUser('id') usrid: number,
     @Body() deleteProject: SelectProject,
   ) {
-    return this.projectService.deleteProject(usrid, deleteProject);
+    return this.projectService.deleteSubProject(usrid, deleteProject);
   }
 
   @Get('get_projects')
