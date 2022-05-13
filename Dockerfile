@@ -2,7 +2,7 @@
 # Build on push to master branch intercom-backend & frontend
 
 # build local intercom-frontend for same domain delivery
-FROM node:14.5.0-slim as intercom
+FROM node:16-slim as intercom
 RUN apt-get update \
  && apt-get install -y git unzip
 
@@ -28,7 +28,7 @@ WORKDIR /ifcopenshell
 RUN unzip /backend/builds/IfcConvert.zip
 
 # keep it small
-FROM node:14.5.0-slim
+FROM node:16-slim
 COPY --from=intercom /ifcopenshell/IfcConvert /usr/local/bin/IfcConvert
 
 USER node

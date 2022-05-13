@@ -21,7 +21,7 @@ import {
   Learning,
 } from './models';
 
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 
 export class UserRO {
   id: number;
@@ -91,7 +91,6 @@ export class User {
       this.email = this.email.toLowerCase();
     }
   }
-
 
   async comparePassword(attempt: string): Promise<boolean> {
     return bcrypt.compare(attempt, this.password);

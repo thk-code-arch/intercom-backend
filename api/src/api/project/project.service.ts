@@ -1,9 +1,9 @@
 // Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
 
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NewProject, UpdateProject } from './project.dto';
+import { NewProject, SelectProject, UpdateProject } from './project.dto';
 import {
   User,
   Project,
@@ -51,8 +51,6 @@ export class ProjectService {
         projects[i]['sub'] = found;
       }
     }
-    //TODO CLEANUP
-
     return [...projects, ...subprojects];
   }
 
@@ -132,6 +130,32 @@ export class ProjectService {
     const UC = await this.chatroomRepository.save(getChatroom);
     this.logger.debug(`new Projectinfo ${UP} new Chatroom name ${UC}  `);
     return UP;
+  }
+
+  async deleteSubProject(
+    usrid: number,
+    deleteProject: SelectProject,
+  ): Promise<Project | undefined> {
+    const getProject = await this.projectsRepository.findOne({
+      where: { id: deleteProject.projectid, owner: usrid },
+    });
+    this.logger.debug(JSON.stringify(getProject));
+    if (getProject.parentProject == null) {
+      throw new HttpException(
+        'Can not delete parent project',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const delProject = await this.projectsRepository.softDelete(getProject.id);
+    const getChatroom = await this.chatroomRepository.findOne({
+      where: { project: getProject.id },
+    });
+    const deleteChatroom = await this.chatroomRepository.softDelete(
+      getChatroom.id,
+    );
+    this.logger.debug(JSON.stringify({ deleteChatroom, delProject }));
+    return getProject;
   }
 
   async getProjectfile(
