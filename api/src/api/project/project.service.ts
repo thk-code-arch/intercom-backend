@@ -113,11 +113,10 @@ export class ProjectService {
   }
 
   async updateProject(
-    usrid: number,
     updateProject: UpdateProject,
   ): Promise<Project | undefined> {
     const getProject = await this.projectsRepository.findOne({
-      where: { id: updateProject.id, owner: usrid },
+      where: { id: updateProject.id },
     });
     getProject.name = updateProject.name;
     getProject.description = updateProject.description;
@@ -133,11 +132,10 @@ export class ProjectService {
   }
 
   async deleteSubProject(
-    usrid: number,
     deleteProject: SelectProject,
   ): Promise<Project | undefined> {
     const getProject = await this.projectsRepository.findOne({
-      where: { id: deleteProject.projectid, owner: usrid },
+      where: { id: deleteProject.projectid },
     });
     this.logger.debug(JSON.stringify(getProject));
     if (getProject.parentProject == null) {
