@@ -54,15 +54,28 @@ export class ProjectService {
     return [...projects, ...subprojects];
   }
 
-  async select_project(
-    usrprojects: number[],
-    sP: number,
-  ): Promise<Project | undefined> {
-    return this.projectsRepository
+  async getSubprojects(projectId: number) {
+    return await this.projectsRepository
+      .createQueryBuilder('project')
+      .where('project.parentProject = :parenProject', {
+        parenProject: projectId,
+      })
+      .getMany();
+  }
+
+  async select_project(usrprojects: number[], sP: number) {
+    const selectedProject = await this.projectsRepository
       .createQueryBuilder('project')
       .where('project.id = :projectId ', { projectId: sP })
       .andWhere('project.id IN (:...userpr)', { userpr: usrprojects })
       .getOneOrFail();
+    this.logger.log(JSON.stringify(selectedProject));
+    if (selectedProject.parentProject === null) {
+      const subprojects = await this.getSubprojects(selectedProject.id);
+      this.logger.log(JSON.stringify(subprojects));
+      return { ...selectedProject, ...{ subprojects: subprojects } };
+    }
+    return selectedProject;
   }
 
   async getProjectinfo(
@@ -108,7 +121,6 @@ export class ProjectService {
         .add(resC);
       this.logger.debug(`new relation Projects ${PJ} new Chatroom ${CJ}  `);
     }
-
     return resP;
   }
 
