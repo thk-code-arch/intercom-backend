@@ -118,6 +118,24 @@ export class ProjectController {
     });
   }
 
+  @Get('get_projectfileifc/:theprojectId')
+  @Header('Content-Type', 'application/octet-stream')
+  async getProjectfileIfc(
+    @Param('theprojectId') pid: number,
+    @CurrentUser('projects') project: number[],
+    @Res() response,
+  ) {
+    const file = await this.projectService.getProjectfile(project, pid);
+    const filepath = '/files/input/' + file.filename.replace('.glb', '.ifc');
+    fs.exists(filepath, function (exists) {
+      if (exists) {
+        return fs.createReadStream(filepath).pipe(response);
+      } else {
+        return;
+      }
+    });
+  }
+
   @Get('get_projectinfo/:theprojectId')
   getProjectinfo(@CurrentUser('projects') project: number[], @Param() p) {
     return this.projectService.getProjectinfo(project, p.theprojectId);
