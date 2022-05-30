@@ -84,7 +84,9 @@ export class ProjectController {
     @CurrentUser('id') usrid: number,
     @Param('projectid') projectid: number,
   ) {
-    this.utils.convertIfc(file.filename.replace('.ifc', ''));
+    const convert = await this.utils.convertIfc(
+      file.filename.replace('.ifc', ''),
+    );
 
     const upload = await this.projectService.uploadIFC(
       file.path,
@@ -92,10 +94,9 @@ export class ProjectController {
       usrid,
       projectid,
     );
-    this.utils.convertIfc(file.filename.replace('.ifc', ''));
     return {
       name: upload.filename,
-      log: `ifc might be converted`,
+      log: convert,
     };
   }
 
