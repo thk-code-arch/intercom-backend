@@ -10,6 +10,7 @@ import {
   Body,
   UseInterceptors,
   UploadedFile,
+  Logger,
 } from '@nestjs/common';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { Roles } from '../../auth/Roles';
@@ -32,6 +33,7 @@ export class ProjectController {
     private readonly projectService: ProjectService,
     private readonly utils: UtilsService,
   ) {}
+  private readonly logger = new Logger(ProjectController.name);
 
   @Post('select_project')
   selectProject(
@@ -84,9 +86,6 @@ export class ProjectController {
     @CurrentUser('id') usrid: number,
     @Param('projectid') projectid: number,
   ) {
-    const convert = await this.utils.convertIfc(
-      file.filename.replace('.ifc', ''),
-    );
 
     const upload = await this.projectService.uploadIFC(
       file.path,
@@ -94,9 +93,21 @@ export class ProjectController {
       usrid,
       projectid,
     );
+
+    const convert = await this.utils
+      .convertIfc(file.filename.replace('.ifc', ''))
+      .then((log) => {
+        this.logger.log(log);
+        return log;
+      })
+      .catch((error) => {
+        this.logger.error(error);
+        return error;
+      });
     return {
       name: upload.filename,
-      log: convert,
+      log: `ifc convert ${convert}`,
+
     };
   }
 
