@@ -107,9 +107,9 @@ export class UtilsService {
           if (error) {
             console.log('errror');
             this.logger.log(error);
-            reject(error);
+            reject(` ${error}, ${stdout}, ${stderr} `);
           } else if (stderr) {
-            reject(stderr);
+            reject(` ${error}, ${stdout}, ${stderr} `);
             this.logger.log(stderr);
           } else {
             this.logger.log(stdout);
