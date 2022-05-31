@@ -105,8 +105,14 @@ export class UtilsService {
         `IfcConvert -v "/files/input/${incomingFile}.ifc" "/files/output/${incomingFile}.glb"`,
         (error: child.ExecException, stdout: string, stderr: string) => {
           if (error) {
+            console.log('errror');
+            this.logger.log(error);
             reject(error);
+          } else if (stderr) {
+            reject(stderr);
+            this.logger.log(stderr);
           } else {
+            this.logger.log(stdout);
             resolve(stdout);
           }
         },
