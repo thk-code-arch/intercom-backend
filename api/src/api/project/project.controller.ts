@@ -86,6 +86,7 @@ export class ProjectController {
     @CurrentUser('id') usrid: number,
     @Param('projectid') projectid: number,
   ) {
+
     const upload = await this.projectService.uploadIFC(
       file.path,
       file.filename,
@@ -106,6 +107,7 @@ export class ProjectController {
     return {
       name: upload.filename,
       log: `ifc convert ${convert}`,
+
     };
   }
 
