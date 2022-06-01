@@ -123,19 +123,29 @@ export class AdminService {
         newuser.email = newUser;
         newuser.username = newUser.replace(/@[^@]+$/, '');
         newuser.invitecode = process.env.IC_Invitecode;
-        const regUser = await this.userService.signup(newuser, false, false);
-        this.logger.debug(JSON.stringify(regUser) + 'New User registred');
-        this.utils.signup(regUser.email, regUser.username, regUser.password);
-        await this.userRepository
-          .createQueryBuilder()
-          .relation(User, 'projects')
-          .of(regUser.id)
-          .add(emails.projectId);
-        await this.userRepository
-          .createQueryBuilder()
-          .relation(User, 'chatrooms')
-          .of(regUser.id)
-          .add(chatroomId);
+        await this.userService
+          .signup(newuser, false, false)
+          .then(async (regUser) => {
+            this.logger.debug(JSON.stringify(regUser) + 'New User registred');
+            this.utils.signup(
+              regUser.email,
+              regUser.username,
+              regUser.password,
+            );
+            await this.userRepository
+              .createQueryBuilder()
+              .relation(User, 'projects')
+              .of(regUser.id)
+              .add(emails.projectId);
+            await this.userRepository
+              .createQueryBuilder()
+              .relation(User, 'chatrooms')
+              .of(regUser.id)
+              .add(chatroomId);
+          })
+          .catch((err) => {
+            this.logger.log(err);
+          });
       });
     }
     return this.allProjects();
