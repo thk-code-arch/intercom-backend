@@ -9,6 +9,7 @@ import { AdminModule } from './admin/admin.module';
 import { AvatarModule } from './avatar/avatar.module';
 import { LearningModule } from './learning/learning.module';
 import { StorageModule } from './storage/storage.module';
+import { ViewModule } from './view/view.module';
 
 @Module({
   controllers: [ApiController],
@@ -20,6 +21,7 @@ import { StorageModule } from './storage/storage.module';
     ProjectModule,
     StorageModule,
     UserModule,
+    ViewModule,
   ],
 })
 export class ApiModule {}
