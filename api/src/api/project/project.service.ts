@@ -3,7 +3,12 @@
 import { Injectable, Logger, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NewProject, SelectProject, UpdateProject } from './project.dto';
+import {
+  NewProject,
+  SelectProject,
+  UpdateProject,
+  SelectProjectFile,
+} from './project.dto';
 import {
   User,
   Project,
@@ -170,11 +175,11 @@ export class ProjectService {
 
   async getProjectfile(
     usrprojects: number[],
-    sP: number,
+    sP: SelectProjectFile,
   ): Promise<Projectfile | undefined> {
     return await this.fileRepository
       .createQueryBuilder('projectfile')
-      .where('projectfile.project = :projectId ', { projectId: sP })
+      .where('projectfile.project = :projectId ', { projectId: sP.projectId })
       .andWhere('projectfile.project IN (:...userpr)', { userpr: usrprojects })
       .orderBy('projectfile.createdAt', 'DESC')
       .getOneOrFail();

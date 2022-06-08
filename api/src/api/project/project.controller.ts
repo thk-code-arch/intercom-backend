@@ -19,7 +19,12 @@ import { UtilsService } from '../../utils/utils.service';
 import { ApiTags, ApiConsumes } from '@nestjs/swagger';
 import { CurrentUser } from '../../auth/decorators/user.decorator';
 import { ApiFile } from '../../auth/decorators/file.decorator';
-import { AddNewProject, SelectProject, UpdateProject } from './project.dto';
+import {
+  AddNewProject,
+  SelectProject,
+  UpdateProject,
+  SelectProjectFile,
+} from './project.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { editFileName, IFCFileFilter } from '../../utils/file-upload';
@@ -86,7 +91,6 @@ export class ProjectController {
     @CurrentUser('id') usrid: number,
     @Param('projectid') projectid: number,
   ) {
-
     const upload = await this.projectService.uploadIFC(
       file.path,
       file.filename,
@@ -107,17 +111,17 @@ export class ProjectController {
     return {
       name: upload.filename,
       log: `ifc convert ${convert}`,
-
     };
   }
 
-  @Get('get_projectfile/:theprojectId')
+  @Get('get_projectfile/:projectId')
   @Header('Content-Type', 'model/gltf+json')
   async getProjectfile(
-    @Param('theprojectId') pid: number,
+    @Param() pid: SelectProjectFile,
     @CurrentUser('projects') project: number[],
     @Res() response,
   ) {
+    console.log(pid);
     const file = await this.projectService.getProjectfile(project, pid);
     const filepath = '/files/output/' + file.filename;
     fs.exists(filepath, function (exists) {
@@ -129,10 +133,10 @@ export class ProjectController {
     });
   }
 
-  @Get('get_projectfileifc/:theprojectId')
+  @Get('get_projectfileifc/:projectId')
   @Header('Content-Type', 'application/octet-stream')
   async getProjectfileIfc(
-    @Param('theprojectId') pid: number,
+    @Param() pid: SelectProjectFile,
     @CurrentUser('projects') project: number[],
     @Res() response,
   ) {

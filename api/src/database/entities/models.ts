@@ -9,3 +9,4 @@ export { Avatarfile } from './avatar_file.entity';
 export { Role } from './role.entity';
 export { User } from './user.entity';
 export { Storage } from './storage.entity';
+export { View } from './view.entity';
