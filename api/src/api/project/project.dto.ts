@@ -54,8 +54,16 @@ export class AddNewProject {
   @IsNumber()
   parentProject?: number;
 }
+
 export class SelectProject {
   @ApiProperty()
   @IsNumber()
   projectid: number;
+}
+
+export class SelectProjectFile {
+  @ApiProperty()
+  @IsNumber()
+  @Type(() => Number)
+  projectId: number;
 }
