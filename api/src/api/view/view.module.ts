@@ -5,10 +5,11 @@ import { ViewService } from './view.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ViewController } from './view.controller';
 import { View } from '../../database/entities/models';
+import { ViewportGateway } from '../../io/viewport.gateway';
 
 @Module({
   imports: [TypeOrmModule.forFeature([View])],
-  providers: [ViewService],
+  providers: [ViewService, ViewportGateway],
   controllers: [ViewController],
   exports: [ViewService],
 })

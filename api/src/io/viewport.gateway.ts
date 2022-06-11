@@ -24,7 +24,8 @@ import {
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({ namespace: 'viewport' })
 export class ViewportGateway
-  implements OnGatewayConnection, OnGatewayDisconnect {
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatroomGateway');
   private onlineUsers = new OnlineUsers();
@@ -76,6 +77,11 @@ export class ViewportGateway
       delete this.onlineUsers[req.projectId][req.user.id];
     }
     //TODO handle disconnect
+  }
+
+  async sendToAll(msg: string) {
+    this.logger.log('fire message');
+    this.server.emit('alertToClient', { message: msg, type: 'Alert' });
   }
 
   @SubscribeMessage('moveTo')

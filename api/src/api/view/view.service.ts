@@ -5,12 +5,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { View } from '../../database/entities/models';
 import { SelectProject, SelectedSubprojects } from './view.dto';
+import { ViewportGateway } from '../../io/viewport.gateway';
 
 @Injectable()
 export class ViewService {
   constructor(
     @InjectRepository(View)
     private readonly viewRepository: Repository<View>,
+    private viewGW: ViewportGateway,
   ) {}
 
   async setSelectedSubprojects(
@@ -21,6 +23,7 @@ export class ViewService {
     setting.project = <any>selSubProj.projectId;
     setting.user = <any>userId;
     setting.selectedSubprojects = <any>selSubProj.selectedSubprojects;
+    await this.viewGW.sendToAll(JSON.stringify(setting));
     return this.viewRepository.save(setting);
   }
 
