@@ -23,7 +23,11 @@ export class ViewService {
     setting.project = <any>selSubProj.projectId;
     setting.user = <any>userId;
     setting.selectedSubprojects = <any>selSubProj.selectedSubprojects;
-    await this.viewGW.sendToAll(JSON.stringify(setting));
+    await this.viewGW.sendInViewport(
+      JSON.stringify(selSubProj.selectedSubprojects),
+      'selectedSubprojects',
+      selSubProj.projectId,
+    );
     return this.viewRepository.save(setting);
   }
 
