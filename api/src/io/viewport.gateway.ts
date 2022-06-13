@@ -22,7 +22,6 @@ import {
   OnlineUsers,
 } from './io.dto';
 import _ = require('lodash');
-import { ObjectIdColumn } from 'typeorm';
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({ namespace: 'viewport' })
@@ -35,45 +34,6 @@ export class ViewportGateway
   private onlineUsers = new OnlineUsers();
   private lastSent = new lastSendInRoom();
 
-  async handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
-  }
-
-  async joinRoom(
-    @ConnectedSocket() socket: Socket,
-    newRoom: number,
-    oldRoom: number,
-    user: any,
-  ) {
-    console.log('thisroom', this.onlineUsers[newRoom], oldRoom, newRoom);
-    if (!this.onlineUsers[newRoom]) {
-      console.log('create new room');
-      this.onlineUsers[newRoom] = new Avatar();
-      this.lastSent[newRoom] = new Date();
-    }
-
-    const foundOldroom = Object.keys(this.onlineUsers).find(
-      (k) => this.onlineUsers[k][user.id],
-    );
-    console.log(foundOldroom);
-
-    if (Number(foundOldroom)) {
-      console.log('leaveOldroom');
-      socket.leave(String(foundOldroom));
-      delete this.onlineUsers[foundOldroom][user.id];
-    }
-
-    socket.join(String(newRoom));
-    this.onlineUsers[newRoom][user.id] = {
-      userId: user.id,
-      username: user.username,
-      profile_image: user.profile_image,
-      position: { x: 0, y: 0, z: 0, dir: { x: 0, y: 0, z: 0 } },
-    };
-    console.log(this.onlineUsers);
-    console.log(socket.rooms);
-  }
-
   async handleConnection(client: Socket) {
     const { token, projectId } = client.handshake.query;
     if (!token) {
@@ -81,9 +41,64 @@ export class ViewportGateway
       return this.handleDisconnect(client);
     }
 
+    const user = await this.getUser(token);
+    await this.joinRoom(client, Number(projectId), 'handleConnection', user);
+  }
+
+  async handleDisconnect(client: Socket) {
+    const { token } = client.handshake.query;
+    if (token) {
+      const user = await this.getUser(token);
+      this.logger.log(`User disconnected: ${user.username}`);
+      Object.keys(this.onlineUsers)
+        .filter((k) => this.onlineUsers[k][user.id])
+        .map((room) => {
+          console.log('leave', room);
+          if (Number(room)) {
+            console.log('left', room);
+            delete this.onlineUsers[room][user.id];
+          }
+        });
+    }
+  }
+
+  async joinRoom(socket: Socket, newRoom: number, action: string, user: any) {
+    //create new Room
+    if (!this.onlineUsers[newRoom]) {
+      this.onlineUsers[newRoom] = new Avatar();
+      this.lastSent[newRoom] = new Date();
+      console.log(action);
+    }
+
+    //leave old roomS
+    Object.keys(this.onlineUsers)
+      .filter((k) => this.onlineUsers[k][user.id])
+      .map((room) => {
+        console.log('leave', room);
+        if (Number(room)) {
+          console.log('left', room);
+          socket.leave(String(room));
+          delete this.onlineUsers[room][user.id];
+        }
+      });
+
+    //leave old roomS
+    if (Number(newRoom)) {
+      socket.join(String(newRoom));
+      this.onlineUsers[newRoom][user.id] = {
+        userId: user.id,
+        username: user.username,
+        profile_image: user.profile_image,
+        position: { x: 0, y: 0, z: 0, dir: { x: 0, y: 0, z: 0 } },
+      };
+    }
+    this.emitUsers(newRoom);
+  }
+
+  async getUser(token: string) {
     const { id, username, profile_image, roles, projects, chatrooms } =
       await this.authService.getUserDatafromJWT(token);
-    const user = {
+    return {
       id,
       username,
       profile_image,
@@ -91,7 +106,13 @@ export class ViewportGateway
       projects: _.map(projects, 'id'),
       chatrooms: _.map(chatrooms, 'id'),
     };
-    await this.joinRoom(client, Number(projectId), Number(projectId), user);
+  }
+
+  emitUsers(roomId: number) {
+    return this.server.in(String(roomId)).emit('getplayers', {
+      projectId: roomId,
+      pos: this.onlineUsers[roomId],
+    });
   }
 
   @SubscribeMessage('join_viewport')
@@ -99,7 +120,7 @@ export class ViewportGateway
     @MessageBody() req: SwitchRoomDto,
     @ConnectedSocket() socket: Socket,
   ) {
-    await this.joinRoom(socket, req.newRoom, req.oldRoom, req.user);
+    await this.joinRoom(socket, req.newRoom, 'join_viewport', req.user);
   }
 
   @SubscribeMessage('disconnect')
@@ -111,12 +132,10 @@ export class ViewportGateway
       socket.leave(String(req.projectId));
       delete this.onlineUsers[req.projectId][req.user.id];
     }
-    //TODO handle disconnectn
   }
 
   async sendInViewport(msg: string, action: string, projectId: number) {
-    console.log(this.onlineUsers);
-
+    this.logger.log('sendUpdateSelectedProjects');
     this.server.in(String(projectId)).emit('update', {
       message: msg,
       action: action,
@@ -126,7 +145,6 @@ export class ViewportGateway
   @SubscribeMessage('moveTo')
   async sendMessage(@MessageBody() req: moveTo) {
     if (req.chatroomId !== 0) {
-      this.logger.log(req.chatroomId);
       if (
         this.onlineUsers[req.chatroomId] == null ||
         this.onlineUsers[req.chatroomId][req.user.id] == null
@@ -145,10 +163,7 @@ export class ViewportGateway
       );
       if (timeDelta >= 500) {
         this.lastSent[req.chatroomId] = new Date();
-        this.server.in(String(req.chatroomId)).emit('getplayers', {
-          projectId: req.chatroomId,
-          pos: this.onlineUsers[req.chatroomId],
-        });
+        this.emitUsers(req.chatroomId);
       }
     }
   }
