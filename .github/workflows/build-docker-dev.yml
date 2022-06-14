@@ -25,7 +25,11 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-
+          options:
+            --e BACKENDDEPLOYKEY=${{ secrets.BACKENDDEPLOYKEY }}
+            --e FRONTENDDEPLOYKEY=${{ secrets.FRONTENDDEPLOYKEY }}
+          run:
+            echo "BACKENDDEPLOYKEY=$BACKENDDEPLOYKEY"
           push: true
           tags: thkcodearch/intercom-dev:latest
 
