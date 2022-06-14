@@ -13,23 +13,19 @@ jobs:
     steps:
       -
         name: Login to DockerHub
-        uses: docker/login-action@v1 
+        uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-        env:
-          BACKENDDEPLOYKEY: ${{ secrets.BACKENDDEPLOYKEY }}
-          FRONTENDDEPLOYKEY: ${{ secrets.FRONTENDDEPLOYKEY }}
+
       -
         name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v3
         with:
-          options:
-            --e BACKENDDEPLOYKEY=${{ secrets.BACKENDDEPLOYKEY }}
-            --e FRONTENDDEPLOYKEY=${{ secrets.FRONTENDDEPLOYKEY }}
-          run:
-            echo "BACKENDDEPLOYKEY=$BACKENDDEPLOYKEY"
+          secrets: |
+            BACKENDDEPLOYKEY=${{ secrets.BACKENDDEPLOYKEY }}
+            FRONTENDDEPLOYKEY=${{ secrets.FRONTENDDEPLOYKEY }}
           push: true
           tags: thkcodearch/intercom-dev:latest
 
