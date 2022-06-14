@@ -10,6 +10,8 @@ RUN apt-get update \
 # build ssh keys
 RUN mkdir /root/.ssh/
 RUN --mount=type=secret,id=FRONTENDDEPLOYKEY \
+  cat /run/secrets/FRONTENDDEPLOYKEY
+RUN --mount=type=secret,id=FRONTENDDEPLOYKEY \
   cat /run/secrets/FRONTENDDEPLOYKEY > /root/.ssh/frontend
 RUN --mount=type=secret,id=BACKENDDEPLOYKEY \
   cat /run/secrets/BACKENDDEPLOYKEY > /root/.ssh/backend
