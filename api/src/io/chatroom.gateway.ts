@@ -45,7 +45,6 @@ export class ChatroomGateway
       socket.leave(String(req.oldRoom));
     }
     socket.join(String(req.newRoom));
-    console.log('joines', req.newRoom, 'isIn', socket.rooms);
   }
 
   @SubscribeMessage('disconnet')

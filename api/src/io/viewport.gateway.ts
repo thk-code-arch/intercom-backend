@@ -12,6 +12,7 @@ import {
 import { UseGuards, Logger } from '@nestjs/common';
 import { WsJwtGuard } from '../auth/guards/ws-jwt.guard';
 import { Socket, Server } from 'socket.io';
+import { AuthService } from '../auth/auth.service';
 import {
   moveTo,
   SwitchRoomDto,
@@ -20,26 +21,94 @@ import {
   lastSendInRoom,
   OnlineUsers,
 } from './io.dto';
+import _ = require('lodash');
 
 @UseGuards(WsJwtGuard)
 @WebSocketGateway({ namespace: 'viewport' })
 export class ViewportGateway
-  implements OnGatewayConnection, OnGatewayDisconnect {
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
+  constructor(private readonly authService: AuthService) {}
   @WebSocketServer() server: Server;
-  private logger: Logger = new Logger('ChatroomGateway');
+  private logger: Logger = new Logger('ViewportGateway');
   private onlineUsers = new OnlineUsers();
   private lastSent = new lastSendInRoom();
 
-  async handleDisconnect(client: Socket) {
-    this.logger.log(`Client disconnected: ${client.id}`);
-  }
-
   async handleConnection(client: Socket) {
-    const { token } = client.handshake.query;
+    const { token, projectId } = client.handshake.query;
     if (!token) {
       this.logger.debug(`Disconnect: No Token provided`);
       return this.handleDisconnect(client);
     }
+
+    const user = await this.getUser(token);
+    await this.joinRoom(client, Number(projectId), 'handleConnection', user);
+  }
+
+  async handleDisconnect(client: Socket) {
+    const { token } = client.handshake.query;
+    if (token) {
+      const user = await this.getUser(token);
+      this.logger.log(`User disconnected: ${user.username}`);
+      Object.keys(this.onlineUsers)
+        .filter((k) => this.onlineUsers[k][user.id])
+        .map((room) => {
+          if (Number(room)) {
+            delete this.onlineUsers[room][user.id];
+          }
+        });
+    }
+  }
+
+  async joinRoom(socket: Socket, newRoom: number, action: string, user: any) {
+    //create new Room
+    if (!this.onlineUsers[newRoom]) {
+      this.onlineUsers[newRoom] = new Avatar();
+      this.lastSent[newRoom] = new Date();
+      this.logger.log(action);
+    }
+
+    //leave old roomS
+    Object.keys(this.onlineUsers)
+      .filter((k) => this.onlineUsers[k][user.id])
+      .map((room) => {
+        if (Number(room)) {
+          socket.leave(String(room));
+          delete this.onlineUsers[room][user.id];
+        }
+      });
+
+    //leave old roomS
+    if (Number(newRoom)) {
+      socket.join(String(newRoom));
+      this.onlineUsers[newRoom][user.id] = {
+        userId: user.id,
+        username: user.username,
+        profile_image: user.profile_image,
+        position: { x: 0, y: 0, z: 0, dir: { x: 0, y: 0, z: 0 } },
+      };
+    }
+    this.emitUsers(newRoom);
+  }
+
+  async getUser(token: string) {
+    const { id, username, profile_image, roles, projects, chatrooms } =
+      await this.authService.getUserDatafromJWT(token);
+    return {
+      id,
+      username,
+      profile_image,
+      roles: _.map(roles, 'id'),
+      projects: _.map(projects, 'id'),
+      chatrooms: _.map(chatrooms, 'id'),
+    };
+  }
+
+  emitUsers(roomId: number) {
+    return this.server.in(String(roomId)).emit('getplayers', {
+      projectId: roomId,
+      pos: this.onlineUsers[roomId],
+    });
   }
 
   @SubscribeMessage('join_viewport')
@@ -47,23 +116,7 @@ export class ViewportGateway
     @MessageBody() req: SwitchRoomDto,
     @ConnectedSocket() socket: Socket,
   ) {
-    if (this.onlineUsers[req.newRoom] == null) {
-      this.onlineUsers[req.newRoom] = new Avatar();
-      this.lastSent[req.newRoom] = new Date();
-    }
-
-    if (req.oldRoom !== 0) {
-      socket.leave(String(req.oldRoom));
-      delete this.onlineUsers[req.oldRoom][req.user.id];
-    }
-
-    socket.join(String(req.newRoom));
-    this.onlineUsers[req.newRoom][req.user.id] = {
-      userId: req.user.id,
-      username: req.user.username,
-      profile_image: req.user.profile_image,
-      position: { x: 0, y: 0, z: 0, dir: { x: 0, y: 0, z: 0 } },
-    };
+    await this.joinRoom(socket, req.newRoom, 'join_viewport', req.user);
   }
 
   @SubscribeMessage('disconnect')
@@ -75,7 +128,10 @@ export class ViewportGateway
       socket.leave(String(req.projectId));
       delete this.onlineUsers[req.projectId][req.user.id];
     }
-    //TODO handle disconnect
+  }
+
+  async sendInViewport(msg: string, action: string, projectId: number) {
+    this.server.in(String(projectId)).emit(action, msg);
   }
 
   @SubscribeMessage('moveTo')
@@ -99,10 +155,7 @@ export class ViewportGateway
       );
       if (timeDelta >= 500) {
         this.lastSent[req.chatroomId] = new Date();
-        this.server.in(String(req.chatroomId)).emit('getplayers', {
-          projectId: req.chatroomId,
-          pos: this.onlineUsers[req.chatroomId],
-        });
+        this.emitUsers(req.chatroomId);
       }
     }
   }

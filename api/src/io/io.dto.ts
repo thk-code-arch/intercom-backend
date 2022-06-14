@@ -75,3 +75,13 @@ export class LeaveViewport {
   projectId: number;
   user: SocketUserDto;
 }
+
+export class viewSubprojectsLoaded {
+  @IsNumber()
+  projectId: number;
+
+  user: SocketUserDto;
+
+  @IsNumber()
+  loadedModels: number;
+}
