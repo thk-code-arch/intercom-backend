@@ -25,7 +25,7 @@ export class ViewService {
     setting.selectedSubprojects = <any>selSubProj.selectedSubprojects;
     await this.viewGW.sendInViewport(
       JSON.stringify(selSubProj.selectedSubprojects),
-      'selectedSubprojects',
+      'updateSelectedSubprojects',
       selSubProj.projectId,
     );
     return this.viewRepository.save(setting);

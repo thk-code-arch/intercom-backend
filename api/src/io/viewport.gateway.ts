@@ -53,9 +53,7 @@ export class ViewportGateway
       Object.keys(this.onlineUsers)
         .filter((k) => this.onlineUsers[k][user.id])
         .map((room) => {
-          console.log('leave', room);
           if (Number(room)) {
-            console.log('left', room);
             delete this.onlineUsers[room][user.id];
           }
         });
@@ -67,16 +65,14 @@ export class ViewportGateway
     if (!this.onlineUsers[newRoom]) {
       this.onlineUsers[newRoom] = new Avatar();
       this.lastSent[newRoom] = new Date();
-      console.log(action);
+      this.logger.log(action);
     }
 
     //leave old roomS
     Object.keys(this.onlineUsers)
       .filter((k) => this.onlineUsers[k][user.id])
       .map((room) => {
-        console.log('leave', room);
         if (Number(room)) {
-          console.log('left', room);
           socket.leave(String(room));
           delete this.onlineUsers[room][user.id];
         }
@@ -135,11 +131,7 @@ export class ViewportGateway
   }
 
   async sendInViewport(msg: string, action: string, projectId: number) {
-    this.logger.log('sendUpdateSelectedProjects');
-    this.server.in(String(projectId)).emit('update', {
-      message: msg,
-      action: action,
-    });
+    this.server.in(String(projectId)).emit(action, msg);
   }
 
   @SubscribeMessage('moveTo')
