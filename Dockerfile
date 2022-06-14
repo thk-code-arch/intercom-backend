@@ -9,9 +9,10 @@ RUN apt-get update \
  
 # build ssh keys
 RUN mkdir /root/.ssh/
-RUN echo "${FRONTENDDEPLOYKEY}" > /root/.ssh/frontend
-RUN echo "${BACKENDDEPLOYKEY}" > /root/.ssh/backend
-RUN cat /root/.ssh/backend
+RUN --mount=type=secret,id=FRONTENDDEPLOYKEY \
+  cat /run/secrets/FRONTENDDEPLOYKEY > /root/.ssh/frontend
+RUN --mount=type=secret,id=BACKENDDEPLOYKEY \
+  cat /run/secrets/BACKENDDEPLOYKEY > /root/.ssh/backend
 #Github requires a private key with strict permission settings
 RUN chmod 600 /root/.ssh/frontend && chmod 600 /root/.ssh/backend
 #Add Github to known hosts
