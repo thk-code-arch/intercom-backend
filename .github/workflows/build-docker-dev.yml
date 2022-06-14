@@ -24,8 +24,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           secrets: |
-            BACKENDDEPLOYKEY=${{ secrets.BACKENDDEPLOYKEY }}
-            FRONTENDDEPLOYKEY=${{ secrets.FRONTENDDEPLOYKEY }}
+            "BACKENDDEPLOYKEY=${{ secrets.BACKENDDEPLOYKEY }}"
+            "FRONTENDDEPLOYKEY=${{ secrets.FRONTENDDEPLOYKEY }}"
           push: true
           tags: thkcodearch/intercom-dev:latest
 
