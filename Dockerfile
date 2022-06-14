@@ -19,7 +19,7 @@ RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
 
 
 WORKDIR /backend
-RUN ssh-agent bash -c 'ssh-add /root/.ssh/backend; git clone https://github.com/thk-code-arch/intercom-backend.git .'
+RUN ssh-agent bash -c 'ssh-add /root/.ssh/backend; git clone git@github.com:thk-code-arch/intercom-backend.git .'
 RUN npm install -g @nestjs/cli
 RUN cd api && npm install && npm run build
 RUN echo "### INTERCOM BACKEND"  >> /backend/api/CHANGELOG.md &&\
@@ -28,7 +28,7 @@ RUN echo "### INTERCOM BACKEND"  >> /backend/api/CHANGELOG.md &&\
 	echo "\`\`\`" >> /backend/api/CHANGELOG.md
 
 WORKDIR /frontend
-RUN ssh-agent bash -c 'ssh-add /root/.ssh/frontend; git clone https://github.com/thk-code-arch/intercom-frontend.git .'
+RUN ssh-agent bash -c 'ssh-add /root/.ssh/frontend; git clone git@github.com:thk-code-arch/intercom-frontend.git .'
 RUN npm install && npm run build
 RUN echo "### INTERCOM FRONTEND"  >> /backend/api/CHANGELOG.md &&\
 	echo "\`\`\`" >> /backend/api/CHANGELOG.md &&\
