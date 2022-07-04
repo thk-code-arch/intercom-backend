@@ -22,6 +22,14 @@ export class ViewController {
     return this.viewService.getSelectedSubprojects(project, projectId);
   }
 
+  @Get('get_manyselectedsubprojects/:projectId')
+  async getManySelectedSubprojects(
+    @Param() projectId: SelectProject,
+    @CurrentUser('projects') project: number[],
+  ) {
+    return this.viewService.getManySelectedSubprojects(project, projectId);
+  }
+
   @Post('set_selectedsubprojects')
   updateProject(
     @Body() selectedSubprojects: SelectedSubprojects,
