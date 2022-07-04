@@ -42,4 +42,16 @@ export class ViewService {
       .orderBy('view.createdAt', 'DESC')
       .getOne();
   }
+
+  async getManySelectedSubprojects(
+    usrprojects: number[],
+    projectId: SelectProject,
+  ): Promise<View[] | undefined> {
+    return this.viewRepository
+      .createQueryBuilder('view')
+      .where('view.project = :projectId ', { projectId: projectId.projectId })
+      .andWhere('view.project IN (:...userpr)', { userpr: usrprojects })
+      .orderBy('view.createdAt', 'DESC')
+      .getMany();
+  }
 }
