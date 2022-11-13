@@ -102,7 +102,8 @@ export class AuthService {
           ),
         },
         false,
-        false,
+        true,
+        //changed last argument demo account with admin permissions for everyone
       );
       this.logger.log(JSON.stringify(res) + 'New User registred');
       status.password = res.password;
