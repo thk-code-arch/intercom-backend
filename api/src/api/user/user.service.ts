@@ -12,7 +12,6 @@ import {
 import { ProjectService } from '../project/project.service';
 import { ChatService } from '../chat/chat.service';
 import _ = require('lodash');
-import { isatty } from 'tty';
 const gravatar = require('gravatar');
 const generator = require('generate-password');
 
