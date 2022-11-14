@@ -12,6 +12,7 @@ import {
 import { ProjectService } from '../project/project.service';
 import { ChatService } from '../chat/chat.service';
 import _ = require('lodash');
+import { isatty } from 'tty';
 const gravatar = require('gravatar');
 const generator = require('generate-password');
 
@@ -81,7 +82,6 @@ export class UserService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    this.logger.debug(usr);
     //add Gravatar
     usr.profile_image = await gravatar.url(
       email,
@@ -92,9 +92,11 @@ export class UserService {
       usr.password = generator.generate({ length: 10, numbers: true });
     }
     usr.role = 1;
-    if (isAdmin) {
-      // no further actions
-    }
+
+    this.logger.debug(usr);
+
+    const assignedRoles = isAdmin ? [1, 2] : [1];
+
     user = this.usersRepository.create(usr);
     const result = await this.usersRepository.save(user);
 
@@ -102,7 +104,7 @@ export class UserService {
       .createQueryBuilder('user')
       .relation(User, 'roles')
       .of(result)
-      .add([1]);
+      .add(assignedRoles);
 
     result.password = usr.password;
     return result;
@@ -147,7 +149,7 @@ export class UserService {
 
   async resetPassword(email: string): Promise<PasswordResetStatus | undefined> {
     const getUser = await this.usersRepository.findOne({
-        where:`lower("email") = lower('${email}')`
+      where: `lower("email") = lower('${email}')`,
     });
     this.logger.log(getUser);
     // lower because existiong email adresses in db aren't case sensitive
