@@ -44,6 +44,9 @@ export class UserService {
       relations: ['roles', 'chatrooms'],
       where: { id: userid },
     });
+    if (!res) {
+      throw new HttpException('User not found', HttpStatus.BAD_REQUEST);
+    }
     //  inject Subprojects
     res.projects = await this.projectService.get_projects_and_subprojects(
       res.id,
