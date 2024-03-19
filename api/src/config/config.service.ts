@@ -73,9 +73,9 @@ class ConfigService {
 
       migrations: [join(__dirname, '/../database/migrations/*.{ts,js}')],
 
-      cli: {
-        migrationsDir: 'src/database/migrations',
-      },
+      //      cli: {
+      //       migrationsDir: 'src/database/migrations',
+      //    },
       //   logging: true,
       ssl: false,
     };
