@@ -1,6 +1,8 @@
 // Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
 
-import { Module, HttpModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
+
 import { configService } from '../config/config.service';
 import { UtilsService } from './utils.service';
 import { MailerModule } from '@nestjs-modules/mailer';

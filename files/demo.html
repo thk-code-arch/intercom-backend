@@ -2,19 +2,19 @@
 <html lang="en" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 
 <head>
-  <meta charset="UTF-8" />
-  <title>INTERCOM | Create demo account</title>
-  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
+    <meta charset="UTF-8" />
+    <title>INTERCOM | Create demo account</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet" />
 </head>
 
 <body style="text-align: center">
-  <div id="app" class="w-full p-4">
-    <div class="bg-gray-300 rounded-sm p-12" v-if="user.success">
-      <p>Username: {{user.username}}</p>
-      <p>Password: {{user.password}}</p>
-      <p class="text-gray-700">https://demo.bim-cloud.org/</p>
-      <p class="mt-4">
-        <a class="
+    <div id="app" class="w-full p-4">
+        <div class="bg-gray-300 rounded-sm p-12" v-if="user.success">
+            <p>Username: {{user.username}}</p>
+            <p>Password: {{user.password}}</p>
+            <p class="text-gray-700">https://demo.bim-cloud.org/</p>
+            <p class="mt-4">
+                <a class="
             bg-blue-500
             text-white
             font-bold
@@ -22,12 +22,12 @@
             px-4
             rounded
           " :href="`/login/direct/${user.username}/${user.password}`" target="_blank">
-          Login
-      </a>
-      </p>
-    </div>
+                    Login
+                </a>
+            </p>
+        </div>
 
-    <div class="
+        <div class="
           flex flex-col
           justify-center
           space-x-4
@@ -36,8 +36,8 @@
           mx-auto
           w-full
         " v-if="!user.success">
-      <label class="flex justify-start items-start">
-        <div class="
+            <label class="flex justify-start items-start">
+                <div class="
               bg-white
               border-2
               rounded
@@ -50,8 +50,8 @@
               mr-2
               focus-within:border-blue-500
             ">
-          <input type="checkbox" class="opacity-0 absolute" v-model="checked" />
-          <svg class="
+                    <input type="checkbox" class="opacity-0 absolute" v-model="checked" />
+                    <svg class="
                 text-black
                 fill-current
                 hidden
@@ -60,64 +60,65 @@
                 text-green-500
                 pointer-events-none
               " viewBox="0 0 20 20">
-            <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" />
-          </svg>
-        </div>
-        <div class="text-gray-700">Der Demo Zugang ist maximal 24 Stunden gültig. Die Platform wird zurückgesetzt.</div>
-      </label>
-      <button class="
+                        <path d="M0 11l2-2 5 5L18 3l2 2L7 18z" />
+                    </svg>
+                </div>
+                <div class="text-gray-700">Der Demo Zugang ist maximal 24 Stunden gültig. Die Platform wird
+                    zurückgesetzt.</div>
+            </label>
+            <button class="
             text-white
             font-bold
             py-2
             px-4
             rounded
           " v-bind:class="{ 'bg-gray-300': !checked, 'bg-blue-500': checked }" v-on:click="getAccount()" name="button">
-        Demo Start
-      </button>
-      <p class="text-red-600">{{ checkbox }}</p>
+                Demo Start
+            </button>
+            <p class="text-red-600">{{ checkbox }}</p>
+        </div>
     </div>
-  </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script>
-    const data = {
-      checked: false,
-      checkbox: "",
-      user: {
-        success: false,
-        message: "",
-        username: "",
-        password: "",
-      },
-    };
-    var vm = new Vue({
-      el: "#app",
-      data: data,
-      methods: {
-        getAccount() {
-          if (vm.checked) {
-            axios
-              .post("/api/auth/signup-demo", {
-                invitecode: "demo-acc",
-              })
-              .then(function (response) {
-                vm.user = response.data;
-              });
-          }
-          else{
-            vm.checkbox = "Bitte Checkbox bestätigen."
-          }
-        },
-      },
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.4.2/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        const data = {
+            checked: false,
+            checkbox: "",
+            user: {
+                success: false,
+                message: "",
+                username: "",
+                password: "",
+            },
+        };
+        var vm = new Vue({
+            el: "#app",
+            data: data,
+            methods: {
+                getAccount() {
+                    if (vm.checked) {
+                        axios
+                            .post("/api/auth/signup-demo", {
+                                invitecode: "demo-acc",
+                            })
+                            .then(function (response) {
+                                vm.user = response.data;
+                            });
+                    }
+                    else {
+                        vm.checkbox = "Bitte Checkbox bestätigen."
+                    }
+                },
+            },
 
-      mounted() { },
-    });
-  </script>
-  <style>
-    input:checked+svg {
-      display: block;
-    }
-  </style>
+            mounted() { },
+        });
+    </script>
+    <style>
+        input:checked+svg {
+            display: block;
+        }
+    </style>
 </body>
 
 </html>

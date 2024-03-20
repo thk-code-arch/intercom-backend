@@ -16,10 +16,16 @@ import { Socket, Server } from 'socket.io';
 import { MessageDto, SwitchRoomDto } from './io.dto';
 import { ChatService } from '../api/chat/chat.service';
 
+const corsOptions = {
+  origin: ['https://' + process.env.IC_CORS, 'http://localhost:8080'],
+  credentials: true,
+};
+
 @UseGuards(WsJwtGuard)
-@WebSocketGateway({ namespace: 'chatroom' })
+@WebSocketGateway({ namespace: 'chatroom', cors: corsOptions, allowEIO3: true })
 export class ChatroomGateway
-  implements OnGatewayConnection, OnGatewayDisconnect {
+  implements OnGatewayConnection, OnGatewayDisconnect
+{
   constructor(private readonly chatService: ChatService) {}
   @WebSocketServer() server: Server;
   private logger: Logger = new Logger('ChatroomGateway');
@@ -30,6 +36,7 @@ export class ChatroomGateway
 
   async handleConnection(client: Socket) {
     const { token } = client.handshake.query;
+    this.logger.debug(`connected to chatroom: ${token}`);
     if (!token) {
       this.logger.debug(`Disconnect: No Token provided`);
       return this.handleDisconnect(client);

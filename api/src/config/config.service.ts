@@ -4,9 +4,6 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { join } from 'path';
 
-// tslint:disable-next-line: no-var-requires
-require('dotenv').config();
-
 class ConfigService {
   constructor(private env: { [k: string]: string | undefined }) {}
 
@@ -73,9 +70,9 @@ class ConfigService {
 
       migrations: [join(__dirname, '/../database/migrations/*.{ts,js}')],
 
-      cli: {
-        migrationsDir: 'src/database/migrations',
-      },
+      //      cli: {
+      //       migrationsDir: 'src/database/migrations',
+      //    },
       //   logging: true,
       ssl: false,
     };

@@ -23,8 +23,13 @@ import {
 } from './io.dto';
 import _ = require('lodash');
 
+const corsOptions = {
+  origin: ['https://' + process.env.IC_CORS, 'http://localhost:8080'],
+  credentials: true,
+};
+
 @UseGuards(WsJwtGuard)
-@WebSocketGateway({ namespace: 'viewport' })
+@WebSocketGateway({ namespace: 'viewport', cors: corsOptions, allowEIO3: true })
 export class ViewportGateway
   implements OnGatewayConnection, OnGatewayDisconnect
 {
@@ -36,7 +41,8 @@ export class ViewportGateway
 
   async handleConnection(client: Socket) {
     const { token, projectId } = client.handshake.query;
-    if (!token) {
+    this.logger.debug(`Connection: ${projectId}`);
+    if (Array.isArray(token) || !token) {
       this.logger.debug(`Disconnect: No Token provided`);
       return this.handleDisconnect(client);
     }
@@ -46,17 +52,28 @@ export class ViewportGateway
   }
 
   async handleDisconnect(client: Socket) {
-    const { token } = client.handshake.query;
+    // Extract token from the handshake query and ensure it is a string
+    let { token } = client.handshake.query;
+
+    // Check if token is an array and handle accordingly
+    if (Array.isArray(token)) {
+      token = token[0]; // or handle it as you see fit
+    }
+
     if (token) {
       const user = await this.getUser(token);
-      this.logger.log(`User disconnected: ${user.username}`);
-      Object.keys(this.onlineUsers)
-        .filter((k) => this.onlineUsers[k][user.id])
-        .map((room) => {
-          if (Number(room)) {
+
+      // Ensure user is defined and has a username before logging
+      if (user && user.username) {
+        this.logger.log(`User disconnected: ${user.username}`);
+
+        // Iterate over onlineUsers and delete user from rooms
+        Object.keys(this.onlineUsers).forEach((room) => {
+          if (this.onlineUsers[room][user.id]) {
             delete this.onlineUsers[room][user.id];
           }
         });
+      }
     }
   }
 

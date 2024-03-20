@@ -1,6 +1,8 @@
 // Copyright (c) 2021 Steffen Stein <mail@steffenstein.com> For LICENSE see docs/LICENSE
 
-import { Injectable, HttpService, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+
+import { HttpService } from '@nestjs/axios';
 import { MailerService } from '@nestjs-modules/mailer';
 import { FetchVideo } from './utils.dto';
 import * as cheerio from 'cheerio';
