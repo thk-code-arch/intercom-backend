@@ -14,6 +14,7 @@ import { ChatService } from '../chat/chat.service';
 import _ = require('lodash');
 const gravatar = require('gravatar');
 const generator = require('generate-password');
+import { Raw } from 'typeorm';
 
 export type Res = any;
 
@@ -57,9 +58,8 @@ export class UserService {
       'id',
     );
     if (Array.isArray(subprojects) && subprojects.length) {
-      const catcheRooms = await this.chatService.getSubProjectChatrooms(
-        subprojects,
-      );
+      const catcheRooms =
+        await this.chatService.getSubProjectChatrooms(subprojects);
       res.chatrooms = [...res.chatrooms, ...catcheRooms];
     }
     return res;
@@ -150,14 +150,25 @@ export class UserService {
   }
 
   async resetPassword(email: string): Promise<PasswordResetStatus | undefined> {
+    // Use TypeORM's `where` with parameters to prevent SQL injection
     const getUser = await this.usersRepository.findOne({
-      where: `lower("email") = lower('${email}')`,
+      where: {
+        email: Raw((alias) => `LOWER(${alias}) = LOWER(:email)`, { email }),
+      },
     });
+
     this.logger.log(getUser);
-    // lower because existiong email adresses in db aren't case sensitive
+
+    if (!getUser) {
+      // Handle the case where the user is not found
+      return undefined;
+    }
+
+    // Proceed with password reset
     const genPassword = await generator.generate({ length: 10, numbers: true });
     getUser.password = genPassword;
     const user = await this.usersRepository.save(getUser);
+
     return {
       username: user.username,
       email: user.email,
