@@ -1,3 +1,9 @@
+## New Location
+
+You can find the latest version of this project, along with other related projects, in our new monorepo:
+
+[https://github.com/thk-code-arch/intercom/](https://github.com/thk-code-arch/intercom/)
+
 # intercom-backend
 
 API built with NestJS,Postgres, TypeORM
